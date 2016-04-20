@@ -138,6 +138,45 @@ Background.prototype.update = function () {
 	Entity.prototype.update.call(this);
 };
 
+//no inheritance
+function Collidable_background(game, spritesheet) {
+    this.x = 0;
+    this.y = 0;
+    this.spritesheet = spritesheet;
+    this.game = game;
+    this.layer = 2;
+    this.control = false;
+    this.ctx = game.ctx;
+};
+
+Collidable_background.prototype.draw = function () {
+	//context.drawImage(img,sx,sy,swidth,sheight,x,y,width,height);
+	var width = Math.floor(dungeonWidth/4);
+	var heigth = Math.floor(dungeonHeight/4);
+    this.ctx.drawImage(this.spritesheet,this.x, this.y, width, heigth,
+    		0, 0, width, heigth);
+};
+
+Collidable_background.prototype.update = function () {
+	if(this.game.controlEntity.x !== null) {
+		//dungeon/8 = half a visible screen, 0.5 = character scale ratio
+		var newX = this.game.controlEntity.x - Math.floor(dungeonWidth/8  - (85 * 0.5 / 2));
+	    var newY = this.game.controlEntity.y - Math.floor(dungeonHeight/8 - (85 * 0.5 / 2));
+		
+	    //dungeonWidth/4 one visible screen width
+		if(newX >= 0 && newX <= (dungeonWidth - dungeonWidth/4)) {
+			this.x = newX;
+		}
+		if(newY >= 0 && newY <= (dungeonHeight - dungeonHeight/4) ) {
+			this.y = newY;
+		}
+	}
+	else {
+		alert("Alert: Board Not updated, when Arrow was moved.");
+	}
+	Entity.prototype.update.call(this);
+};
+
 function Arrow(game, spritesheet) {
 	this.spriteSquareSize = 85;
 	this.scale = 0.5;
@@ -153,7 +192,7 @@ function Arrow(game, spritesheet) {
     this.speedX = 0;
     this.speedY = 0;
     this.game = game;
-    this.layer = 2;
+    this.layer = 3;
     this.control = true;
     this.ctx = game.ctx;
 }
@@ -198,6 +237,25 @@ Arrow.prototype.update = function () {
 	    var newX = this.x + this.game.clockTick * this.speedX;
 	    var newY = this.y + this.game.clockTick * this.speedY;
 	    
+	    //attempting to read new layer as collidable layer
+//	    var collidable = null;
+//	    for (var i = 0; i < this.game.entities.length; i++) {
+//	    	if(this.game.entities[i].layer === 2) {
+//	    		collidable = this.entities[i];
+//	    	}
+//	    }
+//	    
+//	    var index = (newY*dungeonWidth + newX) * 4;
+//	    var alpha = 0;
+//	    
+//	    var imgData = collidable.spritesheet.getImageData(0, 0, dungeonWidth, dungeonHeight);
+//
+//	    alpha = imgData.data[index+3];
+//	    
+//	    if(alpha > 0) {
+//	    	alert(alpha);
+//	    }
+	    
 	    //dungeon/8 = half a visible screen, 0.5 = character scale ratio
 	    if(newX > 0 && newX < dungeonWidth - (85 * 0.5)) {
 	    	this.x += this.game.clockTick * this.speedX;
@@ -211,6 +269,7 @@ Arrow.prototype.update = function () {
 
 AM.queueDownload("./img/ArrowSpriteSheet.png");
 AM.queueDownload("./img/GrassOnlyBackground.png");
+AM.queueDownload("./img/collidable_background.png");
 
 AM.downloadAll(function () {
     var canvas = document.getElementById("gameWorld");
@@ -222,6 +281,7 @@ AM.downloadAll(function () {
 
     gameEngine.addEntity(new Arrow(gameEngine, AM.getAsset("./img/ArrowSpriteSheet.png")));
     gameEngine.addEntity(new Background(gameEngine, AM.getAsset("./img/GrassOnlyBackground.png")));
+    gameEngine.addEntity(new Background(gameEngine, AM.getAsset("./img/collidable_background.png")));
     
     console.log("All Done!");
 });
