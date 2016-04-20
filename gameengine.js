@@ -43,10 +43,14 @@ GameEngine.prototype.startInput = function () {
         var y = e.clientY - that.ctx.canvas.getBoundingClientRect().top;
 
         //not sure what this 1024 or 32 does...
-        if (x < 1024) {
-            x = Math.floor(x / 32);
-            y = Math.floor(y / 32);
-        }
+        //
+        // DAVID
+        // This converts the canvas into 64 x 64 tiles
+        //
+        // if (x < 1024) {
+            x = Math.floor(x / 64);
+            y = Math.floor(y / 64);
+        // }
 
         return { x: x, y: y };
     }
@@ -78,7 +82,7 @@ GameEngine.prototype.startInput = function () {
         that.wheel = e;
         //console.log("Click Event - X,Y " + e.clientX + ", " + e.clientY + " Delta " + e.deltaY);
     }, false);
-
+    
     this.ctx.canvas.addEventListener("keydown", function (e) {
         console.log(e);
         console.log("Key Down Event - Char " + e.code + " Code " + e.keyCode);
@@ -93,6 +97,10 @@ GameEngine.prototype.startInput = function () {
         }	
         else if(e.which === 68) {
         	that.controlEntity.d = true;
+        }
+        else if (e.which === 66)
+        {
+            that.b = true;
         }
         
     }, false);
