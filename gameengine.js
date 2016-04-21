@@ -22,6 +22,7 @@ GameEngine.prototype.init = function (ctx) {
     this.surfaceWidth = this.ctx.canvas.width;
     this.surfaceHeight = this.ctx.canvas.height;
     this.timer = new Timer();
+    this.disableInput = false;
     this.startInput();
     console.log('game initialized');
 }
@@ -86,22 +87,25 @@ GameEngine.prototype.startInput = function () {
     this.ctx.canvas.addEventListener("keydown", function (e) {
         console.log(e);
         console.log("Key Down Event - Char " + e.code + " Code " + e.keyCode);
-        if(e.which === 87) {
-        	that.controlEntity.w = true;
-        }
-        else if(e.which === 83) {
-        	that.controlEntity.s = true;
-        }
-        else if(e.which === 65) {
-        	that.controlEntity.a = true;
-        }	
-        else if(e.which === 68) {
-        	that.controlEntity.d = true;
-        }
-        else if (e.which === 66)
+        if (that.disableInput)
         {
-            that.b = true;
+            if(e.which === 87) {
+                that.controlEntity.w = true;
+            }
+            else if(e.which === 83) {
+                that.controlEntity.s = true;
+            }
+            else if(e.which === 65) {
+                that.controlEntity.a = true;
+            }	
+            else if(e.which === 68) {
+                that.controlEntity.d = true;
+            }
         }
+        if (e.which === 66)
+            {
+                that.b = true;
+            }
         
     }, false);
 
@@ -114,24 +118,27 @@ GameEngine.prototype.startInput = function () {
     this.ctx.canvas.addEventListener("keyup", function (e) {
         console.log(e);
         console.log("Key Up Event - Char " + e.code + " Code " + e.keyCode);
-        if(e.which === 87) {
-        	that.controlEntity.w = false;
-        }
-        else if(e.which === 83) {
+        if (that.disableInput)
+        {
+            if(e.which === 87) {
+                that.controlEntity.w = false;
+            }
+            else if(e.which === 83) {
 
-        	that.controlEntity.s = false;
-        }
-        else if(e.which === 65) {
-        	that.controlEntity.a = false;
-        }	
-        else if(e.which === 68) {
-        	that.controlEntity.d = false;
-        }	
-        
-        if(!(that.w || that.s || that.a || that.d)) {
-        	that.controlEntity.speedX = 0;
-        	that.controlEntity.speedY = 0;
-        }
+                that.controlEntity.s = false;
+            }
+            else if(e.which === 65) {
+                that.controlEntity.a = false;
+            }	
+            else if(e.which === 68) {
+                that.controlEntity.d = false;
+            }	
+            
+            if(!(that.w || that.s || that.a || that.d)) {
+                that.controlEntity.speedX = 0;
+                that.controlEntity.speedY = 0;
+            }
+        }     
     }, false);
 
     console.log('Input started');
@@ -167,7 +174,15 @@ GameEngine.prototype.update = function () {
     for (var i = 0; i < entitiesCount; i++) {
         var entity = this.entities[i];
 
-        entity.update();
+        if (!entity.removeFromWorld) {
+            entity.update();
+        }
+    }
+
+    for (var i = this.entities.length - 1; i >= 0; --i) {
+        if (this.entities[i].removeFromWorld) {
+            this.entities.splice(i, 1);
+        }
     }
 }
 

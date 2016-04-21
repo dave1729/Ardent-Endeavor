@@ -279,11 +279,13 @@ AM.downloadAll(function () {
     gameEngine.init(ctx);
     gameEngine.start();
     var background = new Background(gameEngine, AM.getAsset("./img/GrassOnlyBackground.png"));
+    var cursor = new Cursor(gameEngine);
     gameEngine.addEntity(new Arrow(gameEngine, AM.getAsset("./img/ArrowSpriteSheet.png")));
     gameEngine.addEntity(background);
     gameEngine.addEntity(new Background(gameEngine, AM.getAsset("./img/collidable_background.png")));
+    gameEngine.addEntity(new Battle(gameEngine, cursor))
     gameEngine.addEntity(new Grid(gameEngine, background))
-    gameEngine.addEntity(new Cursor(gameEngine))
+    gameEngine.addEntity(cursor)
     
     console.log("All Done!");
 });
