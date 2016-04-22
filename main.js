@@ -19,7 +19,169 @@ function Animation(spriteSheet, frameWidth, frameHeight, sheetWidth, frameDurati
     this.scale = scale;
 }
 
-Animation.prototype.drawFrame = function (tick, ctx, x, y, entity) {
+Animation.prototype.currentFrame = function () {
+    return Math.floor(this.elapsedTime / this.frameDuration);
+}
+
+Animation.prototype.isDone = function () {
+    return (this.elapsedTime >= this.totalTime);
+}
+
+Animation.prototype.drawEntity = function (tick, ctx, x, y) {
+    this.elapsedTime += tick;
+    if (this.isDone()) {
+        if (this.loop) this.elapsedTime = 0;
+    }
+    var frame = this.currentFrame();
+    var xindex = 0;
+    var yindex = 0;
+    xindex = frame % this.sheetWidth;
+    yindex = Math.floor(frame / this.sheetWidth);
+
+    ctx.drawImage(this.spriteSheet,
+                 xindex * this.frameWidth, yindex * this.frameHeight,  // source from sheet
+                 this.frameWidth, this.frameHeight,
+                 x, y,
+                 this.frameWidth * this.scale,
+                 this.frameHeight * this.scale);
+}
+
+Animation.prototype.updateEntity = function (entity) {
+	if(entity.game.controlEntity.x !== null) {
+		//dungeon/8 = half a visible screen, 0.5 = character scale ratio
+		entity.screenX = entity.x - entity.game.backgroundEntity.x;
+		entity.screenY = entity.y - entity.game.backgroundEntity.y;
+	}
+}
+
+// no inheritance
+function Background(game, spritesheet) {
+    this.x = 0;
+    this.y = 0;
+    this.entityID = 0;
+    this.spritesheet = spritesheet;
+    this.game = game;
+    this.layer = 1;
+    this.control = false;
+    this.ctx = game.ctx;
+};
+
+Background.prototype.draw = function () {
+	//context.drawImage(img,sx,sy,swidth,sheight,x,y,width,height);
+	var width = Math.floor(dungeonWidth/4);
+	var heigth = Math.floor(dungeonHeight/4);
+    this.ctx.drawImage(this.spritesheet,this.x, this.y, width, heigth,
+    		0, 0, width, heigth);
+};
+
+Background.prototype.update = function () {
+	if(this.game.controlEntity.x !== null) {
+		//dungeon/8 = half a visible screen, 0.5 = character scale ratio
+		var newX = this.game.controlEntity.x - Math.floor(dungeonWidth/8  - (64 / 2));
+	    var newY = this.game.controlEntity.y - Math.floor(dungeonHeight/8 - (64 / 2));
+		
+	    //dungeonWidth/4 one visible screen width
+		if(newX >= 0 && newX <= (dungeonWidth - dungeonWidth/4)) {
+			this.x = newX;
+		}
+		if(newY >= 0 && newY <= (dungeonHeight - dungeonHeight/4) ) {
+			this.y = newY;
+		}
+	}
+	else {
+		alert("Alert: Board Not updated, when Arrow was moved.");
+	}
+	Entity.prototype.update.call(this);
+};
+
+//no inheritance
+function Collidable_background(game, spritesheet) {
+    this.x = 0;
+    this.y = 0;
+    this.entityID = 3;
+    this.spritesheet = spritesheet;
+    this.game = game;
+    this.layer = 2;
+    this.ctx = game.ctx;
+};
+
+Collidable_background.prototype.draw = function () {
+	//context.drawImage(img,sx,sy,swidth,sheight,x,y,width,height);
+	var width = Math.floor(dungeonWidth/4);
+	var heigth = Math.floor(dungeonHeight/4);
+    this.ctx.drawImage(this.spritesheet,this.x, this.y, width, heigth,
+    		0, 0, width, heigth);
+};
+
+Collidable_background.prototype.update = function () {
+	if(this.game.controlEntity.x !== null) {
+		//dungeon/8 = half a visible screen, 0.5 = character scale ratio
+		var newX = this.game.controlEntity.x - Math.floor(dungeonWidth/8  - (64 / 2));
+	    var newY = this.game.controlEntity.y - Math.floor(dungeonHeight/8 - (64 / 2));
+		
+	    //dungeonWidth/4 one visible screen width
+		if(newX >= 0 && newX <= (dungeonWidth - dungeonWidth/4)) {
+			this.x = newX;
+		}
+		if(newY >= 0 && newY <= (dungeonHeight - dungeonHeight/4) ) {
+			this.y = newY;
+		}
+	}
+	else {
+		alert("Alert: Board Not updated, when Arrow was moved.");
+	}
+	Entity.prototype.update.call(this);
+};
+
+function Werewolf(game, spritesheet) {
+    this.animation = new Animation(spritesheet, 64, 64, 4, 0.20, 16, true, 1);
+    this.x = 300;
+    this.y = 300;
+    this.screenX = this.x;
+    this.screenY = this.y;
+    this.entityID = 4;
+    this.layer = 3;
+    this.speed = 0;
+    this.game = game;
+    this.ctx = game.ctx;
+}
+
+Werewolf.prototype.draw = function () {
+    this.animation.drawEntity(this.game.clockTick, this.ctx, this.screenX, this.screenY);
+}
+
+Werewolf.prototype.update = function () {
+	//Updates the entities screenX and screenY using it's x and y against the background
+	this.animation.updateEntity(this);
+	
+	Entity.prototype.update.call(this);
+}
+
+function Player(game, spritesheet) {
+	this.spriteSquareSize = 64;
+	this.scale = 1;
+	//Animation: spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale
+    this.animation = new Animation(spritesheet, this.spriteSquareSize, this.spriteSquareSize, 9, 0.1, 32, true, this.scale);
+    this.x = 235;
+    this.y = 215;
+    this.w = false;
+    this.s = false;
+    this.a = false;
+    this.d = false;
+    this.regSpeed = 325;
+    this.speedX = 0;
+    this.speedY = 0;
+    this.game = game;
+    this.layer = 4;
+    this.entityID = 1;
+    this.ctx = game.ctx;
+}
+
+Player.prototype.draw = function () {
+    this.animation.drawPlayer(this.game.clockTick, this.ctx, this.x, this.y, this);
+}
+
+Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
 	
     this.elapsedTime += tick;
     if (this.isDone()) {
@@ -91,116 +253,6 @@ Animation.prototype.drawFrame = function (tick, ctx, x, y, entity) {
                  this.frameHeight * this.scale);
 }
 
-Animation.prototype.currentFrame = function () {
-    return Math.floor(this.elapsedTime / this.frameDuration);
-}
-
-Animation.prototype.isDone = function () {
-    return (this.elapsedTime >= this.totalTime);
-}
-
-// no inheritance
-function Background(game, spritesheet) {
-    this.x = 0;
-    this.y = 0;
-    this.spritesheet = spritesheet;
-    this.game = game;
-    this.layer = 1;
-    this.control = false;
-    this.ctx = game.ctx;
-};
-
-Background.prototype.draw = function () {
-	//context.drawImage(img,sx,sy,swidth,sheight,x,y,width,height);
-	var width = Math.floor(dungeonWidth/4);
-	var heigth = Math.floor(dungeonHeight/4);
-    this.ctx.drawImage(this.spritesheet,this.x, this.y, width, heigth,
-    		0, 0, width, heigth);
-};
-
-Background.prototype.update = function () {
-	if(this.game.controlEntity.x !== null) {
-		//dungeon/8 = half a visible screen, 0.5 = character scale ratio
-		var newX = this.game.controlEntity.x - Math.floor(dungeonWidth/8  - (64 / 2));
-	    var newY = this.game.controlEntity.y - Math.floor(dungeonHeight/8 - (64 / 2));
-		
-	    //dungeonWidth/4 one visible screen width
-		if(newX >= 0 && newX <= (dungeonWidth - dungeonWidth/4)) {
-			this.x = newX;
-		}
-		if(newY >= 0 && newY <= (dungeonHeight - dungeonHeight/4) ) {
-			this.y = newY;
-		}
-	}
-	else {
-		alert("Alert: Board Not updated, when Arrow was moved.");
-	}
-	Entity.prototype.update.call(this);
-};
-
-//no inheritance
-function Collidable_background(game, spritesheet) {
-    this.x = 0;
-    this.y = 0;
-    this.spritesheet = spritesheet;
-    this.game = game;
-    this.layer = 2;
-    this.control = false;
-    this.ctx = game.ctx;
-};
-
-Collidable_background.prototype.draw = function () {
-	//context.drawImage(img,sx,sy,swidth,sheight,x,y,width,height);
-	var width = Math.floor(dungeonWidth/4);
-	var heigth = Math.floor(dungeonHeight/4);
-    this.ctx.drawImage(this.spritesheet,this.x, this.y, width, heigth,
-    		0, 0, width, heigth);
-};
-
-Collidable_background.prototype.update = function () {
-	if(this.game.controlEntity.x !== null) {
-		//dungeon/8 = half a visible screen, 0.5 = character scale ratio
-		var newX = this.game.controlEntity.x - Math.floor(dungeonWidth/8  - (64 / 2));
-	    var newY = this.game.controlEntity.y - Math.floor(dungeonHeight/8 - (64 / 2));
-		
-	    //dungeonWidth/4 one visible screen width
-		if(newX >= 0 && newX <= (dungeonWidth - dungeonWidth/4)) {
-			this.x = newX;
-		}
-		if(newY >= 0 && newY <= (dungeonHeight - dungeonHeight/4) ) {
-			this.y = newY;
-		}
-	}
-	else {
-		alert("Alert: Board Not updated, when Arrow was moved.");
-	}
-	Entity.prototype.update.call(this);
-};
-
-function Player(game, spritesheet) {
-	this.spriteSquareSize = 64;
-	this.scale = 1;
-	//Animation: spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale
-    this.animation = new Animation(spritesheet, this.spriteSquareSize, this.spriteSquareSize, 9, 0.1, 32, true, this.scale);
-    this.x = 235;
-    this.y = 215;
-    this.w = false;
-    this.s = false;
-    this.a = false;
-    this.d = false;
-    this.regSpeed = 125;
-    this.speedX = 0;
-    this.speedY = 0;
-    this.game = game;
-    this.layer = 3;
-    this.control = true;
-    this.ctx = game.ctx;
-}
-
-Player.prototype.draw = function () {
-    this.animation.drawFrame(this.game.clockTick, this.ctx, this.x, this.y, this);
-}
-
 Player.prototype.update = function () {
     if (this.animation.elapsedTime < this.animation.totalTime) {
         var currentAdjust = this.game.clockTick * this.speed;
@@ -270,6 +322,7 @@ Player.prototype.update = function () {
 AM.queueDownload("./img/player.png");
 AM.queueDownload("./img/GrassOnlyBackground.png");
 AM.queueDownload("./img/collidable_background.png");
+AM.queueDownload("./img/werewolf.png");
 
 AM.downloadAll(function () {
     var canvas = document.getElementById("gameWorld");
@@ -281,7 +334,8 @@ AM.downloadAll(function () {
 
     gameEngine.addEntity(new Player(gameEngine, AM.getAsset("./img/player.png")));
     gameEngine.addEntity(new Background(gameEngine, AM.getAsset("./img/GrassOnlyBackground.png")));
-    gameEngine.addEntity(new Background(gameEngine, AM.getAsset("./img/collidable_background.png")));
+    gameEngine.addEntity(new Collidable_background(gameEngine, AM.getAsset("./img/collidable_background.png")));
+    gameEngine.addEntity(new Werewolf(gameEngine, AM.getAsset("./img/werewolf.png")));
     
     console.log("All Done!");
 });
