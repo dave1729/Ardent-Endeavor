@@ -107,7 +107,7 @@ Battle.prototype.update = function () {
         this.cursor.good = true;
         if(this.game.click)
         {
-            this.game.addEntity(new Player(this.game, this.game.click.x, this.game.click.y, this.cursor))
+            this.game.addEntity(new Player(this.game, this.game.click.x, this.game.click.y, this.cursor, this))
             this.playerCount++;
             this.game.click = undefined;
         }
@@ -131,32 +131,84 @@ Battle.prototype.spawnEnemies = function () {
     
     this.game.addEntity(new Enemy(this.game, loc.next().value, loc.next().value, this.cursor))
     this.game.addEntity(new Enemy(this.game, loc.next().value, loc.next().value, this.cursor))
-    
+    this.game.addEntity(new Enemy(this.game, loc.next().value, loc.next().value, this.cursor))
+    this.game.addEntity(new Enemy(this.game, loc.next().value, loc.next().value, this.cursor))
+    this.game.addEntity(new Enemy(this.game, loc.next().value, loc.next().value, this.cursor))
+    this.game.addEntity(new Enemy(this.game, loc.next().value, loc.next().value, this.cursor))
+    this.game.addEntity(new Enemy(this.game, loc.next().value, loc.next().value, this.cursor))
+    this.game.addEntity(new Enemy(this.game, loc.next().value, loc.next().value, this.cursor))
+            
 }
 
-function Player(game, x, y, cursor) {
+function Player(game, x, y, cursor, battle) {
     this.game = game;
+    this.battle = battle;
     this.x = x;
     this.y = y;
+    this.selected = false;
     this.cursor = cursor;
 }
 
-Player.prototype.update = function (ctx) {
-    // if(this.cursor.x == this.x && this.cursor.y === this.y)
-    // {
-    //     console.log("help")
-    //     this.removeFromWorld = true;
-    // }
+Player.prototype.update = function () 
+{
+    if (this.selected)
+    {
+        if (this.game.click)
+        {
+            this.x = this.cursor.x;
+            this.y = this.cursor.y;
+            this.selected = false;
+            this.game.selected = false;
+            this.game.click = undefined;
+        }
+        //console.log("I am selected")
+        if (this.game.rclick)
+        {
+            // console.log("I removed you")
+            this.selected = false;
+            this.game.selected = false;
+            this.game.rclick = undefined;
+        }
+    }
+    else if(this.game.click)
+    {
+        // console.log("we are on top")
+        
+        if (this.cursor.x == this.x && this.cursor.y === this.y)
+        {
+            // console.log("I clicked you")
+            if (!this.game.selected)
+            {
+                // console.log("your selected")
+                this.selected = true;
+                this.game.selected = true;
+            }
+            this.game.click = undefined;
+        }
+    }
+   
 }
 
 Player.prototype.draw = function (ctx) {
     // console.log("help");
     ctx.beginPath();
-                ctx.strokeStyle = "rgba(0, 0, 255, 1)";  
-            ctx.fillStyle  = "rgba(0, 0, 255, 1)";      
+    if(this.selected)
+    {
+        ctx.fillStyle = "rgba(0, 255, 0, 1)";
+    }
+    else
+    {
+        ctx.fillStyle = "rgba(0, 0, 255, 1)";  
+    }
+    ctx.strokeStyle  = "rgba(0, 0, 255, 1)";      
     ctx.arc(this.x * 64 + 32,this.y * 64 + 32, 32, 0, 2*Math.PI);
     ctx.closePath();
     ctx.fill();
+}
+
+Player.prototype.nextToEnemy = () =>
+{
+    
 }
 
 
@@ -168,7 +220,7 @@ function Enemy(game, x, y, cursor)
     this.cursor = cursor;
     //this.layer = 3;
 }
-Enemy.prototype.update = function (ctx) {
+Enemy.prototype.update = function () {
     if(this.cursor.x == this.x && this.cursor.y === this.y)
     {
         this.removeFromWorld = true;
@@ -178,9 +230,9 @@ Enemy.prototype.update = function (ctx) {
 Enemy.prototype.draw = function (ctx) {
     // console.log("help");
     ctx.beginPath();
-                ctx.strokeStyle = "rgba(255, 0, 0, 1)";
-            ctx.fillStyle  = "rgba(255, 0, 0, 1)";
-    ctx.arc(this.x * 64 + 32,this.y * 64 + 32, 32, 0, 2*Math.PI);
+    ctx.strokeStyle = "rgba(255, 0, 0, 1)";
+    ctx.fillStyle  = "rgba(255, 0, 0, 1)";             
+    ctx.arc(this.x * 64 + 32,this.y * 64 + 32, 32, 0, 2 * Math.PI);
     ctx.closePath();
     ctx.fill();
 }

@@ -68,7 +68,7 @@ GameEngine.prototype.startInput = function () {
     }, false);
 
     this.ctx.canvas.addEventListener("contextmenu", function (e) {
-        that.click = getXandY(e);
+        that.rclick = getXandY(e);
         //console.log(e);
         //console.log("Right Click Event - X,Y " + e.clientX + ", " + e.clientY);
         e.preventDefault();
@@ -104,9 +104,9 @@ GameEngine.prototype.startInput = function () {
             }
         }
         if (e.which === 66)
-            {
-                that.b = true;
-            }
+        {
+            that.b = true;
+        }
         
     }, false);
 
@@ -148,6 +148,9 @@ GameEngine.prototype.startInput = function () {
 GameEngine.prototype.addEntity = function (entity) {
     console.log('added entity');
     this.entities.push(entity);
+    // this.entities.sort((a, b) => {
+    //     return b - a;
+    // });
     if(entity.control === true) this.controlEntity = entity;
 }
 
@@ -156,12 +159,12 @@ GameEngine.prototype.draw = function () {
     this.ctx.save();
     
     //Sort entities by layer
-    this.entities.sort(
-            function(x, y)
-            {
-            	return x.layer - y.layer;
-            }
-          );
+    // this.entities.sort(
+    //         function(x, y)
+    //         {
+    //         	return x.layer - y.layer;
+    //         }
+    //       );
     
     for (var i = 0; i < this.entities.length; i++) {
     	this.entities[i].draw(this.ctx);
