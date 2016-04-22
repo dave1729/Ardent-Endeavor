@@ -31,37 +31,37 @@ Animation.prototype.drawFrame = function (tick, ctx, x, y, entity) {
     xindex = frame % this.sheetWidth;
     
     if(entity.w && entity.a) {
-    	yindex = 4;
+    	yindex = 8;
     }
     else if(entity.w && entity.d) {
-    	yindex = 6;
+    	yindex = 8;
     }
     else if(entity.s && entity.a) {
-    	yindex = 5;
+    	yindex = 10;
     }
     else if(entity.s && entity.d) {
-    	yindex = 7;
+    	yindex = 10;
     }
     else if(entity.w) {
-    	yindex = 3;
+    	yindex = 8;
     }
     else if(entity.s) {
-    	yindex = 2;
+    	yindex = 10;
     }
     else if(entity.a) {
-    	yindex = 1;
+    	yindex = 9;
     }
     else if(entity.d) {
-    	yindex = 0;
+    	yindex = 11;
     }
     else {
-    	yindex = 2;
+    	yindex = 10;
     }
     
     var tempX = x;
     var tempY = y;
-    var centerX = Math.floor(dungeonWidth/8  - (85 * 0.5 / 2));
-    var centerY = Math.floor(dungeonHeight/8 - (85 * 0.5 / 2));
+    var centerX = Math.floor(dungeonWidth/8  - (64 / 2));
+    var centerY = Math.floor(dungeonHeight/8 - (64 / 2));
     
     //centering circle for testing
     if(testingMode) {
@@ -121,8 +121,8 @@ Background.prototype.draw = function () {
 Background.prototype.update = function () {
 	if(this.game.controlEntity.x !== null) {
 		//dungeon/8 = half a visible screen, 0.5 = character scale ratio
-		var newX = this.game.controlEntity.x - Math.floor(dungeonWidth/8  - (85 * 0.5 / 2));
-	    var newY = this.game.controlEntity.y - Math.floor(dungeonHeight/8 - (85 * 0.5 / 2));
+		var newX = this.game.controlEntity.x - Math.floor(dungeonWidth/8  - (64 / 2));
+	    var newY = this.game.controlEntity.y - Math.floor(dungeonHeight/8 - (64 / 2));
 		
 	    //dungeonWidth/4 one visible screen width
 		if(newX >= 0 && newX <= (dungeonWidth - dungeonWidth/4)) {
@@ -160,8 +160,8 @@ Collidable_background.prototype.draw = function () {
 Collidable_background.prototype.update = function () {
 	if(this.game.controlEntity.x !== null) {
 		//dungeon/8 = half a visible screen, 0.5 = character scale ratio
-		var newX = this.game.controlEntity.x - Math.floor(dungeonWidth/8  - (85 * 0.5 / 2));
-	    var newY = this.game.controlEntity.y - Math.floor(dungeonHeight/8 - (85 * 0.5 / 2));
+		var newX = this.game.controlEntity.x - Math.floor(dungeonWidth/8  - (64 / 2));
+	    var newY = this.game.controlEntity.y - Math.floor(dungeonHeight/8 - (64 / 2));
 		
 	    //dungeonWidth/4 one visible screen width
 		if(newX >= 0 && newX <= (dungeonWidth - dungeonWidth/4)) {
@@ -177,18 +177,18 @@ Collidable_background.prototype.update = function () {
 	Entity.prototype.update.call(this);
 };
 
-function Arrow(game, spritesheet) {
-	this.spriteSquareSize = 85;
-	this.scale = 0.5;
+function Player(game, spritesheet) {
+	this.spriteSquareSize = 64;
+	this.scale = 1;
 	//Animation: spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale
-    this.animation = new Animation(spritesheet, this.spriteSquareSize, this.spriteSquareSize, 4, 0.2, 32, true, this.scale);
+    this.animation = new Animation(spritesheet, this.spriteSquareSize, this.spriteSquareSize, 9, 0.1, 32, true, this.scale);
     this.x = 235;
     this.y = 215;
     this.w = false;
     this.s = false;
     this.a = false;
     this.d = false;
-    this.regSpeed = 450;
+    this.regSpeed = 125;
     this.speedX = 0;
     this.speedY = 0;
     this.game = game;
@@ -197,11 +197,11 @@ function Arrow(game, spritesheet) {
     this.ctx = game.ctx;
 }
 
-Arrow.prototype.draw = function () {
+Player.prototype.draw = function () {
     this.animation.drawFrame(this.game.clockTick, this.ctx, this.x, this.y, this);
 }
 
-Arrow.prototype.update = function () {
+Player.prototype.update = function () {
     if (this.animation.elapsedTime < this.animation.totalTime) {
         var currentAdjust = this.game.clockTick * this.speed;
     	
@@ -257,17 +257,17 @@ Arrow.prototype.update = function () {
 //	    }
 	    
 	    //dungeon/8 = half a visible screen, 0.5 = character scale ratio
-	    if(newX > 0 && newX < dungeonWidth - (85 * 0.5)) {
+	    if(newX > 0 && newX < dungeonWidth - 64) {
 	    	this.x += this.game.clockTick * this.speedX;
 	    }
-	    if(newY > 0 && newY < dungeonHeight - (85 * 0.5)) {
+	    if(newY > 0 && newY < dungeonHeight - 64) {
 	    	this.y += this.game.clockTick * this.speedY;
 	    }
     }
     Entity.prototype.update.call(this);
 }
 
-AM.queueDownload("./img/ArrowSpriteSheet.png");
+AM.queueDownload("./img/player.png");
 AM.queueDownload("./img/GrassOnlyBackground.png");
 AM.queueDownload("./img/collidable_background.png");
 
@@ -279,7 +279,7 @@ AM.downloadAll(function () {
     gameEngine.init(ctx);
     gameEngine.start();
 
-    gameEngine.addEntity(new Arrow(gameEngine, AM.getAsset("./img/ArrowSpriteSheet.png")));
+    gameEngine.addEntity(new Player(gameEngine, AM.getAsset("./img/player.png")));
     gameEngine.addEntity(new Background(gameEngine, AM.getAsset("./img/GrassOnlyBackground.png")));
     gameEngine.addEntity(new Background(gameEngine, AM.getAsset("./img/collidable_background.png")));
     
