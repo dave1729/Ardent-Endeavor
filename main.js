@@ -28,22 +28,26 @@ Animation.prototype.isDone = function () {
 }
 
 Animation.prototype.drawEntity = function (tick, ctx, x, y) {
-    this.elapsedTime += tick;
-    if (this.isDone()) {
-        if (this.loop) this.elapsedTime = 0;
-    }
-    var frame = this.currentFrame();
-    var xindex = 0;
-    var yindex = 0;
-    xindex = frame % this.sheetWidth;
-    yindex = Math.floor(frame / this.sheetWidth);
-
-    ctx.drawImage(this.spriteSheet,
-                 xindex * this.frameWidth, yindex * this.frameHeight,  // source from sheet
-                 this.frameWidth, this.frameHeight,
-                 x, y,
-                 this.frameWidth * this.scale,
-                 this.frameHeight * this.scale);
+	//only draw if it's gonna be vivible
+	if((x + this.frameWidth) > 0 && x < dungeonWidth/4 &&
+	   (y + this.frameHeight) > 0 && y < dungeonHeight/4) {
+	    this.elapsedTime += tick;
+	    if (this.isDone()) {
+	        if (this.loop) this.elapsedTime = 0;
+	    }
+	    var frame = this.currentFrame();
+	    var xindex = 0;
+	    var yindex = 0;
+	    xindex = frame % this.sheetWidth;
+	    yindex = Math.floor(frame / this.sheetWidth);
+	
+	    ctx.drawImage(this.spriteSheet,
+	                 xindex * this.frameWidth, yindex * this.frameHeight,  // source from sheet
+	                 this.frameWidth, this.frameHeight,
+	                 x, y,
+	                 this.frameWidth * this.scale,
+	                 this.frameHeight * this.scale);
+	}
 }
 
 Animation.prototype.updateEntity = function (entity) {
