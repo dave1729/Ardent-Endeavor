@@ -273,6 +273,7 @@ AM.queueDownload("./img/collidable_background.png");
 
 AM.downloadAll(function () {
     var canvas = document.getElementById("gameWorld");
+    canvas.focus();
     var ctx = canvas.getContext("2d");
 
     var gameEngine = new GameEngine();

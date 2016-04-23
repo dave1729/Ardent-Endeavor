@@ -42,6 +42,7 @@ function Cursor (game, map)
 {
     this.game = game;
     this.visible = false;
+    this.goodAttack = false;
     this.x = 0;
     this.y = 0;
 }
@@ -107,9 +108,12 @@ Battle.prototype.update = function () {
         this.cursor.good = true;
         if(this.game.click)
         {
-            this.game.addEntity(new Player(this.game, this.game.click.x, this.game.click.y, this.cursor, this))
-            this.playerCount++;
-            this.game.click = undefined;
+            if (this.cursor.x === 0 && (this.cursor.y === 2 || this.cursor.y === 3 || this.cursor.y === 4))
+            {
+                this.game.addEntity(new Player(this.game, this.game.click.x, this.game.click.y, this.cursor, this))
+                this.playerCount++;
+                this.game.click = undefined;
+            }
         }
         if(this.playerCount === 3)
         {
@@ -120,6 +124,14 @@ Battle.prototype.update = function () {
 }
 
 Battle.prototype.draw = function (ctx) {
+    if (this.game.b && this.playerCount !== 3)
+    {
+        ctx.strokeStyle  = "rgba(0, 255, 0, 0.4)"; 
+        ctx.fillStyle  = "rgba(0, 255, 0, 0.4)";      
+        ctx.fillRect(0, 2 * 64, 64, 64);
+        ctx.fillRect(0, 3 * 64, 64, 64);    
+        ctx.fillRect(0, 4 * 64, 64, 64);        
+    }
 }
 
 Battle.prototype.disableInput = function () {
@@ -127,22 +139,23 @@ Battle.prototype.disableInput = function () {
 }
 
 Battle.prototype.spawnEnemies = function () {
-    var loc = positionMaker(0, 6);
-    
+    var loc = positionMaker(1, 6);
     this.game.addEntity(new Enemy(this.game, loc.next().value, loc.next().value, this.cursor))
     this.game.addEntity(new Enemy(this.game, loc.next().value, loc.next().value, this.cursor))
     this.game.addEntity(new Enemy(this.game, loc.next().value, loc.next().value, this.cursor))
-    this.game.addEntity(new Enemy(this.game, loc.next().value, loc.next().value, this.cursor))
-    this.game.addEntity(new Enemy(this.game, loc.next().value, loc.next().value, this.cursor))
-    this.game.addEntity(new Enemy(this.game, loc.next().value, loc.next().value, this.cursor))
-    this.game.addEntity(new Enemy(this.game, loc.next().value, loc.next().value, this.cursor))
-    this.game.addEntity(new Enemy(this.game, loc.next().value, loc.next().value, this.cursor))
+    // this.game.addEntity(new Enemy(this.game, loc.next().value, loc.next().value, this.cursor))
+    // this.game.addEntity(new Enemy(this.game, loc.next().value, loc.next().value, this.cursor))
+    // this.game.addEntity(new Enemy(this.game, loc.next().value, loc.next().value, this.cursor))
+    // this.game.addEntity(new Enemy(this.game, loc.next().value, loc.next().value, this.cursor))
+    // this.game.addEntity(new Enemy(this.game, loc.next().value, loc.next().value, this.cursor))
             
 }
 
 function Player(game, x, y, cursor, battle) {
     this.game = game;
     this.battle = battle;
+    this.moved = false;
+    this.attack = false;
     this.x = x;
     this.y = y;
     this.selected = false;
@@ -153,14 +166,46 @@ Player.prototype.update = function ()
 {
     if (this.selected)
     {
+        
         if (this.game.click)
         {
-            this.x = this.cursor.x;
-            this.y = this.cursor.y;
-            this.selected = false;
-            this.game.selected = false;
-            this.game.click = undefined;
+            if(!this.moved)
+            {
+                if(this.x !== this.cursor.x || this.y !== this.cursor.y)
+                {
+                    this.x = this.cursor.x;
+                    this.y = this.cursor.y;
+                    this.selected = false;
+                    this.game.selected = false;
+                    this.moved = true;
+                    this.game.click = undefined;
+                }
+            }
         }
+         if (!this.attack && this.moved)
+            {
+                if(this.game.click)
+                    if(((this.x + 1) === this.cursor.x && this.y === this.cursor.y) ||
+                    ((this.x - 1) === this.cursor.x && this.y === this.cursor.y) ||
+                    (this.x === this.cursor.x && (this.y + 1) === this.cursor.y) ||
+                    (this.x === this.cursor.x && (this.y - 1) === this.cursor.y))
+                    {
+                        // this.attack = true;
+                        this.cursor.attack = {x: this.cursor.x, y: this.cursor.y};
+                    }
+            }
+            
+            if(this.cursor.goodAttack)
+            {
+                this.attack = true;
+                this.selected = false;
+                this.game.selected = false;
+                this.cursor.goodAttack = false;
+            }
+            // else
+            // {
+            //     this.attack = false;
+            // }
         //console.log("I am selected")
         if (this.game.rclick)
         {
@@ -190,10 +235,23 @@ Player.prototype.update = function ()
 }
 
 Player.prototype.draw = function (ctx) {
+    
     // console.log("help");
     ctx.beginPath();
-    if(this.selected)
+    if (this.selected)
     {
+        if (this.moved)
+        {
+            ctx.strokeStyle  = "rgba(255, 0, 255, 1)";    
+            ctx.fillStyle = "rgba(255, 0, 255, 0.5)";
+            if(!this.attack)
+            {
+                ctx.fillRect((this.x + 1) * 64, this.y * 64, 64, 64);
+                ctx.fillRect((this.x - 1) * 64, this.y * 64, 64, 64);
+                ctx.fillRect(this.x * 64, (this.y + 1) * 64, 64, 64);
+                ctx.fillRect(this.x * 64, (this.y - 1) * 64, 64, 64);
+            } 
+        }
         ctx.fillStyle = "rgba(0, 255, 0, 1)";
     }
     else
@@ -206,12 +264,6 @@ Player.prototype.draw = function (ctx) {
     ctx.fill();
 }
 
-Player.prototype.nextToEnemy = () =>
-{
-    
-}
-
-
 function Enemy(game, x, y, cursor)
 {
     this.game = game;
@@ -221,9 +273,13 @@ function Enemy(game, x, y, cursor)
     //this.layer = 3;
 }
 Enemy.prototype.update = function () {
-    if(this.cursor.x == this.x && this.cursor.y === this.y)
+    if(this.cursor.attack)
     {
-        this.removeFromWorld = true;
+        if((this.cursor.attack.x === this.x) && (this.cursor.attack.y === this.y))
+        {
+            this.cursor.goodAttack = true;
+            this.removeFromWorld = true;
+        }
     }
 }
 

@@ -52,7 +52,6 @@ GameEngine.prototype.startInput = function () {
             x = Math.floor(x / 64);
             y = Math.floor(y / 64);
         // }
-
         return { x: x, y: y };
     }
 
@@ -63,12 +62,12 @@ GameEngine.prototype.startInput = function () {
     this.ctx.canvas.addEventListener("click", function (e) {
         if(that.b)
             that.click = getXandY(e);
-        //console.log(e);
         //console.log("Left Click Event - X,Y " + e.clientX + ", " + e.clientY);
     }, false);
 
     this.ctx.canvas.addEventListener("contextmenu", function (e) {
-        that.rclick = getXandY(e);
+        if(that.b)
+            that.rclick = getXandY(e);
         //console.log(e);
         //console.log("Right Click Event - X,Y " + e.clientX + ", " + e.clientY);
         e.preventDefault();
@@ -188,6 +187,7 @@ GameEngine.prototype.update = function () {
             this.entities.splice(i, 1);
         }
     }
+    this.click = undefined;
 }
 
 GameEngine.prototype.loop = function () {
