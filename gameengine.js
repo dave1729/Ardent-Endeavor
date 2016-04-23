@@ -135,19 +135,26 @@ GameEngine.prototype.addEntity = function (entity) {
     this.entities.push(entity);
     if(entity.entityID === 1) this.controlEntity = entity;
     if(entity.entityID === 0) this.backgroundEntity = entity;
+    //Sort entities by layer
+    this.entities.sort(
+    		function(x, y)
+            {
+            	return x.layer - y.layer;
+            }
+    );
 }
 
 GameEngine.prototype.draw = function () {
     this.ctx.clearRect(0, 0, this.surfaceWidth, this.surfaceHeight);
     this.ctx.save();
     
-    //Sort entities by layer
-    this.entities.sort(
-            function(x, y)
-            {
-            	return x.layer - y.layer;
-            }
-          );
+//    //Sort entities by layer
+//    this.entities.sort(
+//            function(x, y)
+//            {
+//            	return x.layer - y.layer;
+//            }
+//          );
     
     for (var i = 0; i < this.entities.length; i++) {
     	this.entities[i].draw(this.ctx);
