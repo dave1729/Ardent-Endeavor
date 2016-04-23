@@ -94,7 +94,7 @@ function Battle(game, cursor)
     this.game = game;
     this.enemiesSpawned = false;
     this.cursor = cursor;
-    this.playerCount = 0;
+    this.BlueCount = 0;
 }
 
 Battle.prototype.update = function () {
@@ -103,19 +103,19 @@ Battle.prototype.update = function () {
         this.spawnEnemies();
         this.enemiesSpawned = true;
     }
-    if (this.game.b && this.playerCount < 3)
+    if (this.game.b && this.BlueCount < 3)
     {
         this.cursor.good = true;
         if(this.game.click)
         {
             if (this.cursor.x === 0 && (this.cursor.y === 2 || this.cursor.y === 3 || this.cursor.y === 4))
             {
-                this.game.addEntity(new Player(this.game, this.game.click.x, this.game.click.y, this.cursor, this))
-                this.playerCount++;
+                this.game.addEntity(new Blue(this.game, this.game.click.x, this.game.click.y, this.cursor, this))
+                this.BlueCount++;
                 this.game.click = undefined;
             }
         }
-        if(this.playerCount === 3)
+        if(this.BlueCount === 3)
         {
             this.cursor.good = false;
         }
@@ -124,7 +124,7 @@ Battle.prototype.update = function () {
 }
 
 Battle.prototype.draw = function (ctx) {
-    if (this.game.b && this.playerCount !== 3)
+    if (this.game.b && this.BlueCount !== 3)
     {
         ctx.strokeStyle  = "rgba(0, 255, 0, 0.4)"; 
         ctx.fillStyle  = "rgba(0, 255, 0, 0.4)";      
@@ -140,18 +140,18 @@ Battle.prototype.disableInput = function () {
 
 Battle.prototype.spawnEnemies = function () {
     var loc = positionMaker(1, 6);
-    this.game.addEntity(new Enemy(this.game, loc.next().value, loc.next().value, this.cursor))
-    this.game.addEntity(new Enemy(this.game, loc.next().value, loc.next().value, this.cursor))
-    this.game.addEntity(new Enemy(this.game, loc.next().value, loc.next().value, this.cursor))
-    // this.game.addEntity(new Enemy(this.game, loc.next().value, loc.next().value, this.cursor))
-    // this.game.addEntity(new Enemy(this.game, loc.next().value, loc.next().value, this.cursor))
-    // this.game.addEntity(new Enemy(this.game, loc.next().value, loc.next().value, this.cursor))
-    // this.game.addEntity(new Enemy(this.game, loc.next().value, loc.next().value, this.cursor))
-    // this.game.addEntity(new Enemy(this.game, loc.next().value, loc.next().value, this.cursor))
+    this.game.addEntity(new Red(this.game, loc.next().value, loc.next().value, this.cursor))
+    this.game.addEntity(new Red(this.game, loc.next().value, loc.next().value, this.cursor))
+    this.game.addEntity(new Red(this.game, loc.next().value, loc.next().value, this.cursor))
+    // this.game.addEntity(new Red(this.game, loc.next().value, loc.next().value, this.cursor))
+    // this.game.addEntity(new Red(this.game, loc.next().value, loc.next().value, this.cursor))
+    // this.game.addEntity(new Red(this.game, loc.next().value, loc.next().value, this.cursor))
+    // this.game.addEntity(new Red(this.game, loc.next().value, loc.next().value, this.cursor))
+    // this.game.addEntity(new Red(this.game, loc.next().value, loc.next().value, this.cursor))
             
 }
 
-function Player(game, x, y, cursor, battle) {
+function Blue(game, x, y, cursor, battle) {
     this.game = game;
     this.battle = battle;
     this.moved = false;
@@ -162,7 +162,7 @@ function Player(game, x, y, cursor, battle) {
     this.cursor = cursor;
 }
 
-Player.prototype.update = function () 
+Blue.prototype.update = function () 
 {
     if (this.selected)
     {
@@ -234,7 +234,7 @@ Player.prototype.update = function ()
    
 }
 
-Player.prototype.draw = function (ctx) {
+Blue.prototype.draw = function (ctx) {
     
     // console.log("help");
     ctx.beginPath();
@@ -264,7 +264,7 @@ Player.prototype.draw = function (ctx) {
     ctx.fill();
 }
 
-function Enemy(game, x, y, cursor)
+function Red(game, x, y, cursor)
 {
     this.game = game;
     this.x = x;
@@ -272,7 +272,7 @@ function Enemy(game, x, y, cursor)
     this.cursor = cursor;
     //this.layer = 3;
 }
-Enemy.prototype.update = function () {
+Red.prototype.update = function () {
     if(this.cursor.attack)
     {
         if((this.cursor.attack.x === this.x) && (this.cursor.attack.y === this.y))
@@ -283,7 +283,7 @@ Enemy.prototype.update = function () {
     }
 }
 
-Enemy.prototype.draw = function (ctx) {
+Red.prototype.draw = function (ctx) {
     // console.log("help");
     ctx.beginPath();
     ctx.strokeStyle = "rgba(255, 0, 0, 1)";

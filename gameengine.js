@@ -86,9 +86,9 @@ GameEngine.prototype.startInput = function () {
     }, false);
     
     this.ctx.canvas.addEventListener("keydown", function (e) {
-        console.log(e);
-        console.log("Key Down Event - Char " + e.code + " Code " + e.keyCode);
-        if (that.disableInput)
+        // console.log(e);
+        // console.log("Key Down Event - Char " + e.code + " Code " + e.keyCode);
+        if (!that.disableInput)
         {
             if(e.which === 87) {
                 that.controlEntity.w = true;
@@ -105,7 +105,9 @@ GameEngine.prototype.startInput = function () {
         }
         if (e.which === 66)
         {
+            that.removeEntity(1);
             that.b = true;
+            // that.entities = [];
         }
         
     }, false);
@@ -117,9 +119,9 @@ GameEngine.prototype.startInput = function () {
     }, false);
 
     this.ctx.canvas.addEventListener("keyup", function (e) {
-        console.log(e);
-        console.log("Key Up Event - Char " + e.code + " Code " + e.keyCode);
-        if (that.disableInput)
+        // console.log(e);
+        // console.log("Key Up Event - Char " + e.code + " Code " + e.keyCode);
+        if (!that.disableInput)
         {
             if(e.which === 87) {
                 that.controlEntity.w = false;
@@ -157,6 +159,15 @@ GameEngine.prototype.addEntity = function (entity) {
             	return x.layer - y.layer;
             }
     );
+}
+
+GameEngine.prototype.removeEntity = function (id) {
+    this.entities.forEach((entity) => {
+        if(entity.entityID === id)
+        {
+            entity.removeFromWorld = true;
+        }
+    })
 }
 
 GameEngine.prototype.draw = function () {

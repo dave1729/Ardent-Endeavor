@@ -267,7 +267,7 @@ Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
     else if (y >= (screenToMapRatio * dungeonHeight) + centerY) {
     	tempY = y - (screenToMapRatio * dungeonHeight);
     }
-    
+	
     ctx.drawImage(this.spriteSheet,
                  xindex * this.frameWidth, yindex * this.frameHeight,  // source from sheet
                  this.frameWidth, this.frameHeight,
@@ -278,8 +278,8 @@ Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
 	//this.animation.drawPlayer(this.game.clockTick, this.ctx, this.x, this.y, this);
 
 	// Collision Box
-    //this.ctx.strokeStyle = "yellow";
-    //this.ctx.strokeRect(this.x, this.y, 42, 42);
+    ctx.strokeStyle = "yellow";
+    ctx.strokeRect(tempX, tempY, 64, 64);
 }
 
 Player.prototype.update = function () {
