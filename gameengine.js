@@ -148,14 +148,6 @@ GameEngine.prototype.draw = function () {
     this.ctx.clearRect(0, 0, this.surfaceWidth, this.surfaceHeight);
     this.ctx.save();
     
-//    //Sort entities by layer
-//    this.entities.sort(
-//            function(x, y)
-//            {
-//            	return x.layer - y.layer;
-//            }
-//          );
-    
     for (var i = 0; i < this.entities.length; i++) {
     	this.entities[i].draw(this.ctx);
     }
