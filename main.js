@@ -275,12 +275,11 @@ Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
                  this.frameWidth * this.scale,
                  this.frameHeight * this.scale);
 
-	this.animation.drawFrame(this.game.clockTick, this.ctx, this.x, this.y, this);
+	//this.animation.drawPlayer(this.game.clockTick, this.ctx, this.x, this.y, this);
 
 	// Collision Box
-    this.ctx.strokeStyle = "yellow";
-    this.ctx.strokeRect(this.x, this.y, 42, 42);
-
+    //this.ctx.strokeStyle = "yellow";
+    //this.ctx.strokeRect(this.x, this.y, 42, 42);
 }
 
 Player.prototype.update = function () {
