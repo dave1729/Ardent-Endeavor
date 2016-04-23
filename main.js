@@ -297,6 +297,8 @@ AM.queueDownload("./img/player.png");
 AM.queueDownload("./img/GrassOnlyBackground.png");
 AM.queueDownload("./img/collidable_background.png");
 AM.queueDownload("./img/greenrage.png");
+AM.queueDownload("./img/shark.png");
+AM.queueDownload("./img/alienfirebird.png");
 
 AM.downloadAll(function () {
     var canvas = document.getElementById("gameWorld");
@@ -313,5 +315,9 @@ AM.downloadAll(function () {
     gameEngine.addEntity(new MapTeleportEvent(gameEngine, 1, 400, 400, 50, 50, 1, 800, 800));
     gameEngine.addEntity(new MapTeleportEvent(gameEngine, 1, 400, 100, 50, 50, 1, 100, 100));
     gameEngine.addEntity(new Enemy(gameEngine, 1, 100, 100, 60, 56, AM.getAsset("./img/greenrage.png")));
+    gameEngine.addEntity(new Enemy2(gameEngine, 1, 50, 250, 142, 96, AM.getAsset("./img/shark.png")));
+    gameEngine.addEntity(new Enemy3(gameEngine, 1, 200, 400, 96, 86, AM.getAsset("./img/alienfirebird.png")));
+
+    
     console.log("All Done!");
 });

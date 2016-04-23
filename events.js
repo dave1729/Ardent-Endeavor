@@ -104,6 +104,87 @@ Enemy.prototype.collisionTrigger = function (player) {
 }
 
 
+
+
+
+function Enemy2(game, mapid, x, y, w, h, spritesheet) {
+	this.animation = new Animation(spritesheet, 142, 96, 4, 0.1, 16, true, 1.0);
+	this.hitBoxVisible = true;
+	Event.call(this, game, mapid, x, y, w, h);
+}
+
+Enemy2.prototype = new Event();
+Enemy2.prototype.constructor = Enemy2;
+
+Enemy2.prototype.update = function () {
+	//Event.prototype.update.call(this);
+}
+
+Enemy2.prototype.draw = function () {
+	// Visual Debugging of Event Locations
+	this.animation.drawFrameEnemy(this.game.clockTick, this.game.ctx, this.x, this.y);
+
+	if (this.hitBoxVisible) {
+		this.game.ctx.strokeStyle = "cyan";
+	    this.game.ctx.strokeRect(this.x, this.y, this.w, this.h);
+	}
+}
+
+Enemy2.prototype.collisionTrigger = function (player) {
+	console.log("Enemy Collision");
+	// Put logic here for transition to battle scene.
+}
+
+
+
+
+
+
+
+function Enemy3(game, mapid, x, y, w, h, spritesheet) {
+	this.animation = new Animation(spritesheet, 81, 86, 2, 0.15, 4, true, 1.0);
+	this.hitBoxVisible = true;
+	Event.call(this, game, mapid, x, y, w, h);
+}
+
+Enemy3.prototype = new Event();
+Enemy3.prototype.constructor = Enemy3;
+
+Enemy3.prototype.update = function () {
+	//Event.prototype.update.call(this);
+}
+
+Enemy3.prototype.draw = function () {
+	// Visual Debugging of Event Locations
+	this.animation.drawFrameEnemy(this.game.clockTick, this.game.ctx, this.x, this.y);
+
+	if (this.hitBoxVisible) {
+		this.game.ctx.strokeStyle = "cyan";
+	    this.game.ctx.strokeRect(this.x, this.y, this.w, this.h);
+	}
+}
+
+Enemy3.prototype.collisionTrigger = function (player) {
+	console.log("Enemy Collision");
+	// Put logic here for transition to battle scene.
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Animation.prototype.drawFrameEnemy = function (tick, ctx, x, y) {
     this.elapsedTime += tick;
     if (this.isDone()) {
