@@ -267,7 +267,7 @@ Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
     else if (y >= (screenToMapRatio * dungeonHeight) + centerY) {
     	tempY = y - (screenToMapRatio * dungeonHeight);
     }
-    
+	
     ctx.drawImage(this.spriteSheet,
                  xindex * this.frameWidth, yindex * this.frameHeight,  // source from sheet
                  this.frameWidth, this.frameHeight,
@@ -278,8 +278,8 @@ Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
 	//this.animation.drawPlayer(this.game.clockTick, this.ctx, this.x, this.y, this);
 
 	// Collision Box
-    //this.ctx.strokeStyle = "yellow";
-    //this.ctx.strokeRect(this.x, this.y, 42, 42);
+    ctx.strokeStyle = "yellow";
+    ctx.strokeRect(tempX, tempY, 64, 64);
 }
 
 Player.prototype.update = function () {
@@ -361,14 +361,20 @@ AM.queueDownload("./img/alienfirebird.png");
 
 AM.downloadAll(function () {
     var canvas = document.getElementById("gameWorld");
+    canvas.focus();
     var ctx = canvas.getContext("2d");
 
     var gameEngine = new GameEngine();
     gameEngine.init(ctx);
     gameEngine.start();
+    var background = new Background(gameEngine, AM.getAsset("./img/GrassOnlyBackground.png"));
+    var cursor = new Cursor(gameEngine);
+    gameEngine.addEntity(background);
+    gameEngine.addEntity(new Battle(gameEngine, cursor))
+    gameEngine.addEntity(new Grid(gameEngine, background))
+    gameEngine.addEntity(cursor)
 
     gameEngine.addEntity(new Player(gameEngine, AM.getAsset("./img/player.png")));
-    gameEngine.addEntity(new Background(gameEngine, AM.getAsset("./img/GrassOnlyBackground.png")));
     gameEngine.addEntity(new Collidable_background(gameEngine, AM.getAsset("./img/collidable_background.png")));
     gameEngine.addEntity(new Werewolf(gameEngine, AM.getAsset("./img/werewolf.png")));
     
@@ -377,7 +383,6 @@ AM.downloadAll(function () {
     gameEngine.addEntity(new Enemy(gameEngine, 1, 100, 100, 60, 56, AM.getAsset("./img/greenrage.png")));
     gameEngine.addEntity(new Enemy2(gameEngine, 1, 50, 250, 142, 96, AM.getAsset("./img/shark.png")));
     gameEngine.addEntity(new Enemy3(gameEngine, 1, 200, 400, 96, 86, AM.getAsset("./img/alienfirebird.png")));
-
     
     console.log("All Done!");
 });
