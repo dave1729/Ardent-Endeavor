@@ -380,9 +380,9 @@ AM.downloadAll(function () {
     
     gameEngine.addEntity(new MapTeleportEvent(gameEngine, 1, 400, 400, 50, 50, 1, 800, 800));
     gameEngine.addEntity(new MapTeleportEvent(gameEngine, 1, 400, 100, 50, 50, 1, 100, 100));
-    gameEngine.addEntity(new Enemy(gameEngine, 1, 100, 100, 60, 56, AM.getAsset("./img/greenrage.png")));
-    gameEngine.addEntity(new Enemy2(gameEngine, 1, 50, 250, 142, 96, AM.getAsset("./img/shark.png")));
-    gameEngine.addEntity(new Enemy3(gameEngine, 1, 200, 400, 96, 86, AM.getAsset("./img/alienfirebird.png")));
+    gameEngine.addEntity(new Enemy(gameEngine, 1, 64, 64, 64, 64, AM.getAsset("./img/greenrage.png")));
+    gameEngine.addEntity(new Enemy2(gameEngine, 1, 64, 128, 64, 64, AM.getAsset("./img/shark.png")));
+    gameEngine.addEntity(new Enemy3(gameEngine, 1, 64, 256, 64, 64, AM.getAsset("./img/alienfirebird.png")));
     
     console.log("All Done!");
 });

@@ -79,7 +79,7 @@ MapTeleportEvent.prototype.collisionTrigger = function (player) {
  * the player to the battle scene.
  */
 function Enemy(game, mapid, x, y, w, h, spritesheet) {
-	this.animation = new Animation(spritesheet, 70, 56, 8, 0.07, 60, true, 1.0);
+	this.animation = new Animation(spritesheet, 64, 64, 8, 0.07, 60, true, 1.0);
 	this.hitBoxVisible = true;
 	Event.call(this, game, mapid, x, y, w, h);
 }
@@ -113,7 +113,7 @@ Enemy.prototype.collisionTrigger = function (player) {
 
 
 function Enemy2(game, mapid, x, y, w, h, spritesheet) {
-	this.animation = new Animation(spritesheet, 142, 96, 4, 0.1, 16, true, 1.0);
+	this.animation = new Animation(spritesheet, 64, 64, 4, 0.1, 16, true, 1.0);
 	this.hitBoxVisible = true;
 	Event.call(this, game, mapid, x, y, w, h);
 }
@@ -149,7 +149,7 @@ Enemy2.prototype.collisionTrigger = function (player) {
 
 
 function Enemy3(game, mapid, x, y, w, h, spritesheet) {
-	this.animation = new Animation(spritesheet, 81, 86, 2, 0.15, 4, true, 1.0);
+	this.animation = new Animation(spritesheet, 64, 64, 2, 0.15, 4, true, 1.0);
 	this.hitBoxVisible = true;
 	Event.call(this, game, mapid, x, y, w, h);
 }
