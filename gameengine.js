@@ -12,6 +12,7 @@ window.requestAnimFrame = (function () {
 function GameEngine() {
     this.entities = [];
     this.controlEntity = null;
+    this.backgroundEntity = null;
     this.ctx = null;
     this.surfaceWidth = null;
     this.surfaceHeight = null;
@@ -132,20 +133,20 @@ GameEngine.prototype.startInput = function () {
 GameEngine.prototype.addEntity = function (entity) {
     console.log('added entity');
     this.entities.push(entity);
-    if(entity.control === true) this.controlEntity = entity;
+    if(entity.entityID === 1) this.controlEntity = entity;
+    if(entity.entityID === 0) this.backgroundEntity = entity;
+    //Sort entities by layer
+    this.entities.sort(
+    		function(x, y)
+            {
+            	return x.layer - y.layer;
+            }
+    );
 }
 
 GameEngine.prototype.draw = function () {
     this.ctx.clearRect(0, 0, this.surfaceWidth, this.surfaceHeight);
     this.ctx.save();
-    
-    //Sort entities by layer
-    this.entities.sort(
-            function(x, y)
-            {
-            	return x.layer - y.layer;
-            }
-          );
     
     for (var i = 0; i < this.entities.length; i++) {
     	this.entities[i].draw(this.ctx);
