@@ -197,8 +197,31 @@ function Player(game, spritesheet) {
     this.ctx = game.ctx;
 }
 
+Player.prototype.entityCollisionCheck = function () {
+	var rectMain = {x: this.x, y: this.y, width: 42, height: 42}
+	var i;
+	for (i = 0; i < this.game.entities.length; ++i) {
+		var rectOther = {x: this.game.entities[i].x, y: this.game.entities[i].y, width: 50, height: 50}
+		
+		if (this.game.entities[i] instanceof Event) {
+			if (rectMain.x < rectOther.x + rectOther.width 
+					&& rectMain.x + rectMain.width > rectOther.x 
+					&& rectMain.y < rectOther.y + rectOther.height 
+					&& rectMain.height + rectMain.y > rectOther.y) { 
+				//console.log("COLLISION DETECTED OMG");
+				this.game.entities[i].collisionTrigger(this);
+			} 
+		}
+		//console.log("ran check");
+	}
+}
+
 Player.prototype.draw = function () {
-    this.animation.drawFrame(this.game.clockTick, this.ctx, this.x, this.y, this);
+	this.animation.drawFrame(this.game.clockTick, this.ctx, this.x, this.y, this);
+
+	// Collision Box
+    this.ctx.strokeStyle = "yellow";
+    this.ctx.strokeRect(this.x, this.y, 42, 42);
 }
 
 Player.prototype.update = function () {
@@ -263,6 +286,9 @@ Player.prototype.update = function () {
 	    if(newY > 0 && newY < dungeonHeight - 64) {
 	    	this.y += this.game.clockTick * this.speedY;
 	    }
+	    
+	    // COLLISION
+	    this.entityCollisionCheck();
     }
     Entity.prototype.update.call(this);
 }
@@ -270,6 +296,7 @@ Player.prototype.update = function () {
 AM.queueDownload("./img/player.png");
 AM.queueDownload("./img/GrassOnlyBackground.png");
 AM.queueDownload("./img/collidable_background.png");
+AM.queueDownload("./img/greenrage.png");
 
 AM.downloadAll(function () {
     var canvas = document.getElementById("gameWorld");
@@ -283,5 +310,8 @@ AM.downloadAll(function () {
     gameEngine.addEntity(new Background(gameEngine, AM.getAsset("./img/GrassOnlyBackground.png")));
     gameEngine.addEntity(new Background(gameEngine, AM.getAsset("./img/collidable_background.png")));
     
+    gameEngine.addEntity(new MapTeleportEvent(gameEngine, 1, 400, 400, 50, 50, 1, 800, 800));
+    gameEngine.addEntity(new MapTeleportEvent(gameEngine, 1, 400, 100, 50, 50, 1, 100, 100));
+    gameEngine.addEntity(new Enemy(gameEngine, 1, 100, 100, 60, 56, AM.getAsset("./img/greenrage.png")));
     console.log("All Done!");
 });
