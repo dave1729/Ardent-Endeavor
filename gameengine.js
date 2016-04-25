@@ -9,6 +9,8 @@ window.requestAnimFrame = (function () {
             };
 })();
 
+const TILE_SIZE = 64;
+
 function GameEngine() {
     this.entities = [];
     this.controlEntity = null;
@@ -16,15 +18,26 @@ function GameEngine() {
     this.ctx = null;
     this.surfaceWidth = null;
     this.surfaceHeight = null;
+    
+    this.am = null; // AssetManager
+    
+    this.mm = null; // MapManager
+    this.em = null; // EntityManager
+    this.sm = null; // SceneManager
 }
 
-GameEngine.prototype.init = function (ctx) {
+GameEngine.prototype.init = function (ctx, AM, game) {
     this.ctx = ctx;
     this.surfaceWidth = this.ctx.canvas.width;
     this.surfaceHeight = this.ctx.canvas.height;
     this.timer = new Timer();
     this.disableInput = false;
     this.startInput();
+    
+    this.am = AM;
+    this.mm = new MapManager(game);
+    this.em = new EntityManager(game);
+    this.sm = new SceneManager(game);
     console.log('game initialized');
 }
 
@@ -50,8 +63,8 @@ GameEngine.prototype.startInput = function () {
         // This converts the canvas into 64 x 64 tiles
         //
         // if (x < 1024) {
-            x = Math.floor(x / 64);
-            y = Math.floor(y / 64);
+            x = Math.floor(x / this.TILE_SIZE);
+            y = Math.floor(y / this.TILE_SIZE);
         // }
         return { x: x, y: y };
     }
@@ -201,8 +214,11 @@ GameEngine.prototype.update = function () {
 
 GameEngine.prototype.loop = function () {
     this.clockTick = this.timer.tick();
-    this.update();
-    this.draw();
+    //console.log(this.haltLoop);
+    //if (!this.haltLoop) {
+    	this.update();
+        this.draw();
+    //}
 }
 
 function Timer() {

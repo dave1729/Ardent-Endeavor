@@ -41,11 +41,11 @@ Event.prototype.draw = function () {
  * image(s) of the game world and move the character to the
  * correct coordinates.
  */
-function MapTeleportEvent(game, mapid, x, y, w, h, destMapid, destx, desty) {
+function MapTeleportEvent(game, x, y, w, h, destMapid, destx, desty) {
 	this.destMapid = destMapid;
 	this.destx = destx;
 	this.desty = desty;
-	Event.call(this, game, mapid, x, y, w, h);
+	Event.call(this, game, 0, x, y, w, h);
 }
 
 MapTeleportEvent.prototype = new Event();
@@ -66,9 +66,8 @@ MapTeleportEvent.prototype.draw = function () {
  * the given mapid and coordinates.
  */
 MapTeleportEvent.prototype.collisionTrigger = function (player) {
-	player.x = this.destx;
-	player.y = this.desty;
-	//Arrow.prototype.update.call(player);
+	//console.error("Map to teleport to: " + this.destMapid);
+	this.game.sm.loadMap(this.destMapid, this.destx, this.desty);
 	this.game.backgroundEntity.update();
 }
 
@@ -95,7 +94,7 @@ Enemy.prototype.update = function () {
 
 Enemy.prototype.draw = function () {
 	// Visual Debugging of Event Locations
-	this.animation.drawFrameEnemy(this.game.clockTick, this.game.ctx, this.screenX, this.screenY);
+	this.animation.drawEntity(this.game.clockTick, this.game.ctx, this.screenX, this.screenY);
 
 	if (this.hitBoxVisible) {
 		this.game.ctx.strokeStyle = "cyan";
@@ -129,7 +128,7 @@ Enemy2.prototype.update = function () {
 
 Enemy2.prototype.draw = function () {
 	// Visual Debugging of Event Locations
-	this.animation.drawFrameEnemy(this.game.clockTick, this.game.ctx, this.screenX, this.screenY);
+	this.animation.drawEntity(this.game.clockTick, this.game.ctx, this.screenX, this.screenY);
 
 	if (this.hitBoxVisible) {
 		this.game.ctx.strokeStyle = "cyan";
@@ -165,7 +164,7 @@ Enemy3.prototype.update = function () {
 
 Enemy3.prototype.draw = function () {
 	// Visual Debugging of Event Locations
-	this.animation.drawFrameEnemy(this.game.clockTick, this.game.ctx, this.screenX, this.screenY);
+	this.animation.drawEntity(this.game.clockTick, this.game.ctx, this.screenX, this.screenY);
 
 	if (this.hitBoxVisible) {
 		this.game.ctx.strokeStyle = "cyan";
