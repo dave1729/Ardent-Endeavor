@@ -9,6 +9,8 @@ window.requestAnimFrame = (function () {
             };
 })();
 
+const TILE_SIZE = 64;
+
 function GameEngine() {
     this.entities = [];
     this.controlEntity = null;
@@ -16,14 +18,26 @@ function GameEngine() {
     this.ctx = null;
     this.surfaceWidth = null;
     this.surfaceHeight = null;
+    
+    this.am = null; // AssetManager
+    
+    this.mm = null; // MapManager
+    this.em = null; // EntityManager
+    this.sm = null; // SceneManager
 }
 
-GameEngine.prototype.init = function (ctx) {
+GameEngine.prototype.init = function (ctx, AM, game) {
     this.ctx = ctx;
     this.surfaceWidth = this.ctx.canvas.width;
     this.surfaceHeight = this.ctx.canvas.height;
     this.timer = new Timer();
+    this.disableInput = false;
     this.startInput();
+    
+    this.am = AM;
+    this.mm = new MapManager(game);
+    this.em = new EntityManager(game);
+    this.sm = new SceneManager(game);
     console.log('game initialized');
 }
 
@@ -44,11 +58,14 @@ GameEngine.prototype.startInput = function () {
         var y = e.clientY - that.ctx.canvas.getBoundingClientRect().top;
 
         //not sure what this 1024 or 32 does...
-        if (x < 1024) {
-            x = Math.floor(x / 32);
-            y = Math.floor(y / 32);
-        }
-
+        //
+        // DAVID
+        // This converts the canvas into 64 x 64 tiles
+        //
+        // if (x < 1024) {
+            x = Math.floor(x / this.TILE_SIZE);
+            y = Math.floor(y / this.TILE_SIZE);
+        // }
         return { x: x, y: y };
     }
 
@@ -57,13 +74,14 @@ GameEngine.prototype.startInput = function () {
     // event listeners are added here
 
     this.ctx.canvas.addEventListener("click", function (e) {
-        that.click = getXandY(e);
-        //console.log(e);
+        if(that.b)
+            that.click = getXandY(e);
         //console.log("Left Click Event - X,Y " + e.clientX + ", " + e.clientY);
     }, false);
 
     this.ctx.canvas.addEventListener("contextmenu", function (e) {
-        that.click = getXandY(e);
+        if(that.b)
+            that.rclick = getXandY(e);
         //console.log(e);
         //console.log("Right Click Event - X,Y " + e.clientX + ", " + e.clientY);
         e.preventDefault();
@@ -79,21 +97,30 @@ GameEngine.prototype.startInput = function () {
         that.wheel = e;
         //console.log("Click Event - X,Y " + e.clientX + ", " + e.clientY + " Delta " + e.deltaY);
     }, false);
-
+    
     this.ctx.canvas.addEventListener("keydown", function (e) {
-        console.log(e);
-        console.log("Key Down Event - Char " + e.code + " Code " + e.keyCode);
-        if(e.which === 87) {
-        	that.controlEntity.w = true;
+        // console.log(e);
+        // console.log("Key Down Event - Char " + e.code + " Code " + e.keyCode);
+        if (!that.disableInput)
+        {
+            if(e.which === 87) {
+                that.controlEntity.w = true;
+            }
+            else if(e.which === 83) {
+                that.controlEntity.s = true;
+            }
+            else if(e.which === 65) {
+                that.controlEntity.a = true;
+            }	
+            else if(e.which === 68) {
+                that.controlEntity.d = true;
+            }
         }
-        else if(e.which === 83) {
-        	that.controlEntity.s = true;
-        }
-        else if(e.which === 65) {
-        	that.controlEntity.a = true;
-        }	
-        else if(e.which === 68) {
-        	that.controlEntity.d = true;
+        if (e.which === 66)
+        {
+            that.removeEntity(1);
+            that.b = true;
+            // that.entities = [];
         }
         
     }, false);
@@ -105,26 +132,29 @@ GameEngine.prototype.startInput = function () {
     }, false);
 
     this.ctx.canvas.addEventListener("keyup", function (e) {
-        console.log(e);
-        console.log("Key Up Event - Char " + e.code + " Code " + e.keyCode);
-        if(e.which === 87) {
-        	that.controlEntity.w = false;
-        }
-        else if(e.which === 83) {
+        // console.log(e);
+        // console.log("Key Up Event - Char " + e.code + " Code " + e.keyCode);
+        if (!that.disableInput)
+        {
+            if(e.which === 87) {
+                that.controlEntity.w = false;
+            }
+            else if(e.which === 83) {
 
-        	that.controlEntity.s = false;
-        }
-        else if(e.which === 65) {
-        	that.controlEntity.a = false;
-        }	
-        else if(e.which === 68) {
-        	that.controlEntity.d = false;
-        }	
-        
-        if(!(that.w || that.s || that.a || that.d)) {
-        	that.controlEntity.speedX = 0;
-        	that.controlEntity.speedY = 0;
-        }
+                that.controlEntity.s = false;
+            }
+            else if(e.which === 65) {
+                that.controlEntity.a = false;
+            }	
+            else if(e.which === 68) {
+                that.controlEntity.d = false;
+            }	
+            
+            if(!(that.w || that.s || that.a || that.d)) {
+                that.controlEntity.speedX = 0;
+                that.controlEntity.speedY = 0;
+            }
+        }     
     }, false);
 
     console.log('Input started');
@@ -144,6 +174,15 @@ GameEngine.prototype.addEntity = function (entity) {
     );
 }
 
+GameEngine.prototype.removeEntity = function (id) {
+    this.entities.forEach((entity) => {
+        if(entity.entityID === id)
+        {
+            entity.removeFromWorld = true;
+        }
+    })
+}
+
 GameEngine.prototype.draw = function () {
     this.ctx.clearRect(0, 0, this.surfaceWidth, this.surfaceHeight);
     this.ctx.save();
@@ -160,14 +199,26 @@ GameEngine.prototype.update = function () {
     for (var i = 0; i < entitiesCount; i++) {
         var entity = this.entities[i];
 
-        entity.update();
+        if (!entity.removeFromWorld) {
+            entity.update();
+        }
     }
+
+    for (var i = this.entities.length - 1; i >= 0; --i) {
+        if (this.entities[i].removeFromWorld) {
+            this.entities.splice(i, 1);
+        }
+    }
+    this.click = undefined;
 }
 
 GameEngine.prototype.loop = function () {
     this.clockTick = this.timer.tick();
-    this.update();
-    this.draw();
+    //console.log(this.haltLoop);
+    //if (!this.haltLoop) {
+    	this.update();
+        this.draw();
+    //}
 }
 
 function Timer() {

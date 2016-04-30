@@ -13,6 +13,8 @@ function Event(game, mapid, x, y, w, h) {
 	this.mapid = mapid;
 	this.w = w;
 	this.h = h;
+	this.screenX = x;
+	this.screenY = y;
 	this.hitBoxVisible = true;
 	Entity.call(this, game, x, y);
 }
@@ -29,7 +31,7 @@ Event.prototype.draw = function () {
 	// Visual Debugging of Event Locations
 	if (this.hitBoxVisible) {
 		this.game.ctx.strokeStyle = "red";
-	    this.game.ctx.strokeRect(this.x, this.y, this.w, this.h);
+	    this.game.ctx.strokeRect(this.screenX, this.screenY, this.w, this.h);
 	}
 }
 
@@ -39,19 +41,19 @@ Event.prototype.draw = function () {
  * image(s) of the game world and move the character to the
  * correct coordinates.
  */
-function MapTeleportEvent(game, mapid, x, y, w, h, destMapid, destx, desty) {
+function MapTeleportEvent(game, x, y, w, h, destMapid, destx, desty) {
 	this.destMapid = destMapid;
 	this.destx = destx;
 	this.desty = desty;
-	Event.call(this, game, mapid, x, y, w, h);
+	Event.call(this, game, 0, x, y, w, h);
 }
 
 MapTeleportEvent.prototype = new Event();
 MapTeleportEvent.prototype.constructor = MapTeleportEvent;
 
 MapTeleportEvent.prototype.update = function () {
-	//console.log(this.x);
-	//console.log(this.y);
+	this.screenX = this.x - this.game.backgroundEntity.x;
+	this.screenY = this.y - this.game.backgroundEntity.y;
 	Event.prototype.update.call(this);
 }
 
@@ -64,9 +66,9 @@ MapTeleportEvent.prototype.draw = function () {
  * the given mapid and coordinates.
  */
 MapTeleportEvent.prototype.collisionTrigger = function (player) {
-	player.x = this.destx;
-	player.y = this.desty;
-	//Arrow.prototype.update.call(player);
+	//console.error("Map to teleport to: " + this.destMapid);
+	this.game.sm.loadMap(this.destMapid, this.destx, this.desty);
+	this.game.backgroundEntity.update();
 }
 
 
@@ -76,7 +78,7 @@ MapTeleportEvent.prototype.collisionTrigger = function (player) {
  * the player to the battle scene.
  */
 function Enemy(game, mapid, x, y, w, h, spritesheet) {
-	this.animation = new Animation(spritesheet, 70, 56, 8, 0.07, 60, true, 1.0);
+	this.animation = new Animation(spritesheet, 64, 64, 8, 0.07, 60, true, 1.0);
 	this.hitBoxVisible = true;
 	Event.call(this, game, mapid, x, y, w, h);
 }
@@ -85,16 +87,18 @@ Enemy.prototype = new Event();
 Enemy.prototype.constructor = Enemy;
 
 Enemy.prototype.update = function () {
+	this.screenX = this.x - this.game.backgroundEntity.x;
+	this.screenY = this.y - this.game.backgroundEntity.y;
 	Event.prototype.update.call(this);
 }
 
 Enemy.prototype.draw = function () {
 	// Visual Debugging of Event Locations
-	this.animation.drawFrameEnemy(this.game.clockTick, this.game.ctx, this.x, this.y);
+	this.animation.drawEntity(this.game.clockTick, this.game.ctx, this.screenX, this.screenY);
 
 	if (this.hitBoxVisible) {
 		this.game.ctx.strokeStyle = "cyan";
-	    this.game.ctx.strokeRect(this.x, this.y, this.w, this.h);
+	    this.game.ctx.strokeRect(this.screenX, this.screenY, this.w, this.h);
 	}
 }
 
@@ -108,7 +112,7 @@ Enemy.prototype.collisionTrigger = function (player) {
 
 
 function Enemy2(game, mapid, x, y, w, h, spritesheet) {
-	this.animation = new Animation(spritesheet, 142, 96, 4, 0.1, 16, true, 1.0);
+	this.animation = new Animation(spritesheet, 64, 64, 4, 0.1, 16, true, 1.0);
 	this.hitBoxVisible = true;
 	Event.call(this, game, mapid, x, y, w, h);
 }
@@ -117,16 +121,18 @@ Enemy2.prototype = new Event();
 Enemy2.prototype.constructor = Enemy2;
 
 Enemy2.prototype.update = function () {
+	this.screenX = this.x - this.game.backgroundEntity.x;
+	this.screenY = this.y - this.game.backgroundEntity.y;
 	//Event.prototype.update.call(this);
 }
 
 Enemy2.prototype.draw = function () {
 	// Visual Debugging of Event Locations
-	this.animation.drawFrameEnemy(this.game.clockTick, this.game.ctx, this.x, this.y);
+	this.animation.drawEntity(this.game.clockTick, this.game.ctx, this.screenX, this.screenY);
 
 	if (this.hitBoxVisible) {
 		this.game.ctx.strokeStyle = "cyan";
-	    this.game.ctx.strokeRect(this.x, this.y, this.w, this.h);
+	    this.game.ctx.strokeRect(this.screenX, this.screenY, this.w, this.h);
 	}
 }
 
@@ -142,7 +148,7 @@ Enemy2.prototype.collisionTrigger = function (player) {
 
 
 function Enemy3(game, mapid, x, y, w, h, spritesheet) {
-	this.animation = new Animation(spritesheet, 81, 86, 2, 0.15, 4, true, 1.0);
+	this.animation = new Animation(spritesheet, 64, 64, 2, 0.15, 4, true, 1.0);
 	this.hitBoxVisible = true;
 	Event.call(this, game, mapid, x, y, w, h);
 }
@@ -151,16 +157,18 @@ Enemy3.prototype = new Event();
 Enemy3.prototype.constructor = Enemy3;
 
 Enemy3.prototype.update = function () {
+	this.screenX = this.x - this.game.backgroundEntity.x;
+	this.screenY = this.y - this.game.backgroundEntity.y;
 	//Event.prototype.update.call(this);
 }
 
 Enemy3.prototype.draw = function () {
 	// Visual Debugging of Event Locations
-	this.animation.drawFrameEnemy(this.game.clockTick, this.game.ctx, this.x, this.y);
+	this.animation.drawEntity(this.game.clockTick, this.game.ctx, this.screenX, this.screenY);
 
 	if (this.hitBoxVisible) {
 		this.game.ctx.strokeStyle = "cyan";
-	    this.game.ctx.strokeRect(this.x, this.y, this.w, this.h);
+	    this.game.ctx.strokeRect(this.screenX, this.screenY, this.w, this.h);
 	}
 }
 
