@@ -137,29 +137,31 @@ Collidable_background.prototype.update = function () {
 	Entity.prototype.update.call(this);
 };
 
-function Werewolf(game, spritesheet) {
-	this.animation = new Animation(spritesheet, 64, 64, 4, 0.20, 16, true, 1);
-	this.x = 300;
-	this.y = 300;
-	this.screenX = this.x;
-	this.screenY = this.y;
-	this.entityID = 4;
-	this.layer = 3;
-	this.speed = 0;
-	this.game = game;
-	this.ctx = game.ctx;
-}
+//function Werewolf(game, spritesheet) {
+//	this.animation = new Animation(spritesheet, 64, 64, 4, 0.20, 16, true, 1);
+//	this.x = 300;
+//	this.y = 300;
+//	this.screenX = this.x;
+//	this.screenY = this.y;
+//	this.entityID = 4;
+//	this.layer = 3;
+//	this.speed = 0;
+//	this.game = game;
+//	this.ctx = game.ctx;
+//}
+//
+//Werewolf.prototype.draw = function () {
+//	this.animation.drawEntity(this.game.clockTick, this.ctx, this.screenX, this.screenY);
+//}
+//
+//Werewolf.prototype.update = function () {
+//	//Updates the entities screenX and screenY using it's x and y against the background
+//	this.animation.updateEntity(this);
+//
+//	Entity.prototype.update.call(this);
+//}
 
-Werewolf.prototype.draw = function () {
-	this.animation.drawEntity(this.game.clockTick, this.ctx, this.screenX, this.screenY);
-}
 
-Werewolf.prototype.update = function () {
-	//Updates the entities screenX and screenY using it's x and y against the background
-	this.animation.updateEntity(this);
-
-	Entity.prototype.update.call(this);
-}
 
 function Player(game, spritesheet) {
 	this.spriteSquareSize = 64;
@@ -179,15 +181,21 @@ function Player(game, spritesheet) {
 	this.layer = 4;
 	this.entityID = 1;
 	this.ctx = game.ctx;
+	// When changing the hitbox, also change x and y shift in draw collision box
+	this.hitBox = new CollisionBox(this, 18, 34, this.spriteSquareSize-36, this.spriteSquareSize-36);
 }
 
 Player.prototype.entityCollisionCheck = function () {
-	var rectMain = {x: this.x, y: this.y, width: 42, height: 42}
+	var rectMain = {x: this.hitBox.getX(), y: this.hitBox.getY(), width: this.hitBox.width, height: this.hitBox.height}
+	//console.log(rectMain);
 	var i;
 	for (i = 0; i < this.game.entities.length; ++i) {
-		var rectOther = {x: this.game.entities[i].x, y: this.game.entities[i].y, width: 50, height: 50}
-
 		if (this.game.entities[i] instanceof Event) {
+			var rectOther = {x: this.game.entities[i].hitBox.getX(),
+					y: this.game.entities[i].hitBox.getY(),
+					width: this.game.entities[i].hitBox.width,
+					height: this.game.entities[i].hitBox.height}
+
 			if (rectMain.x < rectOther.x + rectOther.width 
 					&& rectMain.x + rectMain.width > rectOther.x 
 					&& rectMain.y < rectOther.y + rectOther.height 
@@ -267,6 +275,7 @@ Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
 	else if (y >= (screenToMapRatio * dungeonHeight) + centerY) {
 		tempY = y - (screenToMapRatio * dungeonHeight);
 	}
+	
 
 	ctx.drawImage(this.spriteSheet,
 			xindex * this.frameWidth, yindex * this.frameHeight,  // source from sheet
@@ -278,8 +287,14 @@ Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
 	//this.animation.drawPlayer(this.game.clockTick, this.ctx, this.x, this.y, this);
 
 	// Collision Box
-	ctx.strokeStyle = "yellow";
-	ctx.strokeRect(tempX, tempY, 64, 64);
+	if (entity.game.hitBoxVisible) {
+		ctx.strokeStyle = "yellow";
+	    ctx.strokeRect(tempX + entity.hitBox.offsetX , tempY + entity.hitBox.offsetY,
+	    				entity.hitBox.width, entity.hitBox.height);
+	}
+	
+	//ctx.strokeStyle = "yellow";
+	//ctx.strokeRect(tempX, tempY, 64, 64);
 }
 
 Player.prototype.update = function () {

@@ -15,7 +15,7 @@ function Event(game, mapid, x, y, w, h) {
 	this.h = h;
 	this.screenX = x;
 	this.screenY = y;
-	this.hitBoxVisible = true;
+	this.hitBox = new CollisionBox(this, 0, 0, w, h);
 	Entity.call(this, game, x, y);
 }
 
@@ -23,13 +23,12 @@ Event.prototype = new Entity();
 Event.prototype.constructor = Event;
 
 Event.prototype.update = function () {
-	
 	Entity.prototype.update.call(this);
 }
 
 Event.prototype.draw = function () {
 	// Visual Debugging of Event Locations
-	if (this.hitBoxVisible) {
+	if (this.game.hitBoxVisible) {
 		this.game.ctx.strokeStyle = "red";
 	    this.game.ctx.strokeRect(this.screenX, this.screenY, this.w, this.h);
 	}
@@ -69,147 +68,6 @@ MapTeleportEvent.prototype.collisionTrigger = function (player) {
 	//console.error("Map to teleport to: " + this.destMapid);
 	this.game.sm.loadMap(this.destMapid, this.destx, this.desty);
 	this.game.backgroundEntity.update();
-}
-
-
-/**
- * An Enemy is an overworld enemy. When the player collides with an
- * enemy, it will delete that event from the current map and transfer
- * the player to the battle scene.
- */
-function Enemy(game, mapid, x, y, w, h, spritesheet) {
-	this.animation = new Animation(spritesheet, 64, 64, 8, 0.07, 60, true, 1.0);
-	this.hitBoxVisible = true;
-	Event.call(this, game, mapid, x, y, w, h);
-}
-
-Enemy.prototype = new Event();
-Enemy.prototype.constructor = Enemy;
-
-Enemy.prototype.update = function () {
-	this.screenX = this.x - this.game.backgroundEntity.x;
-	this.screenY = this.y - this.game.backgroundEntity.y;
-	Event.prototype.update.call(this);
-}
-
-Enemy.prototype.draw = function () {
-	// Visual Debugging of Event Locations
-	this.animation.drawEntity(this.game.clockTick, this.game.ctx, this.screenX, this.screenY);
-
-	if (this.hitBoxVisible) {
-		this.game.ctx.strokeStyle = "cyan";
-	    this.game.ctx.strokeRect(this.screenX, this.screenY, this.w, this.h);
-	}
-}
-
-Enemy.prototype.collisionTrigger = function (player) {
-	console.log("Enemy Collision");
-	// Put logic here for transition to battle scene.
-}
-
-
-
-
-
-function Enemy2(game, mapid, x, y, w, h, spritesheet) {
-	this.animation = new Animation(spritesheet, 64, 64, 4, 0.1, 16, true, 1.0);
-	this.hitBoxVisible = true;
-	Event.call(this, game, mapid, x, y, w, h);
-}
-
-Enemy2.prototype = new Event();
-Enemy2.prototype.constructor = Enemy2;
-
-Enemy2.prototype.update = function () {
-	this.screenX = this.x - this.game.backgroundEntity.x;
-	this.screenY = this.y - this.game.backgroundEntity.y;
-	//Event.prototype.update.call(this);
-}
-
-Enemy2.prototype.draw = function () {
-	// Visual Debugging of Event Locations
-	this.animation.drawEntity(this.game.clockTick, this.game.ctx, this.screenX, this.screenY);
-
-	if (this.hitBoxVisible) {
-		this.game.ctx.strokeStyle = "cyan";
-	    this.game.ctx.strokeRect(this.screenX, this.screenY, this.w, this.h);
-	}
-}
-
-Enemy2.prototype.collisionTrigger = function (player) {
-	console.log("Enemy Collision");
-	// Put logic here for transition to battle scene.
-}
-
-
-
-
-
-
-
-function Enemy3(game, mapid, x, y, w, h, spritesheet) {
-	this.animation = new Animation(spritesheet, 64, 64, 2, 0.15, 4, true, 1.0);
-	this.hitBoxVisible = true;
-	Event.call(this, game, mapid, x, y, w, h);
-}
-
-Enemy3.prototype = new Event();
-Enemy3.prototype.constructor = Enemy3;
-
-Enemy3.prototype.update = function () {
-	this.screenX = this.x - this.game.backgroundEntity.x;
-	this.screenY = this.y - this.game.backgroundEntity.y;
-	//Event.prototype.update.call(this);
-}
-
-Enemy3.prototype.draw = function () {
-	// Visual Debugging of Event Locations
-	this.animation.drawEntity(this.game.clockTick, this.game.ctx, this.screenX, this.screenY);
-
-	if (this.hitBoxVisible) {
-		this.game.ctx.strokeStyle = "cyan";
-	    this.game.ctx.strokeRect(this.screenX, this.screenY, this.w, this.h);
-	}
-}
-
-Enemy3.prototype.collisionTrigger = function (player) {
-	console.log("Enemy Collision");
-	// Put logic here for transition to battle scene.
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Animation.prototype.drawFrameEnemy = function (tick, ctx, x, y) {
-    this.elapsedTime += tick;
-    if (this.isDone()) {
-        if (this.loop) this.elapsedTime = 0;
-    }
-    var frame = this.currentFrame();
-    var xindex = 0;
-    var yindex = 0;
-    xindex = frame % this.sheetWidth;
-    yindex = Math.floor(frame / this.sheetWidth);
-
-    ctx.drawImage(this.spriteSheet,
-                 xindex * this.frameWidth, yindex * this.frameHeight,  // source from sheet
-                 this.frameWidth, this.frameHeight,
-                 x, y,
-                 this.frameWidth * this.scale,
-                 this.frameHeight * this.scale);
 }
 
 
