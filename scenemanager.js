@@ -45,11 +45,19 @@ SceneManager.prototype.loadMap = function (mapid, destx, desty) {
 
 /* Loads battle scene, disabling overworld entities and controls */
 SceneManager.prototype.startBattle = function () {
-	this.game.em.cacheEntities();
-	this.game.em.removeAllEntities();
+	// Lets ignore this for now
+	// this.game.em.cacheEntities();
+	// this.game.em.removeAllEntities();
 	
-	this.game.em.addEntity(map.bgLayer);
-	this.game.em.addEntity(map.cLayer);
+	// this.game.em.addEntity(map.bgLayer);
+	// this.game.em.addEntity(map.cLayer);
+	this.game.addEntity(new Grid(this.game))
+	let c = new Cursor(this.game);
+	this.game.addEntity(c);
+	this.game.addEntity(new Battle(this.game, c));
+	// let b = new Battle(this.game);
+	// b.start();
+	
 	// needs more logic to add battle assets
 	// pause overworld functions
 }

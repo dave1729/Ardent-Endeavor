@@ -372,9 +372,11 @@ AM.downloadAll(function () {
 	var gameEngine = new GameEngine();
 	gameEngine.init(ctx, AM, gameEngine);
 	gameEngine.start();
+	
+	gameEngine.sm.startBattle();
 
-	gameEngine.sm.initialize(new Player(gameEngine, AM.getAsset("./img/player.png")),
-			1, 900, 900);
+	// gameEngine.sm.initialize(new Player(gameEngine, AM.getAsset("./img/player.png")),
+	// 		1, 900, 900);
 
 //	var background = new Background(gameEngine, AM.getAsset("./img/GrassOnlyBackground.png"));
 //	var cursor = new Cursor(gameEngine);

@@ -18,6 +18,10 @@ function GameEngine() {
     this.ctx = null;
     this.surfaceWidth = null;
     this.surfaceHeight = null;
+    this.mouse = {
+        x: 0,
+        y: 0
+    }
     
     this.am = null; // AssetManager
     
@@ -63,8 +67,8 @@ GameEngine.prototype.startInput = function () {
         // This converts the canvas into 64 x 64 tiles
         //
         // if (x < 1024) {
-            x = Math.floor(x / this.TILE_SIZE);
-            y = Math.floor(y / this.TILE_SIZE);
+            x = Math.floor(x / TILE_SIZE);
+            y = Math.floor(y / TILE_SIZE);
         // }
         return { x: x, y: y };
     }
@@ -74,13 +78,11 @@ GameEngine.prototype.startInput = function () {
     // event listeners are added here
 
     this.ctx.canvas.addEventListener("click", function (e) {
-        if(that.b)
             that.click = getXandY(e);
         //console.log("Left Click Event - X,Y " + e.clientX + ", " + e.clientY);
     }, false);
 
     this.ctx.canvas.addEventListener("contextmenu", function (e) {
-        if(that.b)
             that.rclick = getXandY(e);
         //console.log(e);
         //console.log("Right Click Event - X,Y " + e.clientX + ", " + e.clientY);
@@ -89,6 +91,7 @@ GameEngine.prototype.startInput = function () {
 
     this.ctx.canvas.addEventListener("mousemove", function (e) {
         //console.log(e);
+        // console.log(that.mouse)
         that.mouse = getXandY(e);
     }, false);
 
