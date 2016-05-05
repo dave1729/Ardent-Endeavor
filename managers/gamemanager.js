@@ -66,7 +66,6 @@ GameManager.prototype.init = function () {
 /* unloads the old map, then loads in the new map and all the entities */
 GameManager.prototype.loadMap = function (mapid, destx, desty) {
 	this.map = this.mm.getMap(mapid);
-	
 	this.em.removeAllEntities();
 	this.player.x = destx;
 	this.player.y = desty;
@@ -76,24 +75,22 @@ GameManager.prototype.loadMap = function (mapid, destx, desty) {
 	this.em.addEntity(this.map.cLayer);
 	
 	//need logic for spawning enemies in spawn zones
-	var i;
-	for (i = 0; i < this.map.entities.length; ++i) {
+	for (var i = 0; i < this.map.entities.length; ++i) {
 		this.em.addEntity(this.map.entities[i]);
 	}
-	
+    debugger;
 }
 /* Loads battle scene, disabling overworld entities and controls */
 GameManager.prototype.startBattle = function () {
 	// Lets ignore this for now
-	// this.game.em.cacheEntities();
-	// this.game.em.removeAllEntities();
-	
+	gm.em.cacheEntities();
+	gm.em.removeAllEntities();
 	// this.game.em.addEntity(map.bgLayer);
 	// this.game.em.addEntity(map.cLayer);
-	this.em.addEntity(new Grid(this.game))
-	let c = new Cursor(this.game);
+	this.em.addEntity(new Grid(this))
+	let c = new Cursor(this);
 	this.em.addEntity(c);
-	this.em.addEntity(new Battle(this.game, c));
+	this.em.addEntity(new Battle(this, c));
 	// let b = new Battle(this.game);
 	// b.start();
 	

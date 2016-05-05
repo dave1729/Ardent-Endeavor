@@ -1,7 +1,6 @@
 /**
  * 
  */
-var gm = gm || {};
 MapManager.prototype.initialize = function () {
 	
 	/* TEMPLATE

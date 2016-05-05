@@ -20,7 +20,6 @@ function Player(spritesheet) {
 }
 
 Player.prototype.controls = function () {
-    console.log(this.im)
 	this.im.addInput(new Input("up", 'w'));
     this.im.addInput(new Input("down", 's'));
     this.im.addInput(new Input("left", 'a'));
