@@ -46,9 +46,9 @@ function Cursor (game)
 Cursor.prototype.update = function () {
     
         // console.log(this.x, this.y)
-        this.point = this.game.mouse;
-        this.x = this.game.mouse.x;
-        this.y = this.game.mouse.y;
+        this.point = this.game.im.mouse;
+        this.x = this.game.im.mouse.x;
+        this.y = this.game.im.mouse.y;
     // if (this.mouse.click)
     // {
     //     // this.game.addEntity(new )
@@ -121,12 +121,12 @@ Battle.prototype.update = function ()
 
 Battle.prototype.setupPhase = function () {
             this.cursor.good = true;
-            if(this.game.click)
+            if(gm.im.click)
             {
                 if (this.validPlacement(this.cursor.point))
                 {
                     this.spawnPlayer();
-                    this.game.click = undefined;
+                    gm.im.click = undefined;
                 }
             }
             if(this.playerCount === 0)
@@ -164,7 +164,7 @@ Battle.prototype.enemyPhase = function (params) {
 }
 
 Battle.prototype.spawnPlayer = function (params) {
-    let spawn = new Blue(this.game, this.game.click.x, this.game.click.y, this.cursor, this);
+    let spawn = new Blue(this.game, this.game.im.click.x, this.game.im.click.y, this.cursor, this);
     this.game.em.addEntity(spawn);
     this.availableUnits.push(spawn);
     this.playerUnits.push(spawn);
