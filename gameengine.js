@@ -16,6 +16,7 @@ function GameEngine() {
     this.controlEntity = null;
     this.backgroundEntity = null;
     this.ctx = null;
+    this.im = null;
     this.surfaceWidth = null;
     this.surfaceHeight = null;
     this.mouse = {
@@ -33,6 +34,7 @@ function GameEngine() {
 
 GameEngine.prototype.init = function (ctx, AM, game) {
     this.ctx = ctx;
+    this.im = new InputManager(ctx, "Dungeon");
     this.surfaceWidth = this.ctx.canvas.width;
     this.surfaceHeight = this.ctx.canvas.height;
     this.timer = new Timer();
@@ -58,110 +60,7 @@ GameEngine.prototype.start = function () {
 
 GameEngine.prototype.startInput = function () {
     console.log('Starting input');
-
-    var getXandY = function (e) {
-        var x = e.clientX - that.ctx.canvas.getBoundingClientRect().left;
-        var y = e.clientY - that.ctx.canvas.getBoundingClientRect().top;
-
-        //not sure what this 1024 or 32 does...
-        //
-        // DAVID
-        // This converts the canvas into 64 x 64 tiles
-        //
-        // if (x < 1024) {
-            x = Math.floor(x / TILE_SIZE);
-            y = Math.floor(y / TILE_SIZE);
-        // }
-        return { x: x, y: y };
-    }
-
-    var that = this;
-
-    // event listeners are added here
-
-    this.ctx.canvas.addEventListener("click", function (e) {
-            that.click = getXandY(e);
-        //console.log("Left Click Event - X,Y " + e.clientX + ", " + e.clientY);
-    }, false);
-
-    this.ctx.canvas.addEventListener("contextmenu", function (e) {
-            that.rclick = getXandY(e);
-        //console.log(e);
-        //console.log("Right Click Event - X,Y " + e.clientX + ", " + e.clientY);
-        e.preventDefault();
-    }, false);
-
-    this.ctx.canvas.addEventListener("mousemove", function (e) {
-        //console.log(e);
-        // console.log(that.mouse)
-        that.mouse = getXandY(e);
-    }, false);
-
-    this.ctx.canvas.addEventListener("mousewheel", function (e) {
-        //console.log(e);
-        that.wheel = e;
-        //console.log("Click Event - X,Y " + e.clientX + ", " + e.clientY + " Delta " + e.deltaY);
-    }, false);
-    
-    this.ctx.canvas.addEventListener("keydown", function (e) {
-        // console.log(e);
-        // console.log("Key Down Event - Char " + e.code + " Code " + e.keyCode);
-        if (!that.disableInput)
-        {
-            if(e.which === 87) {
-                that.controlEntity.w = true;
-            }
-            else if(e.which === 83) {
-                that.controlEntity.s = true;
-            }
-            else if(e.which === 65) {
-                that.controlEntity.a = true;
-            }	
-            else if(e.which === 68) {
-                that.controlEntity.d = true;
-            }
-        }
-        if (e.which === 66)
-        {
-            that.removeEntity(1);
-            that.b = true;
-            // that.entities = [];
-        }
-        
-    }, false);
-
-    this.ctx.canvas.addEventListener("keypress", function (e) {
-        that.chars[e.code] = true;
-        //console.log(e);
-        //console.log("Key Pressed Event - Char " + e.charCode + " Code " + e.keyCode);
-    }, false);
-
-    this.ctx.canvas.addEventListener("keyup", function (e) {
-        // console.log(e);
-        // console.log("Key Up Event - Char " + e.code + " Code " + e.keyCode);
-        if (!that.disableInput)
-        {
-            if(e.which === 87) {
-                that.controlEntity.w = false;
-            }
-            else if(e.which === 83) {
-
-                that.controlEntity.s = false;
-            }
-            else if(e.which === 65) {
-                that.controlEntity.a = false;
-            }	
-            else if(e.which === 68) {
-                that.controlEntity.d = false;
-            }	
-            
-            if(!(that.w || that.s || that.a || that.d)) {
-                that.controlEntity.speedX = 0;
-                that.controlEntity.speedY = 0;
-            }
-        }     
-    }, false);
-
+    this.im.start(this);
     console.log('Input started');
 }
 

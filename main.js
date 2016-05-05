@@ -170,19 +170,24 @@ function Player(game, spritesheet) {
 	this.animation = new Animation(spritesheet, this.spriteSquareSize, this.spriteSquareSize, 9, 0.1, 32, true, this.scale);
 	this.x = 235;
 	this.y = 215;
-	this.w = false;
-	this.s = false;
-	this.a = false;
-	this.d = false;
 	this.regSpeed = 325;
 	this.speedX = 0;
 	this.speedY = 0;
 	this.game = game;
+	this.im = game.im;
 	this.layer = 4;
 	this.entityID = 1;
 	this.ctx = game.ctx;
+	this.controls();
 	// When changing the hitbox, also change x and y shift in draw collision box
 	this.hitBox = new CollisionBox(this, 18, 34, this.spriteSquareSize-36, this.spriteSquareSize-36);
+}
+
+Player.prototype.controls = function () {
+	this.im.addInput(new Input("up", 'w'));
+    this.im.addInput(new Input("down", 's'));
+    this.im.addInput(new Input("left", 'a'));
+    this.im.addInput(new Input("right", 'd'));
 }
 
 Player.prototype.entityCollisionCheck = function () {
@@ -223,28 +228,28 @@ Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
 	var yindex = 0;
 	xindex = frame % this.sheetWidth;
 
-	if(entity.w && entity.a) {
+	if(entity.im.checkInput("up") && entity.im.checkInput("left")) {
 		yindex = 8;
 	}
-	else if(entity.w && entity.d) {
+	else if(entity.im.checkInput("up") && entity.im.checkInput("right")) {
 		yindex = 8;
 	}
-	else if(entity.s && entity.a) {
+	else if(entity.im.checkInput("down") && entity.im.checkInput("left")) {
 		yindex = 10;
 	}
-	else if(entity.s && entity.d) {
+	else if(entity.im.checkInput("down") && entity.im.checkInput("right")) {
 		yindex = 10;
 	}
-	else if(entity.w) {
+	else if(entity.im.checkInput("up")) {
 		yindex = 8;
 	}
-	else if(entity.s) {
+	else if(entity.im.checkInput("down")) {
 		yindex = 10;
 	}
-	else if(entity.a) {
+	else if(entity.im.checkInput("left")) {
 		yindex = 9;
 	}
-	else if(entity.d) {
+	else if(entity.im.checkInput("right")) {
 		yindex = 11;
 	}
 	else {
@@ -301,33 +306,39 @@ Player.prototype.update = function () {
 	if (this.animation.elapsedTime < this.animation.totalTime) {
 		var currentAdjust = this.game.clockTick * this.speed;
 
-		if(this.w && this.a) {
+		if(this.im.checkInput("up") && this.im.checkInput("left")) {
 			this.speedY = -1 * this.regSpeed * sqrtOneHalf;
 			this.speedX = -1 * this.regSpeed * sqrtOneHalf;
 		}
-		else if(this.w && this.d) {
+		else if(this.im.checkInput("up") && this.im.checkInput("right")) {
 			this.speedY = -1 * this.regSpeed * sqrtOneHalf;
 			this.speedX = this.regSpeed * sqrtOneHalf;
 		}
-		else if(this.s && this.a) {
+		else if(this.im.checkInput("down") && this.im.checkInput("left")) {
 			this.speedY = this.regSpeed * sqrtOneHalf;
 			this.speedX = -1 * this.regSpeed * sqrtOneHalf;
 		}
-		else if(this.s && this.d) {
+		else if(this.im.checkInput("down") && this.im.checkInput("right")) {
 			this.speedY = this.regSpeed * sqrtOneHalf;
 			this.speedX = this.regSpeed * sqrtOneHalf;
 		}
-		else if(this.w) {
+		else if(this.im.checkInput("up")) {
 			this.speedY = -1 * this.regSpeed;
 		}
-		else if(this.s) {
+		else if(this.im.checkInput("down")) {
 			this.speedY = this.regSpeed;
 		}
-		else if(this.a) {
+		else if(this.im.checkInput("left")) {
 			this.speedX = -1 * this.regSpeed;
 		}
-		else if(this.d) {
+		else if(this.im.checkInput("right")) {
 			this.speedX = this.regSpeed;
+		}
+		
+		if(!(this.im.checkInput("up") || this.im.checkInput("down") ||
+		     this.im.checkInput("left") || this.im.checkInput("right"))) {
+			this.speedX = 0;
+			this.speedY = 0;
 		}
 
 		var newX = this.x + this.game.clockTick * this.speedX;
