@@ -14,17 +14,17 @@ Enemy.prototype = new Event();
 Enemy.prototype.constructor = Enemy;
 
 Enemy.prototype.update = function () {
-	this.screenX = this.x - this.game.backgroundEntity.x;
-	this.screenY = this.y - this.game.backgroundEntity.y;
+	this.screenX = this.x - gm.em.backgroundEntity.x;
+	this.screenY = this.y - gm.em.backgroundEntity.y;
 	Event.prototype.update.call(this);
 }
 
 Enemy.prototype.draw = function () {
 	// Visual Debugging of Event Locations
 	//this.animation.drawEntity(this.game.clockTick, this.game.ctx, this.screenX, this.screenY);
-	if (this.game.hitBoxVisible) {
-		this.game.ctx.strokeStyle = "cyan";
-	    this.game.ctx.strokeRect(this.hitBox.getScreenX(), this.hitBox.getScreenY(),
+	if (gm.hitBoxVisible) {
+		gm.ctx.strokeStyle = "cyan";
+	    gm.ctx.strokeRect(this.hitBox.getScreenX(), this.hitBox.getScreenY(),
 	    						 this.hitBox.width, this.hitBox.height);
 	}
 }
@@ -41,7 +41,7 @@ Enemy.prototype.collisionTrigger = function (player) {
 /* +------------------------------------------+ */
 function Werewolf(game, x, y) {
 	this.game = game;
-	this.animation = new Animation(this.game.am.getAsset("./img/werewolf.png"), 
+	this.animation = new Animation(gm.am.getAsset("./img/werewolf.png"), 
 					 		TILE_SIZE, TILE_SIZE, 4, 0.20, 16, true, 1);
 	this.x = x;
 	this.y = y;
@@ -53,7 +53,7 @@ Werewolf.prototype = new Enemy();
 Werewolf.prototype.constructor = Werewolf;
 
 Werewolf.prototype.draw = function () {
-	this.animation.drawEntity(this.game.clockTick, this.game.ctx, this.screenX, this.screenY);
+	this.animation.drawEntity(gm.clockTick, gm.ctx, this.screenX, this.screenY);
 	Enemy.prototype.draw.call(this);
 }
 Werewolf.prototype.update = function () {
@@ -71,7 +71,7 @@ Werewolf.prototype.collisionTrigger = function (player) {
 /* +------------------------------------------+ */
 function Green(game, x, y) {
 	this.game = game;
-	this.animation = new Animation(this.game.am.getAsset("./img/greenrage.png"),
+	this.animation = new Animation(gm.am.getAsset("./img/greenrage.png"),
 							TILE_SIZE, TILE_SIZE, 8, 0.07, 60, true, 1.0);
 	this.x = x;
 	this.y = y;
@@ -83,7 +83,7 @@ Green.prototype = new Enemy();
 Green.prototype.constructor = Green;
 
 Green.prototype.draw = function () {
-	this.animation.drawEntity(this.game.clockTick, this.game.ctx, this.screenX, this.screenY);
+	this.animation.drawEntity(gm.clockTick, gm.ctx, this.screenX, this.screenY);
 	Enemy.prototype.draw.call(this);
 }
 Green.prototype.update = function () {
@@ -101,7 +101,7 @@ Green.prototype.collisionTrigger = function (player) {
 /* +------------------------------------------+ */
 function Shark(game, x, y) {
 	this.game = game;
-	this.animation = new Animation(this.game.am.getAsset("./img/shark.png"),
+	this.animation = new Animation(gm.am.getAsset("./img/shark.png"),
 							TILE_SIZE, TILE_SIZE, 4, 0.1, 16, true, 1.0);
 	this.x = x;
 	this.y = y;
@@ -113,7 +113,7 @@ Shark.prototype = new Enemy();
 Shark.prototype.constructor = Shark;
 
 Shark.prototype.draw = function () {
-	this.animation.drawEntity(this.game.clockTick, this.game.ctx, this.screenX, this.screenY);
+	this.animation.drawEntity(gm.clockTick, gm.ctx, this.screenX, this.screenY);
 	Enemy.prototype.draw.call(this);
 }
 Shark.prototype.update = function () {
@@ -130,7 +130,7 @@ Shark.prototype.collisionTrigger = function (player) {
 /* +------------------------------------------+ */
 function Fire(game, x, y, spritesheet) {
 	this.game = game;
-	this.animation = new Animation(this.game.am.getAsset("./img/alienfirebird.png"),
+	this.animation = new Animation(gm.am.getAsset("./img/alienfirebird.png"),
 							TILE_SIZE, TILE_SIZE, 2, 0.15, 4, true, 1.0);
 	this.x = x;
 	this.y = y;
@@ -142,7 +142,7 @@ Fire.prototype = new Enemy();
 Fire.prototype.constructor = Fire;
 
 Fire.prototype.draw = function () {
-	this.animation.drawEntity(this.game.clockTick, this.game.ctx, this.screenX, this.screenY);
+	this.animation.drawEntity(gm.clockTick, gm.ctx, this.screenX, this.screenY);
 	Enemy.prototype.draw.call(this);
 }
 Fire.prototype.update = function () {

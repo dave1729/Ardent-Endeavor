@@ -1,8 +1,10 @@
+var gm = gm || {};
+
 //Input Manager takes the context to draw on
 //and the name of your first InputGroup
 //InputManager(context, String)
-function InputManager(ctx, firstGroupName) {
-	this.ctx = ctx;
+function InputManager(firstGroupName) {
+	this.ctx = gm.ctx;
     this.inputgroup_list = [];
     this.currentgroup = new InputGroup(firstGroupName);
     this.inputgroup_list.push(this.currentgroup);
@@ -92,7 +94,7 @@ InputManager.prototype.changeCurrentGroupTo = function(groupName) {
 
 //Sets Event Listeners to by used by the context passed on creation
 //start()
-InputManager.prototype.start = function (gm) {
+InputManager.prototype.start = function () {
 	var that = this;
 	
     var getXandY = function (e) {
@@ -109,12 +111,12 @@ InputManager.prototype.start = function (gm) {
     //event listeners are added here
 
     this.ctx.canvas.addEventListener("click", function (e) {
-        gm.click = getXandY(e);
+        that.click = getXandY(e);
     }, false);
     
 
     this.ctx.canvas.addEventListener("contextmenu", function (e) {
-        gm.click = getXandY(e);
+        that.rclick = getXandY(e);
         // console.log(e);
         // console.log("Right Click Event - X,Y " + e.clientX + ", " + e.clientY);
         e.preventDefault();
@@ -122,12 +124,12 @@ InputManager.prototype.start = function (gm) {
 
     this.ctx.canvas.addEventListener("mousemove", function (e) {
         //console.log(e);
-        gm.mouse = getXandY(e);
+        that.mouse = getXandY(e);
     }, false);
 
     this.ctx.canvas.addEventListener("mousewheel", function (e) {
         //console.log(e);
-        gm.wheel = e;
+        that.wheel = e;
         //console.log("Click Event - X,Y " + e.clientX + ", " + e.clientY + " Delta " + e.deltaY);
     }, false);
     

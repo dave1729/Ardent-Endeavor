@@ -28,9 +28,9 @@ Event.prototype.update = function () {
 
 Event.prototype.draw = function () {
 	// Visual Debugging of Event Locations
-	if (this.game.hitBoxVisible) {
-		this.game.ctx.strokeStyle = "red";
-	    this.game.ctx.strokeRect(this.screenX, this.screenY, this.w, this.h);
+	if (gm.hitBoxVisible) {
+		gm.ctx.strokeStyle = "red";
+	    gm.ctx.strokeRect(this.screenX, this.screenY, this.w, this.h);
 	}
 }
 
@@ -51,8 +51,8 @@ MapTeleportEvent.prototype = new Event();
 MapTeleportEvent.prototype.constructor = MapTeleportEvent;
 
 MapTeleportEvent.prototype.update = function () {
-	this.screenX = this.x - this.game.backgroundEntity.x;
-	this.screenY = this.y - this.game.backgroundEntity.y;
+	this.screenX = this.x - gm.em.backgroundEntity.x;
+	this.screenY = this.y - gm.em.backgroundEntity.y;
 	Event.prototype.update.call(this);
 }
 
@@ -66,8 +66,8 @@ MapTeleportEvent.prototype.draw = function () {
  */
 MapTeleportEvent.prototype.collisionTrigger = function (player) {
 	//console.error("Map to teleport to: " + this.destMapid);
-	this.game.sm.loadMap(this.destMapid, this.destx, this.desty);
-	this.game.backgroundEntity.update();
+	gm.loadMap(this.destMapid, this.destx, this.desty);
+	gm.em.backgroundEntity.update();
 }
 
 
