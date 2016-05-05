@@ -22,7 +22,7 @@ function EntityManager() {
 /* Adds an active entity to the game */
 EntityManager.prototype.addEntity = function (entity) {
 	//this.game.addEntity(entity);
-	console.log('added entity');
+	// console.log('added entity');
 	this.entities.push(entity);
 	if(entity.entityID === 1) this.controlEntity = entity;
 	if(entity.entityID === 0) this.backgroundEntity = entity;
@@ -49,7 +49,6 @@ EntityManager.prototype.update = function () {
 
     for (var i = 0; i < entitiesCount; i++) {
         var entity = this.entities[i];
-
         if (!entity.removeFromWorld) {
         	//console.log("Update: " + entity.constructor.name);
             entity.update();
@@ -64,28 +63,29 @@ EntityManager.prototype.update = function () {
 }
 
 EntityManager.prototype.draw = function () {
-	gm.ctx.clearRect(0, 0, this.surfaceWidth, this.surfaceHeight);
+	gm.ctx.clearRect(0, 0, gm.surfaceWidth, gm.surfaceHeight);
     gm.ctx.save();
-    
     for (var i = 0; i < this.entities.length; i++) {
-    	this.entities[i].draw(this.ctx);
+    	this.entities[i].draw(gm.ctx);
     }
     gm.ctx.restore();
 }
 
 /* Removes all active entities (including map and player) from the game */
 EntityManager.prototype.removeAllEntities = function () {
-	this.entities.length = 0;
+    this.entities.forEach((entity) => {
+        entity.removeFromWorld = true;
+    })
 }
 
 /* Creates a shallow copy of entities[] from game engine and stores in temp */
 EntityManager.prototype.cacheEntities = function () {
-	this.tempEntities = this.entities.slice(0);
+	this.tempEntities = this.entities;
 }
 
 /* Restores the entities from cache */
 EntityManager.prototype.restoreEntities = function () {
-	this.entities = this.tempEntities.slice(0);
+	this.entities = this.tempEntities;s
 }
 
 /* Remove specific entity from active list. */

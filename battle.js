@@ -165,7 +165,7 @@ Battle.prototype.enemyPhase = function (params) {
 
 Battle.prototype.spawnPlayer = function (params) {
     let spawn = new Blue(this.game, this.game.click.x, this.game.click.y, this.cursor, this);
-    this.game.addEntity(spawn);
+    this.game.em.addEntity(spawn);
     this.availableUnits.push(spawn);
     this.playerUnits.push(spawn);
     this.playerCount--;
@@ -213,7 +213,7 @@ Battle.prototype.spawnEnemies = function () {
 
 Battle.prototype.spawnEnemy = function (loc) {
     let spawn = new Red(this.game, loc.next().value, loc.next().value, this.cursor, this);
-    this.game.addEntity(spawn);
+    this.game.em.addEntity(spawn);
     this.enemyUnits.push(spawn);
 }
 
