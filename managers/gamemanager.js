@@ -66,6 +66,7 @@ GameManager.prototype.init = function () {
 /* unloads the old map, then loads in the new map and all the entities */
 GameManager.prototype.loadMap = function (mapid, destx, desty) {
 	this.map = this.mm.getMap(mapid);
+	console.log(mapid);
 	this.em.removeAllEntities();
 	this.player.x = destx;
 	this.player.y = desty;
@@ -78,7 +79,7 @@ GameManager.prototype.loadMap = function (mapid, destx, desty) {
 	for (var i = 0; i < this.map.entities.length; ++i) {
 		this.em.addEntity(this.map.entities[i]);
 	}
-    debugger;
+    //debugger;
 }
 /* Loads battle scene, disabling overworld entities and controls */
 GameManager.prototype.startBattle = function () {

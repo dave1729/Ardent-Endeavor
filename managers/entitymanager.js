@@ -57,6 +57,7 @@ EntityManager.prototype.update = function () {
 
     for (var i = this.entities.length - 1; i >= 0; --i) {
         if (this.entities[i].removeFromWorld) {
+        	this.entities[i].removeFromWorld = false;
             this.entities.splice(i, 1);
         }
     }
@@ -76,6 +77,7 @@ EntityManager.prototype.removeAllEntities = function () {
     this.entities.forEach((entity) => {
         entity.removeFromWorld = true;
     })
+    this.update();
 }
 
 /* Creates a shallow copy of entities[] from game engine and stores in temp */
