@@ -23,6 +23,10 @@ InputManager.prototype.addInput = function(theInput) {
 	this.currentgroup.addInput(theInput);
 }
 
+InputManager.prototype.addClickAndMouse = function() {
+	this.currentgroup.addClickAndMouse();
+}
+
 //sets an input command to false(to stop a motion with a command)
 //returns false if not in current group
 //setFalse(String)
@@ -111,12 +115,16 @@ InputManager.prototype.start = function () {
     //event listeners are added here
 
     this.ctx.canvas.addEventListener("click", function (e) {
-        that.click = getXandY(e);
+    	if(that.currentgroup.usingClickAndMouse) {
+        	that.currentgroup.click = getXandY(e);
+        }
     }, false);
     
 
     this.ctx.canvas.addEventListener("contextmenu", function (e) {
-        that.rclick = getXandY(e);
+        if(that.currentgroup.usingClickAndMouse) {
+        	that.currentgroup.rClick = getXandY(e);
+        }
         // console.log(e);
         // console.log("Right Click Event - X,Y " + e.clientX + ", " + e.clientY);
         e.preventDefault();
@@ -124,7 +132,9 @@ InputManager.prototype.start = function () {
 
     this.ctx.canvas.addEventListener("mousemove", function (e) {
         //console.log(e);
-        that.mouse = getXandY(e);
+        if(that.currentgroup.usingClickAndMouse) {
+        	that.currentgroup.mouse = getXandY(e);
+        }
     }, false);
 
     this.ctx.canvas.addEventListener("mousewheel", function (e) {
@@ -163,6 +173,11 @@ InputManager.prototype.start = function () {
 function InputGroup(theName) {
 	this.name = theName;
     this.input_list = [];
+    
+    this.usingClickAndMouse = false;
+    this.click = null;
+    this.rclick = null;
+    this.mouse = null;
 }
 
 //adds a new input to the input group
@@ -171,6 +186,9 @@ InputGroup.prototype.addInput = function(theInput) {
 	this.input_list.push(theInput);
 }
 
+InputGroup.prototype.addClickAndMouse = function() {
+	this.usingClickAndMouse = true;
+}
 //Sends an alert that shows the current group
 InputGroup.prototype.printGroupAsAlert = function() {
 	for(var i = 0; i < this.input_list.length; i++) {
