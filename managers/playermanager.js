@@ -24,6 +24,7 @@ Player.prototype.controls = function () {
     this.im.addInput(new Input("down", 's'));
     this.im.addInput(new Input("left", 'a'));
     this.im.addInput(new Input("right", 'd'));
+    this.im.addInput(new Input("menu", 'i'));
 }
 
 Player.prototype.entityCollisionCheck = function () {

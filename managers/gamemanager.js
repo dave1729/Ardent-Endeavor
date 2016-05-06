@@ -1,9 +1,10 @@
 const TILE_SIZE = 64;
-function GameManager(ctx)
+function GameManager(ctx, ctxUI)
 {
     this.controlEntity = null;
     this.backgroundEntity = null;
     this.ctx = ctx;
+    this.ctxUI = ctxUI;
     this.im = null;
     this.surfaceWidth = null;
     this.surfaceHeight = null;
@@ -17,6 +18,7 @@ function GameManager(ctx)
     this.mm = null; // MapManager
     this.em = null; // EntityManager
     this.sm = null; // SceneManager
+    this.ui = null; // UIManager
     this.timer = null;
     
 }
@@ -43,9 +45,9 @@ GameManager.prototype.initialize = function (player, mapid, destx, desty) {
 	this.loadMap(mapid, destx, desty);
 }
 
-GameManager.prototype.startInput = function () {
+GameManager.prototype.startInput = function (ctx) {
     console.log('Starting input');
-    this.im.start();
+    this.im.start(ctx);
     console.log('Input started');
 }
 
@@ -53,11 +55,12 @@ GameManager.prototype.init = function () {
     this.am = new AssetManager();
     this.em = new EntityManager();
     this.im = new InputManager("Dungeon");
+    this.ui = new UIManager();
     this.surfaceWidth = this.ctx.canvas.width;
     this.surfaceHeight = this.ctx.canvas.height;
     this.timer = new Timer();
     this.disableInput = false;
-    this.startInput();
+    this.startInput(this.ctx);
     this.hitBoxVisible = true;
     
     this.mm = new MapManager();
@@ -86,6 +89,7 @@ GameManager.prototype.startBattle = function () {
 	// Lets ignore this for now
 	gm.em.cacheEntities();
 	gm.em.removeAllEntities();
+	
 	// this.game.em.addEntity(map.bgLayer);
 	// this.game.em.addEntity(map.cLayer);
 	this.em.addEntity(new Grid(this))
@@ -110,8 +114,10 @@ GameManager.prototype.endBattle = function () {
 GameManager.prototype.loop = function () {
     this.clockTick = this.timer.tick();
     this.em.update();
+    this.ui.update();
     this.click = undefined;
     this.em.draw();
+    this.ui.draw();
     requestAnimationFrame(this.loop.bind(this), this.ctx.canvas);
    //this.update();
 }

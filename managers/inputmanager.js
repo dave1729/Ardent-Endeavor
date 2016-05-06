@@ -94,7 +94,7 @@ InputManager.prototype.changeCurrentGroupTo = function(groupName) {
 
 //Sets Event Listeners to by used by the context passed on creation
 //start()
-InputManager.prototype.start = function () {
+InputManager.prototype.start = function (ctx) {
 	var that = this;
 	
     var getXandY = function (e) {
@@ -110,30 +110,30 @@ InputManager.prototype.start = function () {
 
     //event listeners are added here
 
-    this.ctx.canvas.addEventListener("click", function (e) {
+    ctx.canvas.addEventListener("click", function (e) {
         that.click = getXandY(e);
     }, false);
     
 
-    this.ctx.canvas.addEventListener("contextmenu", function (e) {
+    ctx.canvas.addEventListener("contextmenu", function (e) {
         that.rclick = getXandY(e);
         // console.log(e);
         // console.log("Right Click Event - X,Y " + e.clientX + ", " + e.clientY);
         e.preventDefault();
     }, false);
 
-    this.ctx.canvas.addEventListener("mousemove", function (e) {
+    ctx.canvas.addEventListener("mousemove", function (e) {
         //console.log(e);
         that.mouse = getXandY(e);
     }, false);
 
-    this.ctx.canvas.addEventListener("mousewheel", function (e) {
+    ctx.canvas.addEventListener("mousewheel", function (e) {
         //console.log(e);
         that.wheel = e;
         //console.log("Click Event - X,Y " + e.clientX + ", " + e.clientY + " Delta " + e.deltaY);
     }, false);
     
-    this.ctx.canvas.addEventListener("keydown", function (e) {
+    ctx.canvas.addEventListener("keydown", function (e) {
 		for(var i = 0; i < that.currentgroup.input_list.length; i++) {
 			if(that.currentgroup.input_list[i].charCode === e.which) {
 				that.currentgroup.input_list[i].isPressed = true;
@@ -147,7 +147,7 @@ InputManager.prototype.start = function () {
         // console.log("Key Pressed Event - Char " + e.charCode + " Code " + e.keyCode);
     // }, false);
 // 
-    this.ctx.canvas.addEventListener("keyup", function (e) {
+    ctx.canvas.addEventListener("keyup", function (e) {
 		for(var i = 0; i < that.currentgroup.input_list.length; i++) {
 			if(that.currentgroup.input_list[i].charCode === e.which) {
 				that.currentgroup.input_list[i].isPressed = false;

@@ -45,12 +45,14 @@ EntityManager.prototype.removeEntity = function (id) {
 }
 
 EntityManager.prototype.update = function () {
-	var entitiesCount = this.entities.length;
-
-    for (var i = 0; i < entitiesCount; i++) {
+	//var entitiesCount = this.entities.length;
+	//console.log(this.entities);
+	//console.log(this.entities.length);
+	
+	
+    for (var i = 0; i < this.entities.length; i++) {
         var entity = this.entities[i];
         if (!entity.removeFromWorld) {
-        	//console.log("Update: " + entity.constructor.name);
             entity.update();
         }
     }
@@ -59,6 +61,7 @@ EntityManager.prototype.update = function () {
         if (this.entities[i].removeFromWorld) {
         	this.entities[i].removeFromWorld = false;
             this.entities.splice(i, 1);
+            
         }
     }
 }

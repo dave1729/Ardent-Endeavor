@@ -293,7 +293,12 @@ var gm = gm || {};
 window.addEventListener('load', () => {
 	var canvas = document.getElementById("gameWorld");
 	canvas.focus();
-	gm = new GameManager(canvas.getContext("2d"));
+	var ctx = canvas.getContext("2d");
+	
+	var canvasUI = document.getElementById("uiLayer");
+	var ctxUI = canvasUI.getContext("2d");
+	
+	gm = new GameManager(ctx, ctxUI);
 	gm.start();
 
 });
