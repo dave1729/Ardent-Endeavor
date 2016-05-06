@@ -54,6 +54,46 @@ InputManager.prototype.checkInput = function(theName) {
 	return initiated;
 }
 
+//returns a boolean value used to check if the 
+//mouse or clicks are being used on the current group
+//checkMouse()
+InputManager.prototype.checkMouse = function() {
+	return this.currentgroup.isUsingMouse;
+}
+
+//returns the left click
+//getClick()
+InputManager.prototype.getClick = function() {
+	if(this.currentgroup.isUsingMouse) {
+		return this.currentgroup.click;
+	}
+	else {
+		return null;
+	}
+}
+
+//returns the right click
+//getRClick()
+InputManager.prototype.getRClick = function() {
+	if(this.currentgroup.isUsingMouse) {
+		return this.currentgroup.rClick;
+	}
+	else {
+		return null;
+	}
+}
+
+//returns the moving mouse position
+//getMouse()
+InputManager.prototype.getMouse = function() {
+	if(this.currentgroup.isUsingMouse) {
+		return this.currentgroup.mouse;
+	}
+	else {
+		return null;
+	}
+}
+
 //CANT REMEMBER WHY I MADE THIS, BUT ITS HERE IN CASE
 //I REMEMEBER WHAT I WANTED IT FOR. :-)
 // InputManager.prototype.inputCode = function(name) {
@@ -111,12 +151,22 @@ InputManager.prototype.start = function (ctx) {
     //event listeners are added here
 
     ctx.canvas.addEventListener("click", function (e) {
-        that.click = getXandY(e);
+        if(that.currentgroup.isUsingMouse) {
+			that.currentgroup.click == getXandY(e);
+		}
+		else {
+			that.currentgroup.mouse == null;
+		}
     }, false);
     
 
     ctx.canvas.addEventListener("contextmenu", function (e) {
-        that.rclick = getXandY(e);
+        if(that.currentgroup.isUsingMouse) {
+			that.currentgroup.rClick == getXandY(e);
+		}
+		else {
+			that.currentgroup.mouse == null;
+		}
         // console.log(e);
         // console.log("Right Click Event - X,Y " + e.clientX + ", " + e.clientY);
         e.preventDefault();
@@ -124,7 +174,12 @@ InputManager.prototype.start = function (ctx) {
 
     ctx.canvas.addEventListener("mousemove", function (e) {
         //console.log(e);
-        that.mouse = getXandY(e);
+        if(that.currentgroup.isUsingMouse) {
+			that.currentgroup.mouse == getXandY(e);
+		}
+		else {
+			that.currentgroup.mouse == null;
+		}
     }, false);
 
     ctx.canvas.addEventListener("mousewheel", function (e) {
@@ -163,12 +218,23 @@ InputManager.prototype.start = function (ctx) {
 function InputGroup(theName) {
 	this.name = theName;
     this.input_list = [];
+    this.isUsingMouse = false;
+    this.click = null;
+    this.rclick = null;
+    this.mouse = null;
 }
 
 //adds a new input to the input group
 //addInput(Input)
 InputGroup.prototype.addInput = function(theInput) {
 	this.input_list.push(theInput);
+}
+
+
+//adds a new mouse/clicks to the input group
+//addMouse())
+InputGroup.prototype.addMouse = function() {
+	this.isUsingMouse = true;
 }
 
 //Sends an alert that shows the current group
