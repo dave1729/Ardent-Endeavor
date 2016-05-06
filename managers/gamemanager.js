@@ -20,6 +20,7 @@ function GameManager(ctx, ctxUI)
     this.sm = null; // SceneManager
     this.ui = null; // UIManager
     this.timer = null;
+    this.gamePaused = true;
     
 }
 GameManager.prototype.start = function() {
@@ -43,6 +44,7 @@ GameManager.prototype.initialize = function (player, mapid, destx, desty) {
 	this.player = player;
 	this.mm.initialize();
 	this.loadMap(mapid, destx, desty);
+	this.gamePaused = false;
 }
 
 GameManager.prototype.startInput = function (ctx) {
@@ -111,13 +113,34 @@ GameManager.prototype.endBattle = function () {
 	// resume overworld functions
 }
 
+/* Opens the game menu, switching canvas focus and keybinds */
+GameManager.prototype.openGameMenu = function () {
+	this.gamePaused = true;
+	this.im.changeCurrentGroupTo("ui");
+	this.startInput(this.ctxUI);
+	// need to disable previous keys.
+	document.getElementById("uiLayer").style.zIndex = "2";
+}
+
+GameManager.prototype.closeGameMenu = function () {
+	this.gamePaused = false;
+	this.im.changeCurrentGroupTo("Dungeon");
+	this.startInput(this.ctx);
+	document.getElementById("uiLayer").style.zIndex = "-1";
+}
+
 GameManager.prototype.loop = function () {
     this.clockTick = this.timer.tick();
-    this.em.update();
-    this.ui.update();
-    this.click = undefined;
-    this.em.draw();
-    this.ui.draw();
+    if (!this.gamePaused) {
+    	this.em.update();
+    	this.click = undefined;
+    	this.em.draw();
+    } else {
+    	this.ui.update();
+    	this.click = undefined;
+    	this.ui.draw();
+    }
+    
     requestAnimationFrame(this.loop.bind(this), this.ctx.canvas);
    //this.update();
 }

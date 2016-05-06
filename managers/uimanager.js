@@ -25,17 +25,18 @@ function GameMenu(uimanager, ctx, x, y) {
 	this.ui = uimanager;
 	this.BUTTON_HEIGHT = this.ui.screenHeight / 16;
 	this.MENU_WIDTH = this.ui.screenWidth / 4;
+	this.TOP_BOT_PADDING = this.ui.screenHeight / 48;
 	
 	this.x = x;
 	this.y = y;
 	this.ctx = ctx;
 	this.buttons = [];
-	this.buttons.push(new Button(this, this.ctx, "Items", this.x, this.y + (this.BUTTON_HEIGHT*0), this.MENU_WIDTH, this.BUTTON_HEIGHT));
-	this.buttons.push(new Button(this, this.ctx, "Magic", this.x, this.y + (this.BUTTON_HEIGHT*1), this.MENU_WIDTH, this.BUTTON_HEIGHT));
-	this.buttons.push(new Button(this, this.ctx, "Equipment", this.x, this.y + (this.BUTTON_HEIGHT*2), this.MENU_WIDTH, this.BUTTON_HEIGHT));
-	this.buttons.push(new Button(this, this.ctx, "Status", this.x, this.y + (this.BUTTON_HEIGHT*3), this.MENU_WIDTH, this.BUTTON_HEIGHT));
-	this.buttons.push(new Button(this, this.ctx, "Options", this.x, this.y + (this.BUTTON_HEIGHT*4), this.MENU_WIDTH, this.BUTTON_HEIGHT));
-	this.buttons.push(new Button(this, this.ctx, "Save", this.x, this.y + (this.BUTTON_HEIGHT*5), this.MENU_WIDTH, this.BUTTON_HEIGHT));
+	this.buttons.push(new Button(this, this.ctx, "Items", this.x, this.y + (this.BUTTON_HEIGHT*0 + this.TOP_BOT_PADDING), this.MENU_WIDTH, this.BUTTON_HEIGHT));
+	this.buttons.push(new Button(this, this.ctx, "Magic", this.x, this.y + (this.BUTTON_HEIGHT*1 + this.TOP_BOT_PADDING), this.MENU_WIDTH, this.BUTTON_HEIGHT));
+	this.buttons.push(new Button(this, this.ctx, "Equipment", this.x, this.y + (this.BUTTON_HEIGHT*2 + this.TOP_BOT_PADDING), this.MENU_WIDTH, this.BUTTON_HEIGHT));
+	this.buttons.push(new Button(this, this.ctx, "Status", this.x, this.y + (this.BUTTON_HEIGHT*3 + this.TOP_BOT_PADDING), this.MENU_WIDTH, this.BUTTON_HEIGHT));
+	this.buttons.push(new Button(this, this.ctx, "Options", this.x, this.y + (this.BUTTON_HEIGHT*4 + this.TOP_BOT_PADDING), this.MENU_WIDTH, this.BUTTON_HEIGHT));
+	this.buttons.push(new Button(this, this.ctx, "Save", this.x, this.y + (this.BUTTON_HEIGHT*5 + this.TOP_BOT_PADDING), this.MENU_WIDTH, this.BUTTON_HEIGHT));
 }
 GameMenu.prototype.update = function () {
 	// Update buttons
@@ -43,18 +44,36 @@ GameMenu.prototype.update = function () {
 	for (i = 0; i < this.buttons.length; i++) {
 		this.buttons[i].update(this.ctx);
 	}
+	
+	if (gm.im.checkInput("menu")) {
+		gm.closeGameMenu();
+		gm.im.currentgroup.input_list[4].isPressed = false;
+	}
+	
 }
 GameMenu.prototype.draw = function () {
 	// Draw the backdrop and border
 	this.ctx.strokeStyle = "rgb(255, 255, 255)";
 	this.ctx.fillStyle = "rgba(0, 98, 130, 0.01)";
-	roundRect(this.ctx, this.x, this.y, this.MENU_WIDTH, (this.BUTTON_HEIGHT * this.buttons.length), 15, true, true);
+	roundRect(this.ctx, this.x, this.y, this.MENU_WIDTH, (this.BUTTON_HEIGHT * this.buttons.length + this.TOP_BOT_PADDING*2), 15, true, true);
 			
 	// Draw buttons
 	var i;
 	for (i = 0; i < this.buttons.length; i++) {
 		this.buttons[i].draw(this.ctx);
 	}
+}
+
+GameMenu.prototype.controls = function () {
+	var temp = this.im.currentgroup.name;
+	this.im.addGroup("ui");
+	this.im.addInput(new Input("up", 'w'));
+    this.im.addInput(new Input("down", 's'));
+    this.im.addInput(new Input("left", 'a'));
+    this.im.addInput(new Input("right", 'd'));
+    this.im.addInput(new Input("menu", 'i'));
+    this.im.addInput(new Input("mouseMove", "mousemove"));
+    this.im.changeCurrentGroupTo(temp);
 }
 
 
@@ -113,6 +132,18 @@ Button.prototype.update = function(canvas) {
             this.handler();
         }
     }
+    //console.log(gm.im.mouse.x + " - " + gm.im.mouse.y);
+    if (gm.im.checkInput("mousemove")) {
+		if (gm.im.mouse.x > this.x && 
+				gm.im.mouse.y > this.y &&
+				gm.im.mouse.x < this.x + this.width &&
+				gm.im.mouse.y < this.y + this.height) {
+			this.hovered = true;
+		} else {
+			this.hovoered = false;
+		}
+	}
+    
 }
 
 Button.prototype.draw = function(ctx) {

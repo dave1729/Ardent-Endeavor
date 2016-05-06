@@ -58,7 +58,11 @@ Player.prototype.update = function () {
 	if (this.animation.elapsedTime < this.animation.totalTime) {
 		var currentAdjust = gm.clockTick * this.speed;
 
-		if(this.im.checkInput("up") && this.im.checkInput("left")) {
+		if (this.im.checkInput("menu")) {
+			gm.openGameMenu();
+			gm.im.currentgroup.input_list[4].isPressed = false;
+		}
+		else if(this.im.checkInput("up") && this.im.checkInput("left")) {
 			this.speedY = -1 * this.regSpeed * sqrtOneHalf;
 			this.speedX = -1 * this.regSpeed * sqrtOneHalf;
 		}
