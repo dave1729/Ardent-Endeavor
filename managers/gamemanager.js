@@ -1,9 +1,10 @@
 const TILE_SIZE = 64;
-function GameManager(ctx)
+function GameManager(ctx, ctxUI)
 {
     this.controlEntity = null;
     this.backgroundEntity = null;
     this.ctx = ctx;
+    this.ctxUI = ctxUI;
     this.im = null;
     this.surfaceWidth = null;
     this.surfaceHeight = null;
@@ -17,7 +18,9 @@ function GameManager(ctx)
     this.mm = null; // MapManager
     this.em = null; // EntityManager
     this.sm = null; // SceneManager
+    this.ui = null; // UIManager
     this.timer = null;
+    this.gamePaused = false;
     
 }
 GameManager.prototype.start = function() {
@@ -42,11 +45,12 @@ GameManager.prototype.initialize = function (player, mapid, destx, desty) {
 	this.player = player;
 	this.mm.initialize();
 	this.loadMap(mapid, destx, desty);
+	this.gamePaused = false;
 }
 
-GameManager.prototype.startInput = function () {
+GameManager.prototype.startInput = function (ctx) {
     console.log('Starting input');
-    this.im.start();
+    this.im.start(ctx);
     console.log('Input started');
 }
 
@@ -54,11 +58,12 @@ GameManager.prototype.init = function () {
     this.am = new AssetManager();
     this.em = new EntityManager();
     this.im = new InputManager("Dungeon");
+    this.ui = new UIManager();
     this.surfaceWidth = this.ctx.canvas.width;
     this.surfaceHeight = this.ctx.canvas.height;
     this.timer = new Timer();
     this.disableInput = false;
-    this.startInput();
+    this.startInput(this.ctx);
     this.hitBoxVisible = true;
     
     this.mm = new MapManager();
@@ -87,6 +92,7 @@ GameManager.prototype.startBattle = function (enemy) {
 	// Lets ignore this for now
 	gm.em.cacheEntities();
 	gm.em.removeAllEntities();
+	
 	// this.game.em.addEntity(map.bgLayer);
 	// this.game.em.addEntity(map.cLayer);
 	this.em.addEntity(new Grid(this))
@@ -108,11 +114,79 @@ GameManager.prototype.endBattle = function () {
 	// resume overworld functions
 }
 
+/* Opens the game menu, switching canvas focus and keybinds */
+GameManager.prototype.openGameMenu = function () {
+	this.gamePaused = true;
+	this.showUI = true;
+	this.im.changeCurrentGroupTo("ui");
+	this.startInput(this.ctxUI);
+	this.ui.showGameMenu = true;
+	// need to disable previous keys (maybe).
+	document.getElementById("uiLayer").style.zIndex = "3";
+}
+/* Closes the game mneu, switching canvas focus back to the game. */
+GameManager.prototype.closeGameMenu = function () {
+	this.gamePaused = false;
+	this.showUI = false;
+	this.im.changeCurrentGroupTo("Dungeon");
+	this.startInput(this.ctx);
+	this.ui.showGameMenu = false;
+	document.getElementById("uiLayer").style.zIndex = "-1";
+}
+
+/* Opens the game menu, switching canvas focus and keybinds */
+GameManager.prototype.openBattleMenu = function (x, y) {
+	this.gamePaused = false;
+	this.showUI = true;
+	this.im.changeCurrentGroupTo("ui");
+	this.startInput(this.ctxUI);
+	this.ui.battleMenu.moveMenu(x, y);
+	this.ui.showBattleMenu = true;
+	// need to disable previous keys (maybe).
+	document.getElementById("uiLayer").style.zIndex = "3";
+}
+/* Closes the game mneu, switching canvas focus back to the game. */
+GameManager.prototype.closeBattleMenu = function () {
+	this.gamePaused = false;
+	this.showUI = false;
+	this.im.changeCurrentGroupTo("Dungeon");
+	this.startInput(this.ctx);
+	this.ui.showBattleMenu = false;
+	document.getElementById("uiLayer").style.zIndex = "-1";
+}
+
+GameManager.prototype.openDialogueBox = function (name, string) {
+	this.gamePaused = true;
+	this.showUI = true;
+	this.im.changeCurrentGroupTo("ui");
+	this.startInput(this.ctxUI);
+	this.ui.showDialogue = true;
+	document.getElementById("uiLayer").style.zIndex = "3";
+	this.ui.dialogueBox.newDialogue(name, string);
+}
+
+GameManager.prototype.closeDialogueBox = function () {
+	this.gamePaused = false;
+	this.showUI = false;
+	this.im.changeCurrentGroupTo("Dungeon");
+	this.startInput(this.ctx);
+	this.ui.showDialogue = false;
+	document.getElementById("uiLayer").style.zIndex = "-1";
+}
+
 GameManager.prototype.loop = function () {
     this.clockTick = this.timer.tick();
-    this.em.update();
-    this.click = undefined;
-    this.em.draw();
+    if (!this.gamePaused) {
+    	this.em.update();
+    	this.click = undefined;
+    	this.em.draw();
+    }
+    if (this.showUI) {
+    	this.ui.update();
+    	this.click = undefined;
+    	this.ui.draw();
+    }
+    
     requestAnimationFrame(this.loop.bind(this), this.ctx.canvas);
    //this.update();
 }

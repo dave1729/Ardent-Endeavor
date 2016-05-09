@@ -12,6 +12,7 @@
     <script type="text/javascript" src="./managers/gamemanager.js"></script>
     <script type="text/javascript" src="./managers/entitymanager.js"></script>
     <script type="text/javascript" src="./managers/mapmanager.js"></script>
+    <script type="text/javascript" src="./managers/uimanager.js"></script>
     <!-- END MANAGERS -->
     <script type="text/javascript" src="./gameengine.js"></script>
     <script type="text/javascript" src="./nicholas.js"></script>
@@ -21,9 +22,11 @@
     <script type="text/javascript" src="./maps.js"></script>
     <script type="text/javascript" src="./battle.js"></script>
     <script type="text/javascript" src="./enemies.js"></script>
+    <script type="text/javascript" src="./npcs.js"></script>
 </head>
 <body>
-    <canvas id="gameWorld" tabindex="1" width="512" height="480" style="border: 1px solid brown; background: darkgreen"></canvas>
+    <canvas id="gameWorld" tabindex="1" width="512" height="480" style="border: 1px solid brown; position: absolute; background: darkgreen; z-index: 1;"></canvas>
+    <canvas id="uiLayer" tabindex="1" width="512" height="480" style="border: 1px solid brown; position: absolute; background: transparent; z-index: 2;"></canvas>
     <p>
     INSTRUCTIONS</br>
     NOTE: RELOAD TO PLAY AGAIN</br>

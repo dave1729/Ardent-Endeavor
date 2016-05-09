@@ -25,6 +25,7 @@ MapManager.prototype.initialize = function () {
 	map01.addEntity(new Green(gm, 64, 64));
     map01.addEntity(new Shark(gm, 64, 128));
     map01.addEntity(new Fire(gm, 64, 256));
+    map01.addEntity(new Billy(gm, 500, 600));
     this.addMap(map01);
     
     
