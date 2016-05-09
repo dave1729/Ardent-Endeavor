@@ -109,8 +109,23 @@ function Battle(game, cursor, enemy)
     this.init();
 }
 
+Battle.prototype.controls = function () {
+	//var temp = gm.im.currentgroup.name;
+	gm.im.addGroup("battle");
+	//console.log(gm.im.currentgroup);
+	gm.im.currentgroup.addMouse();
+	// gm.im.addInput(new Input("up", 'w'));
+	// gm.im.addInput(new Input("down", 's'));
+	// gm.im.addInput(new Input("left", 'a'));
+	// gm.im.addInput(new Input("right", 'd'));
+	// gm.im.addInput(new Input("menu", 'i'));
+	// gm.im.addInput(new Input("confirm", 'e'));
+	gm.im.changeCurrentGroupTo(temp);
+}
+
 Battle.prototype.init = function (params) {
     this.spawnEnemies();
+    this.controls();
 }
 
 Battle.prototype.update = function ()

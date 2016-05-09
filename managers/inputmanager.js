@@ -70,9 +70,7 @@ InputManager.prototype.getClick = function() {
 	if(this.currentgroup.isUsingMouse) {
 		return this.currentgroup.click;
 	}
-	else {
-		return null;
-	}
+	return null;
 }
 
 //returns the right click
@@ -81,9 +79,7 @@ InputManager.prototype.getRClick = function() {
 	if(this.currentgroup.isUsingMouse) {
 		return this.currentgroup.rClick;
 	}
-	else {
-		return null;
-	}
+	return null;
 }
 
 //returns the moving mouse position
@@ -92,9 +88,7 @@ InputManager.prototype.getMouse = function() {
 	if(this.currentgroup.isUsingMouse) {
 		return this.currentgroup.mouse;
 	}
-	else {
-		return null;
-	}
+	return null;
 }
 
 //CANT REMEMBER WHY I MADE THIS, BUT ITS HERE IN CASE
@@ -156,18 +150,12 @@ InputManager.prototype.start = function (ctx) {
         if(that.currentgroup.isUsingMouse) {
 			that.currentgroup.click = getXandY(e);
 		}
-		else {
-			that.currentgroup.click = null;
-		}
     }, false);
     
 
     ctx.canvas.addEventListener("contextmenu", function (e) {
         if(that.currentgroup.isUsingMouse) {
 			that.currentgroup.rClick = getXandY(e);
-		}
-		else {
-			that.currentgroup.rClick = null;
 		}
         // console.log(e);
         // console.log("Right Click Event - X,Y " + e.clientX + ", " + e.clientY);
