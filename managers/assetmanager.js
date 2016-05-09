@@ -4,6 +4,8 @@ function AssetManager() {
     this.cache = [];
     this.downloadQueue = [];
 }
+AssetManager.prototype = Object.create(AssetManager.prototype);
+AssetManager.prototype.constructor = AssetManager;
 
 AssetManager.prototype.queueDownload = function (path) {
     console.log("Queueing " + path);

@@ -4,26 +4,41 @@
 <head>
     <meta charset="utf-8">
     <title>Game Project Shell</title>
+    <!-- MANAGERS -->
+    <script type="text/javascript" src="./managers/manager.js"></script>
+    <script type="text/javascript" src="./managers/playermanager.js"></script>
+    <script type="text/javascript" src="./managers/assetmanager.js"></script>
+    <script type="text/javascript" src="./managers/inputmanager.js"></script>
+    <script type="text/javascript" src="./managers/gamemanager.js"></script>
+    <script type="text/javascript" src="./managers/entitymanager.js"></script>
+    <script type="text/javascript" src="./managers/mapmanager.js"></script>
+    <script type="text/javascript" src="./managers/uimanager.js"></script>
+    <!-- END MANAGERS -->
     <script type="text/javascript" src="./gameengine.js"></script>
     <script type="text/javascript" src="./nicholas.js"></script>
-    <script type="text/javascript" src="./assetmanager.js"></script>
     <script type="text/javascript" src="./main.js"></script>
     <script type="text/javascript" src="./events.js"></script>
+
+    <script type="text/javascript" src="./maps.js"></script>
+    <script type="text/javascript" src="./battle.js"></script>
+    <script type="text/javascript" src="./enemies.js"></script>
+    <script type="text/javascript" src="./npcs.js"></script>
 </head>
 <body>
-    <canvas id="gameWorld" tabindex="1" width="512" height="480" style="border: 1px solid brown; background: darkgreen"></canvas>
+    <canvas id="gameWorld" tabindex="1" width="512" height="480" style="border: 1px solid brown; position: absolute; background: darkgreen; z-index: 1;"></canvas>
+    <canvas id="uiLayer" tabindex="1" width="512" height="480" style="border: 1px solid brown; position: absolute; background: transparent; z-index: 2;"></canvas>
     <p>
-    INSTRUCTIONS
-    NOTE: RELOAD TO PLAY AGAIN
-    Press B to start battle sequence
+    INSTRUCTIONS</br>
+    NOTE: RELOAD TO PLAY AGAIN</br>
+    Press B to start battle sequence</br>
     
-    Click green spaces to place players
-    Click them again to select a player, it should be highlighted green
-    Click a square to only move once your player there.
-    click an enemy to attack it
-    each player can move one time and attack one time.
-    Deselect the player with right click
-    RELOAD TO PLAY AGAIN
+    Click green spaces to place players</br>
+    Click them again to select a player, it should be highlighted green</br>
+    Click a square to only move once your player there.</br>
+    click an enemy to attack it</br>
+    each player can move one time and attack one time.</br>
+    Deselect the player with right click</br>
+    RELOAD TO PLAY AGAIN</br>
     
     
     </p>
