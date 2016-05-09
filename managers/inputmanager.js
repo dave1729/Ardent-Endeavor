@@ -178,9 +178,6 @@ InputManager.prototype.start = function (ctx) {
         if(that.currentgroup.isUsingMouse) {
 			that.currentgroup.mouse = getXandY(e);
 		}
-		else {
-			that.currentgroup.mouse = null;
-		}
     }, false);
 
     ctx.canvas.addEventListener("mousewheel", function (e) {
