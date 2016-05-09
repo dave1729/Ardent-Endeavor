@@ -45,10 +45,9 @@ function Cursor (game)
 
 Cursor.prototype.update = function () {
     
-        // console.log(this.x, this.y)
-        this.point = this.game.im.mouse;
-        this.x = this.game.im.mouse.x;
-        this.y = this.game.im.mouse.y;
+        this.point = gm.im.mouse;
+        this.x = gm.im.mouse.x;
+        this.y = gm.im.mouse.y;
     // if (this.mouse.click)
     // {
     //     // this.game.addEntity(new )
@@ -86,7 +85,7 @@ function tileToWorldLeftTop(x, y) {
 // Battl Start
 // Battle End
 
-function Battle(game, cursor)
+function Battle(game, cursor, enemy)
  {
     this.game = game;
     this.currentPhase = this.setupPhase;
@@ -103,6 +102,7 @@ function Battle(game, cursor)
     
     //Phases
     this.playerUnits = [];
+    this.enemyType = enemy;
     this.enemyUnits = [];
     this.availableUnits = [];
     this.cursor = cursor;
@@ -212,7 +212,7 @@ Battle.prototype.spawnEnemies = function () {
 }
 
 Battle.prototype.spawnEnemy = function (loc) {
-    let spawn = new Red(this.game, loc.next().value, loc.next().value, this.cursor, this);
+    let spawn = new Red(this.game, loc.next().value, loc.next().value, this.cursor, this, this.enemyType);
     this.game.em.addEntity(spawn);
     this.enemyUnits.push(spawn);
 }

@@ -15,7 +15,7 @@ Blue.prototype.update = function ()
     {
     if (this.selected)
     {     
-        if (this.game.click)
+        if (gm.im.click)
         {
             if(!this.moved)
             {
@@ -26,13 +26,13 @@ Blue.prototype.update = function ()
                     this.selected = false;
                     this.cursor.selected = false;
                     this.moved = true;
-                    this.game.click = undefined;
+                    gm.im.click = undefined;
                 }
             }
         }
          if (!this.attack && this.moved)
             {
-                if(this.game.click)
+                if(gm.im.click)
                     if(((this.x + 1) === this.cursor.x && this.y === this.cursor.y) ||
                     ((this.x - 1) === this.cursor.x && this.y === this.cursor.y) ||
                     (this.x === this.cursor.x && (this.y + 1) === this.cursor.y) ||
@@ -55,7 +55,7 @@ Blue.prototype.update = function ()
             // console.log("I removed you")
             this.selected = false;
             this.cursor.selected = false;
-            this.game.rclick = undefined;
+            gm.im.rclick = undefined;
         }
     }
     else if(this.game.click)
@@ -109,13 +109,17 @@ Blue.prototype.draw = function (ctx) {
     ctx.fill();
 }
 
-function Red(game, x, y, cursor, battle)
+function Red(game, x, y, cursor, battle, enemyType)
 {
     this.game = game;
     this.x = x;
     this.y = y;
+    this.enemyType = enemyType;
     this.cursor = cursor;
     this.battle = battle;
+    
+    // this.enemyType.x = x * 64;
+    // this.enemyType.y = y * 64;
     //this.layer = 3;
 }
 Red.prototype.update = function () {
@@ -131,13 +135,14 @@ Red.prototype.update = function () {
 }
 
 Red.prototype.draw = function (ctx) {
+    this.enemyType.animation.drawEntity(gm.clockTick, gm.ctx, this.x * 64, this.y * 64);
     // console.log("help");
-    ctx.beginPath();
-    ctx.strokeStyle = "rgba(255, 0, 0, 1)";
-    ctx.fillStyle  = "rgba(255, 0, 0, 1)";             
-    ctx.arc(this.x * 64 + 32,this.y * 64 + 32, 32, 0, 2 * Math.PI);
-    ctx.closePath();
-    ctx.fill();
+    // ctx.beginPath();
+    // ctx.strokeStyle = "rgba(255, 0, 0, 1)";
+    // ctx.fillStyle  = "rgba(255, 0, 0, 1)";             
+    // ctx.arc(this.x * 64 + 32,this.y * 64 + 32, 32, 0, 2 * Math.PI);
+    // ctx.closePath();
+    // ctx.fill();
 }
 
 // Stole from MDN

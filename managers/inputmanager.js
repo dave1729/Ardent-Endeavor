@@ -8,6 +8,7 @@ function InputManager(firstGroupName) {
     this.inputgroup_list = [];
     this.currentgroup = new InputGroup(firstGroupName);
     this.inputgroup_list.push(this.currentgroup);
+	this.mouse = {x: 0, y: 0}
 }
 
 //Adds a new group and switches to it right stat now
@@ -98,12 +99,11 @@ InputManager.prototype.start = function () {
 	var that = this;
 	
     var getXandY = function (e) {
-        var x = e.clientX - that.ctx.canvas.getBoundingClientRect().left;
-        var y = e.clientY - that.ctx.canvas.getBoundingClientRect().top;
-
+        var x = e.clientX - gm.ctx.canvas.getBoundingClientRect().left;
+        var y = e.clientY - gm.ctx.canvas.getBoundingClientRect().top;
         if (x < 2048) {
-            x = Math.floor(x / this.TILE_SIZE);
-            y = Math.floor(y / this.TILE_SIZE);
+            x = Math.floor(x / TILE_SIZE);
+            y = Math.floor(y / TILE_SIZE);
         }
         return { x: x, y: y };
     }
@@ -123,9 +123,8 @@ InputManager.prototype.start = function () {
     }, false);
 
     this.ctx.canvas.addEventListener("mousemove", function (e) {
-        //console.log(e);
         that.mouse = getXandY(e);
-    }, false);
+	}, false);
 
     this.ctx.canvas.addEventListener("mousewheel", function (e) {
         //console.log(e);

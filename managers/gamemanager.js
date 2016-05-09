@@ -32,7 +32,8 @@ GameManager.prototype.start = function() {
     this.am.queueDownload("./img/temple.jpg");
     this.am.downloadAll(() => {
         this.loop();
-        this.initialize(new Player(this.am.getAsset("./img/player.png")), 1, 900, 900);
+        this.startBattle(new Fire(gm, 64, 256));
+        //this.initialize(new Player(this.am.getAsset("./img/player.png")), 1, 900, 900);
     })
 }
 
@@ -82,7 +83,7 @@ GameManager.prototype.loadMap = function (mapid, destx, desty) {
     //debugger;
 }
 /* Loads battle scene, disabling overworld entities and controls */
-GameManager.prototype.startBattle = function () {
+GameManager.prototype.startBattle = function (enemy) {
 	// Lets ignore this for now
 	gm.em.cacheEntities();
 	gm.em.removeAllEntities();
@@ -91,7 +92,7 @@ GameManager.prototype.startBattle = function () {
 	this.em.addEntity(new Grid(this))
 	let c = new Cursor(this);
 	this.em.addEntity(c);
-	this.em.addEntity(new Battle(this, c));
+	this.em.addEntity(new Battle(this, c, enemy));
 	// let b = new Battle(this.game);
 	// b.start();
 	
