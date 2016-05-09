@@ -15,6 +15,7 @@ function Player(spritesheet) {
 	this.entityID = 1;
 	this.ctx = gm.ctx;
 	this.controls();
+	this.interactRange = 2;
 	// When changing the hitbox, also change x and y shift in draw collision box
 	this.hitBox = new CollisionBox(this, 18, 34, this.spriteSquareSize-36, this.spriteSquareSize-36);
 }
@@ -25,9 +26,10 @@ Player.prototype.controls = function () {
     this.im.addInput(new Input("left", 'a'));
     this.im.addInput(new Input("right", 'd'));
     this.im.addInput(new Input("menu", 'i'));
+    this.im.addInput(new Input("interact", 'e'));
 }
 
-Player.prototype.entityCollisionCheck = function () {
+Player.prototype.entityCollisionCheck = function (startX, startY) {
 	var rectMain = {x: this.hitBox.getX(), y: this.hitBox.getY(), width: this.hitBox.width, height: this.hitBox.height}
 	//console.log(rectMain);
 	var i;
@@ -43,7 +45,30 @@ Player.prototype.entityCollisionCheck = function () {
 					&& rectMain.y < rectOther.y + rectOther.height 
 					&& rectMain.height + rectMain.y > rectOther.y) { 
 				//console.log("COLLISION DETECTED OMG");
-				gm.em.entities[i].collisionTrigger(this);
+				gm.em.entities[i].collisionTrigger(this, startX, startY);
+			} 
+		}
+		//console.log("ran check");
+	}
+}
+
+Player.prototype.interactFind = function () {
+	var rectMain = {x: this.hitBox.getX() - this.interactRange, y: this.hitBox.getY() - this.interactRange, width: this.hitBox.width + this.interactRange*2, height: this.hitBox.height + this.interactRange*2}
+	//console.log(rectMain);
+	var i;
+	for (i = 0; i < gm.em.entities.length; ++i) {
+		if (gm.em.entities[i] instanceof Event) {
+			var rectOther = {x: gm.em.entities[i].hitBox.getX(),
+					y: gm.em.entities[i].hitBox.getY(),
+					width: gm.em.entities[i].hitBox.width,
+					height: gm.em.entities[i].hitBox.height}
+
+			if (rectMain.x < rectOther.x + rectOther.width 
+					&& rectMain.x + rectMain.width > rectOther.x 
+					&& rectMain.y < rectOther.y + rectOther.height 
+					&& rectMain.height + rectMain.y > rectOther.y) { 
+				console.log("Interacted with " + gm.em.entities[i].constructor.name);
+				gm.em.entities[i].interactTrigger(this);
 			} 
 		}
 		//console.log("ran check");
@@ -57,10 +82,15 @@ Player.prototype.draw = function () {
 Player.prototype.update = function () {
 	if (this.animation.elapsedTime < this.animation.totalTime) {
 		var currentAdjust = gm.clockTick * this.speed;
+		var startX = this.x;
+		var startY = this.y;
 
 		if (this.im.checkInput("menu")) {
 			gm.openGameMenu();
 			gm.im.currentgroup.input_list[4].isPressed = false;
+		}
+		else if (this.im.checkInput("interact")) {
+			this.interactFind();
 		}
 		else if(this.im.checkInput("up") && this.im.checkInput("left")) {
 			this.speedY = -1 * this.regSpeed * sqrtOneHalf;
@@ -128,7 +158,7 @@ Player.prototype.update = function () {
 		}
 
 		// COLLISION
-		this.entityCollisionCheck();
+		this.entityCollisionCheck(startX, startY);
 	}
 	Entity.prototype.update.call(this);
 }

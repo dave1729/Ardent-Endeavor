@@ -39,6 +39,8 @@ InputManager.prototype.setFalse = function(theName) {
 InputManager.prototype.setAllFalse = function() {
 	for(var i = 0; i < this.currentgroup.input_list.length; i++) {
 		this.currentgroup.input_list[i].isPressed = false;
+		this.currentgroup.click = null;
+		this.currentgroup.rClick = null;
 	}
 }
 
@@ -140,10 +142,10 @@ InputManager.prototype.start = function (ctx) {
     var getXandY = function (e) {
         var x = e.clientX - that.ctx.canvas.getBoundingClientRect().left;
         var y = e.clientY - that.ctx.canvas.getBoundingClientRect().top;
-
+        
         if (x < 2048) {
-            x = Math.floor(x / this.TILE_SIZE);
-            y = Math.floor(y / this.TILE_SIZE);
+            //x = Math.floor(x / this.TILE_SIZE);
+            //y = Math.floor(y / this.TILE_SIZE);
         }
         return { x: x, y: y };
     }
@@ -152,20 +154,20 @@ InputManager.prototype.start = function (ctx) {
 
     ctx.canvas.addEventListener("click", function (e) {
         if(that.currentgroup.isUsingMouse) {
-			that.currentgroup.click == getXandY(e);
+			that.currentgroup.click = getXandY(e);
 		}
 		else {
-			that.currentgroup.mouse == null;
+			that.currentgroup.click = null;
 		}
     }, false);
     
 
     ctx.canvas.addEventListener("contextmenu", function (e) {
         if(that.currentgroup.isUsingMouse) {
-			that.currentgroup.rClick == getXandY(e);
+			that.currentgroup.rClick = getXandY(e);
 		}
 		else {
-			that.currentgroup.mouse == null;
+			that.currentgroup.rClick = null;
 		}
         // console.log(e);
         // console.log("Right Click Event - X,Y " + e.clientX + ", " + e.clientY);
@@ -175,10 +177,10 @@ InputManager.prototype.start = function (ctx) {
     ctx.canvas.addEventListener("mousemove", function (e) {
         //console.log(e);
         if(that.currentgroup.isUsingMouse) {
-			that.currentgroup.mouse == getXandY(e);
+			that.currentgroup.mouse = getXandY(e);
 		}
 		else {
-			that.currentgroup.mouse == null;
+			that.currentgroup.mouse = null;
 		}
     }, false);
 

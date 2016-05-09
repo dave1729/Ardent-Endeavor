@@ -20,7 +20,7 @@ function GameManager(ctx, ctxUI)
     this.sm = null; // SceneManager
     this.ui = null; // UIManager
     this.timer = null;
-    this.gamePaused = true;
+    this.gamePaused = false;
     
 }
 GameManager.prototype.start = function() {
@@ -116,16 +116,60 @@ GameManager.prototype.endBattle = function () {
 /* Opens the game menu, switching canvas focus and keybinds */
 GameManager.prototype.openGameMenu = function () {
 	this.gamePaused = true;
+	this.showUI = true;
 	this.im.changeCurrentGroupTo("ui");
 	this.startInput(this.ctxUI);
-	// need to disable previous keys.
-	document.getElementById("uiLayer").style.zIndex = "2";
+	this.ui.showGameMenu = true;
+	// need to disable previous keys (maybe).
+	document.getElementById("uiLayer").style.zIndex = "3";
 }
-
+/* Closes the game mneu, switching canvas focus back to the game. */
 GameManager.prototype.closeGameMenu = function () {
 	this.gamePaused = false;
+	this.showUI = false;
 	this.im.changeCurrentGroupTo("Dungeon");
 	this.startInput(this.ctx);
+	this.ui.showGameMenu = false;
+	document.getElementById("uiLayer").style.zIndex = "-1";
+}
+
+/* Opens the game menu, switching canvas focus and keybinds */
+GameManager.prototype.openBattleMenu = function (x, y) {
+	this.gamePaused = false;
+	this.showUI = true;
+	this.im.changeCurrentGroupTo("ui");
+	this.startInput(this.ctxUI);
+	this.ui.battleMenu.moveMenu(x, y);
+	this.ui.showBattleMenu = true;
+	// need to disable previous keys (maybe).
+	document.getElementById("uiLayer").style.zIndex = "3";
+}
+/* Closes the game mneu, switching canvas focus back to the game. */
+GameManager.prototype.closeBattleMenu = function () {
+	this.gamePaused = false;
+	this.showUI = false;
+	this.im.changeCurrentGroupTo("Dungeon");
+	this.startInput(this.ctx);
+	this.ui.showBattleMenu = false;
+	document.getElementById("uiLayer").style.zIndex = "-1";
+}
+
+GameManager.prototype.openDialogueBox = function (name, string) {
+	this.gamePaused = true;
+	this.showUI = true;
+	this.im.changeCurrentGroupTo("ui");
+	this.startInput(this.ctxUI);
+	this.ui.showDialogue = true;
+	document.getElementById("uiLayer").style.zIndex = "3";
+	this.ui.dialogueBox.newDialogue(name, string);
+}
+
+GameManager.prototype.closeDialogueBox = function () {
+	this.gamePaused = false;
+	this.showUI = false;
+	this.im.changeCurrentGroupTo("Dungeon");
+	this.startInput(this.ctx);
+	this.ui.showDialogue = false;
 	document.getElementById("uiLayer").style.zIndex = "-1";
 }
 
@@ -135,7 +179,8 @@ GameManager.prototype.loop = function () {
     	this.em.update();
     	this.click = undefined;
     	this.em.draw();
-    } else {
+    }
+    if (this.showUI) {
     	this.ui.update();
     	this.click = undefined;
     	this.ui.draw();

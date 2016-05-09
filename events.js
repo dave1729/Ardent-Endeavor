@@ -33,6 +33,9 @@ Event.prototype.draw = function () {
 	    gm.ctx.strokeRect(this.screenX, this.screenY, this.w, this.h);
 	}
 }
+Event.prototype.interactTrigger = function (player) {
+	// Default is do nothing
+}
 
 
 /**

@@ -61,7 +61,7 @@ Werewolf.prototype.update = function () {
 	Enemy.prototype.update.call(this);
 }
 Werewolf.prototype.collisionTrigger = function (player) {
-	Enemy.prototype.collisionTrigger.call(this);
+	Enemy.prototype.collisionTrigger.call(this, player);
 }
 
 
@@ -91,7 +91,7 @@ Green.prototype.update = function () {
 	Enemy.prototype.update.call(this);
 }
 Green.prototype.collisionTrigger = function (player) {
-	Enemy.prototype.collisionTrigger.call(this);
+	Enemy.prototype.collisionTrigger.call(this, player);
 }
 
 
@@ -121,7 +121,7 @@ Shark.prototype.update = function () {
 	Enemy.prototype.update.call(this);
 }
 Shark.prototype.collisionTrigger = function (player) {
-	Enemy.prototype.collisionTrigger.call(this);
+	Enemy.prototype.collisionTrigger.call(this, player);
 }
 
 
@@ -150,5 +150,5 @@ Fire.prototype.update = function () {
 	Enemy.prototype.update.call(this);
 }
 Fire.prototype.collisionTrigger = function (player) {
-	Enemy.prototype.collisionTrigger.call(this);
+	Enemy.prototype.collisionTrigger.call(this, player);
 }
