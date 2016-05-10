@@ -1,6 +1,6 @@
-function Grid(game) {
-    this.game = game;
-    this.ctx = this.game.ctx;
+function Grid()
+{
+    this.ctx = gm.ctx;
     this.visible = true;
     this.tileSize = 64;
     this.rows = 0;
@@ -33,9 +33,8 @@ Grid.prototype.draw = function (ctx) {
     }
 }
 
-function Cursor (game)
+function Cursor ()
 {
-    this.game = game;
     this.visible = true;
     this.goodAttack = false;
     this.point = {x: 0, y:0}
@@ -61,11 +60,6 @@ Cursor.prototype.draw = function (ctx) {
         }
         ctx.fillRect(this.point.x * 64,this.point.y * 64, 64, 64);    
     }
-}
-
-function tileToWorldLeftTop(x, y) {
-    
-    
 }
 
 // Unit Placement

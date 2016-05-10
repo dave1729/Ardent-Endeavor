@@ -3,24 +3,29 @@ function GameManager(ctx, ctxUI)
 {
     this.controlEntity = null;
     this.backgroundEntity = null;
+	
     this.ctx = ctx;
     this.ctxUI = ctxUI;
-    this.im = null;
+	
     this.surfaceWidth = null;
     this.surfaceHeight = null;
     this.hitBoxVisible = null;
+	
+	this.im = null; // InputManager
     this.am = null; // AssetManager
-    
+	this.battle = null; // BattleManager
     this.mm = null; // MapManager
     this.em = null; // EntityManager
     this.sm = null; // SceneManager
     this.ui = null; // UIManager
+	
     this.timer = null;
     this.gamePaused = false;
     
 }
 GameManager.prototype.start = function() {
     this.init();
+	
     this.am.queueDownload("./img/player.png");
     this.am.queueDownload("./img/GrassOnlyBackground.png");
     this.am.queueDownload("./img/collidable_background.png");
@@ -29,6 +34,7 @@ GameManager.prototype.start = function() {
     this.am.queueDownload("./img/shark.png");
     this.am.queueDownload("./img/alienfirebird.png");
     this.am.queueDownload("./img/temple.jpg");
+	
     this.am.downloadAll(() => {
         this.loop();
         this.startBattle(new Fire(gm, 64, 256));
@@ -93,15 +99,9 @@ GameManager.prototype.startBattle = function (enemy) {
 	// Lets ignore this for now
 	gm.em.cacheEntities();
 	gm.em.removeAllEntities();
-	
-	// this.game.em.addEntity(map.bgLayer);
-	// this.game.em.addEntity(map.cLayer);
-	this.em.addEntity(new Grid(this))
-	let c = new Cursor(this);
-	this.em.addEntity(c);
-	this.em.addEntity(new Battle(this, c, enemy));
-	// let b = new Battle(this.game);
-	// b.start();
+	// gm.em.addEntity(map.bgLayer);
+	// gm.em.addEntity(map.cLayer);
+	gm.battle.startBattle(enemy);
 	
 	// needs more logic to add battle assets
 	// pause overworld functions
@@ -151,7 +151,7 @@ GameManager.prototype.closeBattleMenu = function () {
 	this.gamePaused = false;
 	this.showUI = false;
 	this.im.changeCurrentGroupTo("Dungeon");
-	this.startInput(this.ctx);
+	this.startInput();
 	this.ui.showBattleMenu = false;
 	document.getElementById("uiLayer").style.zIndex = "-1";
 }
