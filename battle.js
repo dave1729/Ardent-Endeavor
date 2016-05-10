@@ -39,11 +39,19 @@ function Cursor (game)
     this.visible = true;
     this.goodAttack = false;
     this.point = {x: 0, y:0}
+    this.x = 0;
+    this.y = 0;
 }
 
 Cursor.prototype.update = function () {
-    if (gm.im.getMouse())
-        this.point = gm.im.getMouse();
+    
+        this.point = gm.im.mouse;
+        this.x = gm.im.mouse.x;
+        this.y = gm.im.mouse.y;
+    // if (this.mouse.click)
+    // {
+    //     // this.game.addEntity(new )
+    // }
 }
 
 Cursor.prototype.draw = function (ctx) {
@@ -54,12 +62,17 @@ Cursor.prototype.draw = function (ctx) {
             ctx.strokeStyle = "rgba(0, 0, 255, 0.5)";  
             ctx.fillStyle  = "rgba(0, 0, 255, 0.5)";           
         }
+        // else if (this.bad)
+        // {
+        //     ctx.strokeStyle = "rgba(255, 0, 0, 0.5)";
+        //     ctx.fillStyle  = "rgba(255, 0, 0, 0.5)";
+        // }
         else
         {
             ctx.strokeStyle = "rgba(0, 0, 0, 0.5)";
             ctx.fillStyle  = "rgba(0, 0, 0, 0.5)";
         }
-        ctx.fillRect(this.point.x * 64,this.point.y * 64, 64, 64);    
+        ctx.fillRect(this.x * 64,this.y * 64, 64,64);    
     }
 }
 
@@ -107,7 +120,7 @@ Battle.prototype.controls = function () {
 	// gm.im.addInput(new Input("right", 'd'));
 	// gm.im.addInput(new Input("menu", 'i'));
 	// gm.im.addInput(new Input("confirm", 'e'));
-	// gm.im.changeCurrentGroupTo(temp);
+	gm.im.changeCurrentGroupTo(temp);
 }
 
 Battle.prototype.init = function (params) {
@@ -123,12 +136,12 @@ Battle.prototype.update = function ()
 
 Battle.prototype.setupPhase = function () {
             this.cursor.good = true;
-            if(gm.im.getClick())
+            if(gm.im.click)
             {
                 if (this.validPlacement(this.cursor.point))
                 {
                     this.spawnPlayer();
-                    gm.im.currentgroup.click = null;
+                    gm.im.click = undefined;
                 }
             }
             if(this.playerCount === 0)
@@ -144,7 +157,7 @@ Battle.prototype.playerPhase = function () {
     if (this.availableUnits.length === 0)
     {
         console.log("TURN DONE")
-        this.currentPhase = this.enemyPhase;
+        this.currentPhase = this.enemyPhase
     }
         if (this.enemyUnits.length === 0)
         {
@@ -166,8 +179,8 @@ Battle.prototype.enemyPhase = function (params) {
 }
 
 Battle.prototype.spawnPlayer = function (params) {
-    let spawn = new Blue(this.cursor.point.x, this.cursor.point.y, this.cursor, this);
-    gm.em.addEntity(spawn);
+    let spawn = new Blue(this.game, this.game.im.click.x, this.game.im.click.y, this.cursor, this);
+    this.game.em.addEntity(spawn);
     this.availableUnits.push(spawn);
     this.playerUnits.push(spawn);
     this.playerCount--;
@@ -198,11 +211,9 @@ Battle.prototype.unitUsed = function (unit)
 {
     this.availableUnits.splice(this.availableUnits.indexOf(unit), 1);
 }
-
 Battle.prototype.resetUnits = function () {
     this.availableUnits = this.playerUnits;
 }
-
 Battle.prototype.disableInput = function () {
     this.game.disableInput = true;
 }
