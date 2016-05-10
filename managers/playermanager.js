@@ -21,12 +21,16 @@ function Player(spritesheet) {
 }
 
 Player.prototype.controls = function () {
+	//starting controls
 	this.im.addInput(new Input("up", 'w'));
     this.im.addInput(new Input("down", 's'));
     this.im.addInput(new Input("left", 'a'));
     this.im.addInput(new Input("right", 'd'));
     this.im.addInput(new Input("menu", 'i'));
     this.im.addInput(new Input("interact", 'e'));
+    
+    //start with camera following Player
+    gm.cam.follow(this);
 }
 
 Player.prototype.entityCollisionCheck = function (startX, startY) {

@@ -5,7 +5,6 @@ function GameManager(ctx, ctxUI)
     this.backgroundEntity = null;
     this.ctx = ctx;
     this.ctxUI = ctxUI;
-    this.im = null;
     this.surfaceWidth = null;
     this.surfaceHeight = null;
     this.mouse = {
@@ -14,7 +13,8 @@ function GameManager(ctx, ctxUI)
     }
     this.hitBoxVisible = null;
     this.am = null; // AssetManager
-    
+    this.cam = null; // Camera
+    this.im = null; // InputManager
     this.mm = null; // MapManager
     this.em = null; // EntityManager
     this.sm = null; // SceneManager
@@ -56,6 +56,7 @@ GameManager.prototype.startInput = function (ctx) {
 GameManager.prototype.init = function () {
     this.am = new AssetManager();
     this.em = new EntityManager();
+    this.cam = new Camera(this.ctx.canvas.width, this.ctx.canvas.height);
     this.im = new InputManager("Dungeon");
     this.ui = new UIManager();
     this.surfaceWidth = this.ctx.canvas.width;
@@ -177,6 +178,7 @@ GameManager.prototype.loop = function () {
     this.clockTick = this.timer.tick();
     if (!this.gamePaused) {
     	this.em.update();
+    	this.cam.update();
     	this.click = undefined;
     	this.em.draw();
     }

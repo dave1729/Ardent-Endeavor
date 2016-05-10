@@ -27,8 +27,7 @@ Animation.prototype.isDone = function () {
 
 Animation.prototype.drawEntity = function (tick, ctx, x, y) {
 	//only draw if it's gonna be vivible
-	if((x + this.frameWidth) > 0 && x < dungeonWidth/4 &&
-			(y + this.frameHeight) > 0 && y < dungeonHeight/4) {
+	if(gm.cam.isVisible(this)) {
 		this.elapsedTime += tick;
 		if (this.isDone()) {
 			if (this.loop) this.elapsedTime = 0;
@@ -42,7 +41,7 @@ Animation.prototype.drawEntity = function (tick, ctx, x, y) {
 		ctx.drawImage(this.spriteSheet,
 				xindex * this.frameWidth, yindex * this.frameHeight,  // source from sheet
 				this.frameWidth, this.frameHeight,
-				x, y,
+				x - gm.cam.leftX, y - gm.cam.topY,
 				this.frameWidth * this.scale,
 				this.frameHeight * this.scale);
 	}
@@ -51,8 +50,8 @@ Animation.prototype.drawEntity = function (tick, ctx, x, y) {
 Animation.prototype.updateEntity = function (entity) {
 	if(entity.game.controlEntity.x !== null) {
 		//dungeon/8 = half a visible screen, 0.5 = character scale ratio
-		entity.screenX = entity.x - entity.game.backgroundEntity.x;
-		entity.screenY = entity.y - entity.game.backgroundEntity.y;
+		entity.screenX = entity.x - gm.cam.leftX;
+		entity.screenY = entity.y - gm.cam.topY;
 	}
 }
 
@@ -72,28 +71,12 @@ Background.prototype.draw = function () {
 	//context.drawImage(img,sx,sy,swidth,sheight,x,y,width,height);
 	var width = Math.floor(dungeonWidth/4);
 	var heigth = Math.floor(dungeonHeight/4);
-	this.ctx.drawImage(this.spritesheet,this.x, this.y, width, heigth,
-			0, 0, width, heigth);
+	this.ctx.drawImage(this.spritesheet, gm.cam.leftX, gm.cam.topY, gm.cam.width, gm.cam.height,
+			0, 0, gm.cam.width, gm.cam.height);
 };
 
 Background.prototype.update = function () {
-	if(gm.em.controlEntity.x !== null) {
-		//dungeon/8 = half a visible screen, 0.5 = character scale ratio
-		var newX = gm.em.controlEntity.x - Math.floor(dungeonWidth/8  - (64 / 2));
-		var newY = gm.em.controlEntity.y - Math.floor(dungeonHeight/8 - (64 / 2));
 
-		//dungeonWidth/4 one visible screen width
-		if(newX >= 0 && newX <= (dungeonWidth - dungeonWidth/4)) {
-			this.x = newX;
-		}
-		if(newY >= 0 && newY <= (dungeonHeight - dungeonHeight/4) ) {
-			this.y = newY;
-		}
-	}
-	else {
-		alert("Alert: Board Not updated, when Arrow was moved.");
-	}
-	Entity.prototype.update.call(this);
 };
 
 //no inheritance
@@ -111,28 +94,12 @@ Collidable_background.prototype.draw = function () {
 	//context.drawImage(img,sx,sy,swidth,sheight,x,y,width,height);
 	var width = Math.floor(dungeonWidth/4);
 	var heigth = Math.floor(dungeonHeight/4);
-	this.ctx.drawImage(this.spritesheet,this.x, this.y, width, heigth,
-			0, 0, width, heigth);
+	this.ctx.drawImage(this.spritesheet, gm.cam.leftX, gm.cam.topY, gm.cam.width, gm.cam.height,
+			0, 0, gm.cam.width, gm.cam.height);
 };
 
 Collidable_background.prototype.update = function () {
-	if(gm.em.controlEntity.x !== null) {
-		//dungeon/8 = half a visible screen, 0.5 = character scale ratio
-		var newX = gm.em.controlEntity.x - Math.floor(dungeonWidth/8  - (64 / 2));
-		var newY = gm.em.controlEntity.y - Math.floor(dungeonHeight/8 - (64 / 2));
 
-		//dungeonWidth/4 one visible screen width
-		if(newX >= 0 && newX <= (dungeonWidth - dungeonWidth/4)) {
-			this.x = newX;
-		}
-		if(newY >= 0 && newY <= (dungeonHeight - dungeonHeight/4) ) {
-			this.y = newY;
-		}
-	}
-	else {
-		alert("Alert: Board Not updated, when Arrow was moved.");
-	}
-	Entity.prototype.update.call(this);
 };
 
 //function Werewolf(game, spritesheet) {
@@ -213,6 +180,7 @@ Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
 		ctx.stroke();
 	}
 
+	
 	if (x > centerX && x < (screenToMapRatio * dungeonWidth) + centerX) {
 		tempX = centerX;
 	}
