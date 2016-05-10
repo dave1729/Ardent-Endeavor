@@ -70,6 +70,8 @@ GameManager.prototype.initManagers = function (params) {
 GameManager.prototype.init = function () {
     this.surfaceWidth = this.ctx.canvas.width;
     this.surfaceHeight = this.ctx.canvas.height;
+	
+	this.initManagers();
     this.timer = new Timer();
     this.disableInput = false;
     this.startInput();
