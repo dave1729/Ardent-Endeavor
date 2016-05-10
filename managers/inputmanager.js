@@ -4,16 +4,14 @@ var gm = gm || {};
 //and the name of your first InputGroup
 //InputManager(context, String)
 function InputManager(firstGroupName) {
-	this.ctx = gm.ctx;
     this.inputgroup_list = [];
-    this.currentgroup = new InputGroup(firstGroupName);
+    this.currentgroup = new InputGroup(firstGroupName, gm.ctx);
     this.inputgroup_list.push(this.currentgroup);
-	this.mouse = {x: 0, y: 0}
 }
 
 //Adds a new group and switches to it right stat now
 //addGroup(String)
-InputManager.prototype.addGroup = function(newGroupName) {
+InputManager.prototype.addGroup = function(newGroupName, ctx) {
 	this.currentgroup = new InputGroup(newGroupName);
 	this.inputgroup_list.push(this.currentgroup);
 }
@@ -131,7 +129,7 @@ InputManager.prototype.changeCurrentGroupTo = function(groupName) {
 
 //Sets Event Listeners to by used by the context passed on creation
 //start()
-InputManager.prototype.start = function (ctx) {
+InputManager.prototype.start = function () {
 	var that = this;
 	
     var getXandY = function (e) {
@@ -146,14 +144,14 @@ InputManager.prototype.start = function (ctx) {
 
     //event listeners are added here
 
-    ctx.canvas.addEventListener("click", function (e) {
+    currentgroup.ctx.canvas.addEventListener("click", function (e) {
         if(that.currentgroup.isUsingMouse) {
 			that.currentgroup.click = getXandY(e);
 		}
     }, false);
     
 
-    ctx.canvas.addEventListener("contextmenu", function (e) {
+    currentgroup.ctx.canvas.addEventListener("contextmenu", function (e) {
         if(that.currentgroup.isUsingMouse) {
 			that.currentgroup.rClick = getXandY(e);
 		}
@@ -161,20 +159,20 @@ InputManager.prototype.start = function (ctx) {
         // console.log("Right Click Event - X,Y " + e.clientX + ", " + e.clientY);
         e.preventDefault();
     }, false);
-    ctx.canvas.addEventListener("mousemove", function (e) {
+    currentgroup.ctx.canvas.addEventListener("mousemove", function (e) {
         //console.log(e);
         if(that.currentgroup.isUsingMouse) {
 			that.currentgroup.mouse = getXandY(e);
 		}
     }, false);
 
-    ctx.canvas.addEventListener("mousewheel", function (e) {
+    currentgroup.ctx.canvas.addEventListener("mousewheel", function (e) {
         //console.log(e);
         that.wheel = e;
         //console.log("Click Event - X,Y " + e.clientX + ", " + e.clientY + " Delta " + e.deltaY);
     }, false);
     
-    ctx.canvas.addEventListener("keydown", function (e) {
+    currentgroup.ctx.canvas.addEventListener("keydown", function (e) {
 		for(var i = 0; i < that.currentgroup.input_list.length; i++) {
 			if(that.currentgroup.input_list[i].charCode === e.which) {
 				that.currentgroup.input_list[i].isPressed = true;
@@ -188,7 +186,7 @@ InputManager.prototype.start = function (ctx) {
         // console.log("Key Pressed Event - Char " + e.charCode + " Code " + e.keyCode);
     // }, false);
 // 
-    ctx.canvas.addEventListener("keyup", function (e) {
+    currentgroup.ctx.canvas.addEventListener("keyup", function (e) {
 		for(var i = 0; i < that.currentgroup.input_list.length; i++) {
 			if(that.currentgroup.input_list[i].charCode === e.which) {
 				that.currentgroup.input_list[i].isPressed = false;
@@ -201,8 +199,9 @@ InputManager.prototype.start = function (ctx) {
 
 //Input Group, holds just  name and list of Inputs
 //InputGroup(String)
-function InputGroup(theName) {
+function InputGroup(theName, ctx) {
 	this.name = theName;
+	this.ctx = ctx;
     this.input_list = [];
     this.isUsingMouse = false;
     this.click = null;
