@@ -54,8 +54,8 @@ MapTeleportEvent.prototype = new Event();
 MapTeleportEvent.prototype.constructor = MapTeleportEvent;
 
 MapTeleportEvent.prototype.update = function () {
-	this.screenX = this.x - gm.em.backgroundEntity.x;
-	this.screenY = this.y - gm.em.backgroundEntity.y;
+	this.screenX = this.x - gm.cam.leftX;
+	this.screenY = this.y - gm.cam.topY;
 	Event.prototype.update.call(this);
 }
 

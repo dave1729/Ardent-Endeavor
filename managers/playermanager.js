@@ -21,12 +21,16 @@ function Player(spritesheet) {
 }
 
 Player.prototype.controls = function () {
+	//starting controls
 	this.im.addInput(new Input("up", 'w'));
     this.im.addInput(new Input("down", 's'));
     this.im.addInput(new Input("left", 'a'));
     this.im.addInput(new Input("right", 'd'));
     this.im.addInput(new Input("menu", 'i'));
     this.im.addInput(new Input("interact", 'e'));
+    
+    //start with camera following Player
+    gm.cam.follow(this);
 }
 
 Player.prototype.entityCollisionCheck = function (startX, startY) {
@@ -108,7 +112,7 @@ Player.prototype.update = function () {
 			this.speedY = this.regSpeed * sqrtOneHalf;
 			this.speedX = this.regSpeed * sqrtOneHalf;
 		}
-		else if(this.im.checkInput("up")) {
+		if(this.im.checkInput("up")) {
 			this.speedY = -1 * this.regSpeed;
 		}
 		else if(this.im.checkInput("down")) {
@@ -121,10 +125,16 @@ Player.prototype.update = function () {
 			this.speedX = this.regSpeed;
 		}
 		
-		if(!(this.im.checkInput("up") || this.im.checkInput("down") ||
-		     this.im.checkInput("left") || this.im.checkInput("right"))) {
-			this.speedX = 0;
-			this.speedY = 0;
+//		if(!(this.im.checkInput("up") || this.im.checkInput("down") ||
+//		     this.im.checkInput("left") || this.im.checkInput("right"))) {
+//			this.speedX = 0;
+//			this.speedY = 0;
+//		}
+		if(!(this.im.checkInput("up") || this.im.checkInput("down"))) {
+				this.speedY = 0;
+		}
+		if(!(this.im.checkInput("left") || this.im.checkInput("right"))) {
+				this.speedX = 0;
 		}
 
 		var newX = this.x + gm.clockTick * this.speedX;
