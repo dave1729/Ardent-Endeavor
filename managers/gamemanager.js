@@ -25,8 +25,16 @@ function GameManager(ctx, ctxUI)
 }
 GameManager.prototype.start = function() {
     this.init();
-	
-    this.am.queueDownload("./img/player.png");
+	this.queueAssets();
+    this.am.downloadAll(() => {
+		this.startBattle(new Fire(gm, 64, 256));
+		// this.initialize(new Player(this.am.getAsset("./img/player.png")), 1, 900, 900);
+        this.loop();
+    })
+}
+
+GameManager.prototype.queueAssets = function () {
+	this.am.queueDownload("./img/player.png");
     this.am.queueDownload("./img/GrassOnlyBackground.png");
     this.am.queueDownload("./img/collidable_background.png");
     this.am.queueDownload("./img/werewolf.png");
@@ -34,12 +42,6 @@ GameManager.prototype.start = function() {
     this.am.queueDownload("./img/shark.png");
     this.am.queueDownload("./img/alienfirebird.png");
     this.am.queueDownload("./img/temple.jpg");
-	
-    this.am.downloadAll(() => {
-        this.loop();
-        this.startBattle(new Fire(gm, 64, 256));
-        //this.initialize(new Player(this.am.getAsset("./img/player.png")), 1, 900, 900);
-    })
 }
 
 /* loads the starting map and character's starting position. */
