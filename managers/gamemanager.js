@@ -8,10 +8,6 @@ function GameManager(ctx, ctxUI)
     this.im = null;
     this.surfaceWidth = null;
     this.surfaceHeight = null;
-    this.mouse = {
-        x: 0,
-        y: 0
-    }
     this.hitBoxVisible = null;
     this.am = null; // AssetManager
     
@@ -50,29 +46,34 @@ GameManager.prototype.initialize = function (player, mapid, destx, desty) {
 
 GameManager.prototype.startInput = function (ctx) {
     console.log('Starting input');
-    this.im.start(ctx);
+    this.im.start();
     console.log('Input started');
 }
 
-GameManager.prototype.init = function () {
-    this.am = new AssetManager();
+GameManager.prototype.initManagers = function (params) {
+	this.am = new AssetManager();
     this.em = new EntityManager();
     this.im = new InputManager("Dungeon");
     this.ui = new UIManager();
+	this.battle = new BattleManager();
+	this.mm = new MapManager();
+	
+	console.log("Managers Initialized");
+}
+
+GameManager.prototype.init = function () {
     this.surfaceWidth = this.ctx.canvas.width;
     this.surfaceHeight = this.ctx.canvas.height;
     this.timer = new Timer();
     this.disableInput = false;
-    this.startInput(this.ctx);
+    this.startInput();
     this.hitBoxVisible = true;
-    
-    this.mm = new MapManager();
     console.log('game initialized');
 }
 /* unloads the old map, then loads in the new map and all the entities */
 GameManager.prototype.loadMap = function (mapid, destx, desty) {
 	this.map = this.mm.getMap(mapid);
-	console.log(mapid);
+	// console.log(mapid);
 	this.em.removeAllEntities();
 	this.player.x = destx;
 	this.player.y = desty;
@@ -178,14 +179,16 @@ GameManager.prototype.loop = function () {
     this.clockTick = this.timer.tick();
     if (!this.gamePaused) {
     	this.em.update();
-    	this.click = undefined;
     	this.em.draw();
     }
     if (this.showUI) {
     	this.ui.update();
-    	this.click = undefined;
     	this.ui.draw();
-    }
+    }	
+	if(this.battle) 
+	{
+		this.battle.update();
+	}
     
     requestAnimationFrame(this.loop.bind(this), this.ctx.canvas);
    //this.update();
