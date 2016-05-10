@@ -135,7 +135,7 @@ Fire.prototype = new Enemy();
 Fire.prototype.constructor = Fire;
 
 Fire.prototype.draw = function () {
-	this.animation.drawEntity(gm.clockTick, gm.ctx, this.x, this.x);
+	this.animation.drawEntity(gm.clockTick, gm.ctx, this.x, this.y);
 	Enemy.prototype.draw.call(this);
 }
 Fire.prototype.update = function () {

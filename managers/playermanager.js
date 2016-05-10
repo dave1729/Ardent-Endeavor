@@ -112,7 +112,7 @@ Player.prototype.update = function () {
 			this.speedY = this.regSpeed * sqrtOneHalf;
 			this.speedX = this.regSpeed * sqrtOneHalf;
 		}
-		else if(this.im.checkInput("up")) {
+		if(this.im.checkInput("up")) {
 			this.speedY = -1 * this.regSpeed;
 		}
 		else if(this.im.checkInput("down")) {
@@ -125,10 +125,16 @@ Player.prototype.update = function () {
 			this.speedX = this.regSpeed;
 		}
 		
-		if(!(this.im.checkInput("up") || this.im.checkInput("down") ||
-		     this.im.checkInput("left") || this.im.checkInput("right"))) {
-			this.speedX = 0;
-			this.speedY = 0;
+//		if(!(this.im.checkInput("up") || this.im.checkInput("down") ||
+//		     this.im.checkInput("left") || this.im.checkInput("right"))) {
+//			this.speedX = 0;
+//			this.speedY = 0;
+//		}
+		if(!(this.im.checkInput("up") || this.im.checkInput("down"))) {
+				this.speedY = 0;
+		}
+		if(!(this.im.checkInput("left") || this.im.checkInput("right"))) {
+				this.speedX = 0;
 		}
 
 		var newX = this.x + gm.clockTick * this.speedX;
