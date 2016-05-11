@@ -111,7 +111,7 @@ InputManager.prototype.iterateGroupBy = function(iterations = 1) {
 			currentGroupIndex = i;
 		}
 	}
-	currentGroupIndex = ((currentGroupIndex + iterations) % this.inputgroup_list.length);
+	this.currentGroupIndex = ((currentGroupIndex + iterations) % this.inputgroup_list.length);
 	this.currentgroup = this.inputgroup_list[currentGroupIndex];
 }
 
@@ -144,14 +144,14 @@ InputManager.prototype.start = function () {
 
     //event listeners are added here
 
-    currentgroup.ctx.canvas.addEventListener("click", function (e) {
+    this.currentgroup.ctx.canvas.addEventListener("click", function (e) {
         if(that.currentgroup.isUsingMouse) {
 			that.currentgroup.click = getXandY(e);
 		}
     }, false);
     
 
-    currentgroup.ctx.canvas.addEventListener("contextmenu", function (e) {
+    this.currentgroup.ctx.canvas.addEventListener("contextmenu", function (e) {
         if(that.currentgroup.isUsingMouse) {
 			that.currentgroup.rClick = getXandY(e);
 		}
@@ -159,20 +159,20 @@ InputManager.prototype.start = function () {
         // console.log("Right Click Event - X,Y " + e.clientX + ", " + e.clientY);
         e.preventDefault();
     }, false);
-    currentgroup.ctx.canvas.addEventListener("mousemove", function (e) {
+    this.currentgroup.ctx.canvas.addEventListener("mousemove", function (e) {
         //console.log(e);
         if(that.currentgroup.isUsingMouse) {
 			that.currentgroup.mouse = getXandY(e);
 		}
     }, false);
 
-    currentgroup.ctx.canvas.addEventListener("mousewheel", function (e) {
+    this.currentgroup.ctx.canvas.addEventListener("mousewheel", function (e) {
         //console.log(e);
         that.wheel = e;
         //console.log("Click Event - X,Y " + e.clientX + ", " + e.clientY + " Delta " + e.deltaY);
     }, false);
     
-    currentgroup.ctx.canvas.addEventListener("keydown", function (e) {
+    this.currentgroup.ctx.canvas.addEventListener("keydown", function (e) {
 		for(var i = 0; i < that.currentgroup.input_list.length; i++) {
 			if(that.currentgroup.input_list[i].charCode === e.which) {
 				that.currentgroup.input_list[i].isPressed = true;
@@ -186,7 +186,7 @@ InputManager.prototype.start = function () {
         // console.log("Key Pressed Event - Char " + e.charCode + " Code " + e.keyCode);
     // }, false);
 // 
-    currentgroup.ctx.canvas.addEventListener("keyup", function (e) {
+    this.currentgroup.ctx.canvas.addEventListener("keyup", function (e) {
 		for(var i = 0; i < that.currentgroup.input_list.length; i++) {
 			if(that.currentgroup.input_list[i].charCode === e.which) {
 				that.currentgroup.input_list[i].isPressed = false;

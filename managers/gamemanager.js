@@ -20,6 +20,7 @@ function GameManager(ctx, ctxUI)
     
 }
 GameManager.prototype.start = function() {
+    this.initManagers();
     this.init();
     this.am.queueDownload("./img/player.png");
     this.am.queueDownload("./img/GrassOnlyBackground.png");
@@ -56,7 +57,7 @@ GameManager.prototype.initManagers = function (params) {
     this.cam = new Camera(this.ctx.canvas.width, this.ctx.canvas.height);
     this.im = new InputManager("Dungeon");
     this.ui = new UIManager();
-	this.battle = new BattleManager();
+	//this.battle = new BattleManager();
 	this.mm = new MapManager();
 	
 	console.log("Managers Initialized");
