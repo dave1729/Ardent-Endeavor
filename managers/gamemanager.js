@@ -31,8 +31,8 @@ GameManager.prototype.start = function() {
     this.am.queueDownload("./img/temple.jpg");
     this.am.downloadAll(() => {
         this.loop();
-        this.startBattle(new Fire(gm, 64, 256));
-        //this.initialize(new Player(this.am.getAsset("./img/player.png")), 1, 900, 900);
+        //this.startBattle(new Fire(gm, 64, 256));
+        this.initialize(new Player(this.am.getAsset("./img/player.png")), 1, 900, 900);
     })
 }
 
