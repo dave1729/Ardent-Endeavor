@@ -32,7 +32,7 @@ Enemy.prototype.draw = function () {
 Enemy.prototype.collisionTrigger = function (player) {
 	console.log("Enemy Collision: " + this.constructor.name);
 	// Put logic here for transition to battle scene.
-	gm.startBattle(this);
+	//gm.startBattle(this);
 }
 
 
