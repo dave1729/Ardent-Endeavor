@@ -38,12 +38,20 @@ Animation.prototype.drawEntity = function (tick, ctx, x, y) {
 		xindex = frame % this.sheetWidth;
 		yindex = Math.floor(frame / this.sheetWidth);
 
+		var screenPoint = gm.cam.getMyScreenXandY(x, y);
+		
 		ctx.drawImage(this.spriteSheet,
 				xindex * this.frameWidth, yindex * this.frameHeight,  // source from sheet
 				this.frameWidth, this.frameHeight,
-				x - gm.cam.leftX, y - gm.cam.topY,
+				screenPoint.x, screenPoint.y,
 				this.frameWidth * this.scale,
-				this.frameHeight * this.scale);
+				this.frameHeight * this.scale);		
+//		ctx.drawImage(this.spriteSheet,
+//				xindex * this.frameWidth, yindex * this.frameHeight,  // source from sheet
+//				this.frameWidth, this.frameHeight,
+//				x - gm.cam.leftX, y - gm.cam.topY,
+//				this.frameWidth * this.scale,
+//				this.frameHeight * this.scale);
 	}
 }
 
@@ -102,34 +110,6 @@ Collidable_background.prototype.update = function () {
 
 };
 
-//function Werewolf(game, spritesheet) {
-//	this.animation = new Animation(spritesheet, 64, 64, 4, 0.20, 16, true, 1);
-//	this.x = 300;
-//	this.y = 300;
-//	this.screenX = this.x;
-//	this.screenY = this.y;
-//	this.entityID = 4;
-//	this.layer = 3;
-//	this.speed = 0;
-//	this.game = game;
-//	this.ctx = game.ctx;
-//}
-//
-//Werewolf.prototype.draw = function () {
-//	this.animation.drawEntity(this.game.clockTick, this.ctx, this.screenX, this.screenY);
-//}
-//
-//Werewolf.prototype.update = function () {
-//	//Updates the entities screenX and screenY using it's x and y against the background
-//	this.animation.updateEntity(this);
-//
-//	Entity.prototype.update.call(this);
-//}
-
-
-
-
-
 Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
 
 	this.elapsedTime += tick;
@@ -141,6 +121,7 @@ Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
 	var yindex = 0;
 	xindex = frame % this.sheetWidth;
 
+	//Choosing character sprite from sheet
 	if(entity.im.checkInput("up") && entity.im.checkInput("left")) {
 		yindex = 8;
 	}
@@ -174,28 +155,29 @@ Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
 	var centerX = Math.floor(dungeonWidth/8  - (64 / 2));
 	var centerY = Math.floor(dungeonHeight/8 - (64 / 2));
 
-	//centering circle for testing
-	if(testingMode) {
-		ctx.arc(dungeonWidth/8,dungeonHeight/8,20,0,2*Math.PI);
-		ctx.stroke();
-	}
-
 	
-	if (x > centerX && x < (screenToMapRatio * dungeonWidth) + centerX) {
-		tempX = centerX;
+	//If he's not being followed by the camera, just draw him like everyone else is drawn.
+	if(gm.cam.currentEntity !== entity) {
+		var screenPoint = gm.cam.getMyScreenXandY(entity.x, entity.y);
+		tempX = screenPoint.x;
+		tempY = screenPoint.y;
 	}
-	else if (x >= (screenToMapRatio * dungeonWidth) + centerX) {
-		tempX = x - (screenToMapRatio * dungeonWidth);
-	}
-
-	if(y > centerY && y < (screenToMapRatio * dungeonHeight) + centerY) {
-		tempY = centerY;
-	}
-	else if (y >= (screenToMapRatio * dungeonHeight) + centerY) {
-		tempY = y - (screenToMapRatio * dungeonHeight);
+	else {//draw him all special and junk
+		if (x > centerX && x < (screenToMapRatio * dungeonWidth) + centerX) {
+			tempX = centerX;
+		}
+		else if (x >= (screenToMapRatio * dungeonWidth) + centerX) {
+			tempX = x - (screenToMapRatio * dungeonWidth);
+		}
+	
+		if(y > centerY && y < (screenToMapRatio * dungeonHeight) + centerY) {
+			tempY = centerY;
+		}
+		else if (y >= (screenToMapRatio * dungeonHeight) + centerY) {
+			tempY = y - (screenToMapRatio * dungeonHeight);
+		}
 	}
 	
-
 	ctx.drawImage(this.spriteSheet,
 			xindex * this.frameWidth, yindex * this.frameHeight,  // source from sheet
 			this.frameWidth, this.frameHeight,

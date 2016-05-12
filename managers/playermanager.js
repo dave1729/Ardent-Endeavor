@@ -27,6 +27,10 @@ Player.prototype.controls = function () {
     this.im.addInput(new Input("left", 'a'));
     this.im.addInput(new Input("right", 'd'));
     this.im.addInput(new Input("menu", 'i'));
+
+    //turns player follow on and off with 't'
+	this.im.addInput(new Input("screentest", 't'));
+	
     this.im.addInput(new Input("interact", 'e'));
     
     //start with camera following Player
@@ -125,6 +129,16 @@ Player.prototype.update = function () {
 			this.speedX = this.regSpeed;
 		}
 		
+		//screen test allows to switch between following player and not with 't'
+		if(this.im.checkInput("screentest") && gm.cam.currentEntity === this) {
+			gm.im.setFalse("screentest");
+			gm.cam.stopFollow();
+		}
+		else if(this.im.checkInput("screentest")) {
+			gm.im.setFalse("screentest");
+			gm.cam.follow(this);
+		}
+		
 //		if(!(this.im.checkInput("up") || this.im.checkInput("down") ||
 //		     this.im.checkInput("left") || this.im.checkInput("right"))) {
 //			this.speedX = 0;
@@ -139,25 +153,6 @@ Player.prototype.update = function () {
 
 		var newX = this.x + gm.clockTick * this.speedX;
 		var newY = this.y + gm.clockTick * this.speedY;
-
-		//attempting to read new layer as collidable layer
-//		var collidable = null;
-//		for (var i = 0; i < this.game.entities.length; i++) {
-//		if(this.game.entities[i].layer === 2) {
-//		collidable = this.entities[i];
-//		}
-//		}
-
-//		var index = (newY*dungeonWidth + newX) * 4;
-//		var alpha = 0;
-
-//		var imgData = collidable.spritesheet.getImageData(0, 0, dungeonWidth, dungeonHeight);
-
-//		alpha = imgData.data[index+3];
-
-//		if(alpha > 0) {
-//		alert(alpha);
-//		}
 
 		//dungeon/8 = half a visible screen, 0.5 = character scale ratio
 		if(newX > 0 && newX < dungeonWidth - 64) {
