@@ -155,26 +155,27 @@ Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
 	var centerX = Math.floor(dungeonWidth/8  - (64 / 2));
 	var centerY = Math.floor(dungeonHeight/8 - (64 / 2));
 
-	if (x > centerX && x < (screenToMapRatio * dungeonWidth) + centerX) {
-		tempX = centerX;
-	}
-	else if (x >= (screenToMapRatio * dungeonWidth) + centerX) {
-		tempX = x - (screenToMapRatio * dungeonWidth);
-	}
-
-	if(y > centerY && y < (screenToMapRatio * dungeonHeight) + centerY) {
-		tempY = centerY;
-	}
-	else if (y >= (screenToMapRatio * dungeonHeight) + centerY) {
-		tempY = y - (screenToMapRatio * dungeonHeight);
-	}
 	
-	
-	//
+	//If he's not being followed by the camera, just draw him like everyone else is drawn.
 	if(gm.cam.currentEntity !== entity) {
-		var screenPoint = gm.cam.getMyScreenXandY(this.x, this.y);
+		var screenPoint = gm.cam.getMyScreenXandY(entity.x, entity.y);
 		tempX = screenPoint.x;
 		tempY = screenPoint.y;
+	}
+	else {//draw him all special and junk
+		if (x > centerX && x < (screenToMapRatio * dungeonWidth) + centerX) {
+			tempX = centerX;
+		}
+		else if (x >= (screenToMapRatio * dungeonWidth) + centerX) {
+			tempX = x - (screenToMapRatio * dungeonWidth);
+		}
+	
+		if(y > centerY && y < (screenToMapRatio * dungeonHeight) + centerY) {
+			tempY = centerY;
+		}
+		else if (y >= (screenToMapRatio * dungeonHeight) + centerY) {
+			tempY = y - (screenToMapRatio * dungeonHeight);
+		}
 	}
 	
 	ctx.drawImage(this.spriteSheet,
