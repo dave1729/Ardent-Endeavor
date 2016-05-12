@@ -11,8 +11,14 @@ BattleManager.prototype.createBattle = function () {
         
     // }
 }
+BattleManager.prototype.controls = function () {
+    gm.im.currentgroup.addMouse();
+    gm.im.currentgroup.addClick();
+    gm.im.currentgroup.addRClick();
+}
 
 BattleManager.prototype.startBattle = function (spec) {
+    this.controls();
     gm.em.addEntity(this.cursor);
     gm.em.addEntity(this.grid);     
 }
