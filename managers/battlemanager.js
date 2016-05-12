@@ -20,26 +20,27 @@ BattleManager.prototype.createBattle = function () {
         playerUnits: [],
         enemyUnits: []
     }
-    this.currentBattle = new Battle();
+    this.currentBattle = new Battle(spec);
+    
 }
 
 BattleManager.prototype.controls = function () {
     gm.im.addGroup("battle", gm.ctx);
     gm.im.currentgroup.addMouse();
-    gm.im.currentgroup.addClick();
-    gm.im.currentgroup.addRClick();
 }
 
 BattleManager.prototype.startBattle = function (spec) {
     this.controls();
+    this.createBattle();
     gm.em.addEntity(this.cursor);
     gm.em.addEntity(this.grid);
-    this.currentPhase = this.setupPhase;     
+    // this.currentPhase = this.currentBattle.setupPhase;     
 }
 
 
 
 BattleManager.prototype.update = function () {
+    console.log(this.currentBattle)
     this.currentBattle.currentPhase();
 }
 
@@ -52,8 +53,9 @@ function Battle(spec)
     //Phases
     this.playerUnits = spec.playerUnits;
     this.enemyUnits = spec.enemyUnits;
+    this.currentPhase = this.setupPhase;
     this.availableUnits = [];
-     this.spawnEnemies();
+    this.spawnEnemies();
 }
 
 Battle.prototype.update = function ()

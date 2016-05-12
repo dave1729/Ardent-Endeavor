@@ -115,7 +115,6 @@ Blue.prototype.draw = function (ctx) {
 
 function Red(x, y, cursor, battle, enemyType)
 {
-    this.game = game;
     this.x = x;
     this.y = y;
     this.enemyType = enemyType;

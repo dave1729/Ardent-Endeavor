@@ -1,7 +1,6 @@
 function Grid()
 {
     this.visible = true;
-    this.tileSize = 64;
     this.rows = 0;
     this.cols = 0;
 }
@@ -15,7 +14,7 @@ Grid.prototype.draw = function (ctx) {
     {
         ctx.strokeStyle = "black"
         //rows
-        for (var r = 0; r < dungeonWidth; r+= this.tileSize)
+        for (var r = 0; r < dungeonWidth; r += TILE_SIZE)
         {
             ctx.beginPath();
             ctx.moveTo(0, r);
@@ -23,7 +22,7 @@ Grid.prototype.draw = function (ctx) {
             ctx.stroke();
         }
         //cols
-        for (var c = 0; c < dungeonHeight; c += this.tileSize)
+        for (var c = 0; c < dungeonHeight; c += TILE_SIZE)
         {
             ctx.beginPath();
             ctx.moveTo(c, 0);
@@ -33,16 +32,45 @@ Grid.prototype.draw = function (ctx) {
     }
 }
 
+function BattleOverlay(spec) 
+{
+    
+}
+
+BattleOverlay.prototype.draw = function (ctx)
+{
+    if (gm.battle.currentBattle.currentPhase === gm.battle.currentBattle.playerPhase)
+    {
+        
+    }
+    if (gm.battle.currentBattle.currentPhase === gm.battle.currentBattle.setupPhase)
+    {
+        this.highlightSpawns(ctx)    
+    }
+}
+
+BattleOverlay.prototype.highlightSpawns = function (ctx) {
+    ctx.strokeStyle  = "rgba(0, 255, 0, 0.4)"; 
+    ctx.fillStyle  = "rgba(0, 255, 0, 0.4)";     
+    this.validLocations.forEach((point) => {
+        ctx.fillRect(point.x * 64, point.y * 64, 64, 64);
+    })
+}
+
 function Cursor ()
 {
     this.visible = true;
     this.goodAttack = false;
-    this.point = {x: 0, y:0}
+    Entity.call(this, -TILE_SIZE, -TILE_SIZE);
 }
 
 Cursor.prototype.update = function () {
     if (gm.im.getMouse())
-        this.point = gm.im.getMouse();
+    {
+        let m = gm.im.getMouse();
+        this.x = m.x;
+        this.y = m.y;
+    }
 }
 
 Cursor.prototype.draw = function (ctx) {
@@ -58,9 +86,12 @@ Cursor.prototype.draw = function (ctx) {
             ctx.strokeStyle = "rgba(0, 0, 0, 0.5)";
             ctx.fillStyle  = "rgba(0, 0, 0, 0.5)";
         }
-        ctx.fillRect(this.point.x * 64,this.point.y * 64, 64, 64);    
+        ctx.fillRect(this.x * 64,this.y * 64, 64, 64);    
     }
 }
+
+
+
 
 // Unit Placement
 // Battl Start
@@ -83,20 +114,6 @@ Battle.prototype.validPlacement = function (point) {
     }).length  !== 0;
 }
 
-Battle.prototype.draw = function (ctx) {
-    if (this.currentPhase === this.setupPhase)
-    {
-        this.highlightSpawns(ctx)    
-    }
-}
-
-Battle.prototype.highlightSpawns = function (ctx) {
-    ctx.strokeStyle  = "rgba(0, 255, 0, 0.4)"; 
-    ctx.fillStyle  = "rgba(0, 255, 0, 0.4)";     
-    this.validLocations.forEach((point) => {
-        ctx.fillRect(point.x * 64, point.y * 64, 64, 64);
-    })
-}
 
 Battle.prototype.unitUsed = function (unit) 
 {
@@ -108,7 +125,7 @@ Battle.prototype.resetUnits = function () {
 }
 
 Battle.prototype.disableInput = function () {
-    this.game.disableInput = true;
+    gm.disableInput = true;
 }
 
 Battle.prototype.spawnEnemies = function () {
@@ -120,8 +137,8 @@ Battle.prototype.spawnEnemies = function () {
 }
 
 Battle.prototype.spawnEnemy = function (loc) {
-    let spawn = new Red(this.game, loc.next().value, loc.next().value, this.cursor, this, this.enemyType);
-    this.game.em.addEntity(spawn);
+    let spawn = new Red(loc.next().value, loc.next().value, gm.battle.cursor, this, this.enemyType);
+    gm.em.addEntity(spawn);
     this.enemyUnits.push(spawn);
 }
 

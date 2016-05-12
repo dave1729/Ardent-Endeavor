@@ -189,7 +189,7 @@ GameManager.prototype.loop = function () {
     	this.ui.update();
     	this.ui.draw();
     }	
-	if(this.battle) 
+	if(this.battle.currentPhase) 
 	{
 		this.battle.update();
 	}
