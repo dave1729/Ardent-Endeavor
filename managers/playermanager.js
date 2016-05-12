@@ -27,6 +27,9 @@ Player.prototype.controls = function () {
     this.im.addInput(new Input("left", 'a'));
     this.im.addInput(new Input("right", 'd'));
     this.im.addInput(new Input("menu", 'i'));
+
+	this.im.addInput(new Input("screentest", 't'));
+	
     this.im.addInput(new Input("interact", 'e'));
     
     //start with camera following Player
@@ -123,6 +126,13 @@ Player.prototype.update = function () {
 		}
 		else if(this.im.checkInput("right")) {
 			this.speedX = this.regSpeed;
+		}
+		
+		if(this.im.checkInput("screentest") && gm.cam.isFollowing) {
+			gm.cam.stopFollow();
+		}
+		else if(this.im.checkInput("screentest") && !gm.cam.isFollowing) {
+			gm.cam.follow(this);
 		}
 		
 //		if(!(this.im.checkInput("up") || this.im.checkInput("down") ||

@@ -38,12 +38,20 @@ Animation.prototype.drawEntity = function (tick, ctx, x, y) {
 		xindex = frame % this.sheetWidth;
 		yindex = Math.floor(frame / this.sheetWidth);
 
+		var screenPoint = gm.cam.getMyScreenXandY(x, y);
+		
 		ctx.drawImage(this.spriteSheet,
 				xindex * this.frameWidth, yindex * this.frameHeight,  // source from sheet
 				this.frameWidth, this.frameHeight,
-				x - gm.cam.leftX, y - gm.cam.topY,
+				screenPoint.x, screenPoint.y,
 				this.frameWidth * this.scale,
-				this.frameHeight * this.scale);
+				this.frameHeight * this.scale);		
+//		ctx.drawImage(this.spriteSheet,
+//				xindex * this.frameWidth, yindex * this.frameHeight,  // source from sheet
+//				this.frameWidth, this.frameHeight,
+//				x - gm.cam.leftX, y - gm.cam.topY,
+//				this.frameWidth * this.scale,
+//				this.frameHeight * this.scale);
 	}
 }
 
@@ -101,34 +109,6 @@ Collidable_background.prototype.draw = function () {
 Collidable_background.prototype.update = function () {
 
 };
-
-//function Werewolf(game, spritesheet) {
-//	this.animation = new Animation(spritesheet, 64, 64, 4, 0.20, 16, true, 1);
-//	this.x = 300;
-//	this.y = 300;
-//	this.screenX = this.x;
-//	this.screenY = this.y;
-//	this.entityID = 4;
-//	this.layer = 3;
-//	this.speed = 0;
-//	this.game = game;
-//	this.ctx = game.ctx;
-//}
-//
-//Werewolf.prototype.draw = function () {
-//	this.animation.drawEntity(this.game.clockTick, this.ctx, this.screenX, this.screenY);
-//}
-//
-//Werewolf.prototype.update = function () {
-//	//Updates the entities screenX and screenY using it's x and y against the background
-//	this.animation.updateEntity(this);
-//
-//	Entity.prototype.update.call(this);
-//}
-
-
-
-
 
 Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
 
@@ -195,7 +175,12 @@ Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
 		tempY = y - (screenToMapRatio * dungeonHeight);
 	}
 	
-
+	if(gm.cam.currentEntity === this) {
+		var screenPoint = gm.cam.getMyScreenXandY(this.x, this.y);
+		tempX = screenPoint.x;
+		tempY = screenPoint.y;
+	}
+	
 	ctx.drawImage(this.spriteSheet,
 			xindex * this.frameWidth, yindex * this.frameHeight,  // source from sheet
 			this.frameWidth, this.frameHeight,

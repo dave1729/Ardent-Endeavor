@@ -6,6 +6,13 @@ function Camera(screenWidth, screenHeight) {
 	this.width = screenWidth;
 	this.height = screenHeight;
 	this.currentEntity = null;
+	this.isFollowing = false;
+}
+
+//Returns a Point object that has the new x and y
+//which can be used to draw your object in the right place
+Camera.prototype.getMyScreenXandY = function(mapX, mapY) {
+	return { x: mapX - this.leftX, y: mapY - this.topY};
 }
 
 //requires hitBox
@@ -41,7 +48,7 @@ Camera.prototype.isVisible = function(entity) {
 }
 
 Camera.prototype.update = function() {
-	if(this.currentEntity !== null) {
+	if(this.isFollowing) {
 		//Reminder in case Camera stops working on NPC Character.
 		if(this.currentEntity.spriteSquareSize === null) alert("Camera Follow Entity doesn't have field spriteSquareSize!");
 		
@@ -66,10 +73,12 @@ Camera.prototype.update = function() {
 
 Camera.prototype.follow = function(entity) {
 	this.currentEntity = entity;
+	this.isFollowing = true;
 }
 
-Camera.prototype.stopFollowing = function() {
+Camera.prototype.stopFollow = function() {
 	this.currentEntity = null;
+	this.isFollowing = false;
 }
 
 //Jumps to Camera position where the top left CORNER is passed
