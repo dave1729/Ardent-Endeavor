@@ -1,10 +1,10 @@
 function Camera(screenWidth, screenHeight) {
 	this.leftX = 0;
 	this.topY = 0;
-	this.rightX = screenWidth;
-	this.bottomY = screenHeight;
-	this.width = screenWidth;
-	this.height = screenHeight;
+	this.rightX = Math.floor(screenWidth);
+	this.bottomY = Math.floor(screenHeight);
+	this.width = Math.floor(screenWidth);
+	this.height = Math.floor(screenHeight);
 	this.currentEntity = null;
 	this.isFollowing = false;
 }
@@ -12,7 +12,7 @@ function Camera(screenWidth, screenHeight) {
 //Returns a Point object that has the new x and y
 //which can be used to draw your object in the right place
 Camera.prototype.getMyScreenXandY = function(mapX, mapY) {
-	return { x: mapX - this.leftX, y: mapY - this.topY};
+	return { x: Math.floor(mapX - this.leftX), y: Math.floor(mapY - this.topY)};
 }
 
 //requires hitBox
@@ -53,18 +53,18 @@ Camera.prototype.update = function() {
 		if(this.currentEntity.spriteSquareSize === null) alert("Camera Follow Entity doesn't have field spriteSquareSize!");
 		
 		//dungeon/8 = half a visible screen, 0.5 = character scale ratio
-		var newX = this.currentEntity.x - Math.floor(dungeonWidth/8  - (this.currentEntity.spriteSquareSize / 2));
-		var newY = this.currentEntity.y - Math.floor(dungeonHeight/8 - (this.currentEntity.spriteSquareSize / 2));
+		var newX = Math.floor(this.currentEntity.x - Math.floor(dungeonWidth/8  - (this.currentEntity.spriteSquareSize / 2)));
+		var newY = Math.floor(this.currentEntity.y - Math.floor(dungeonHeight/8 - (this.currentEntity.spriteSquareSize / 2)));
 		//alert(dungeonHeight + " " + this.currentEntity.spriteSquareSize / 2)));
 		//dungeonWidth/4 one visible screen width
 		if(newX >= 0 && newX <= (dungeonWidth - dungeonWidth/4)) {
-			this.leftX = newX;
-			this.rightX = newX + this.width;
+			this.leftX = Math.floor(newX);
+			this.rightX = Math.floor(newX + this.width);
 		}
 		
 		if(newY >= 0 && newY <= (dungeonHeight - dungeonHeight/4) ) {
-			this.topY = newY;
-			this.bottomY = newY + this.height;
+			this.topY = Math.floor(newY);
+			this.bottomY = Math.floor(newY + this.height);
 		}
 	}
 
@@ -83,10 +83,10 @@ Camera.prototype.stopFollow = function() {
 
 //Jumps to Camera position where the top left CORNER is passed
 Camera.prototype.jumpToByCorner = function(x, y) {
-	this.leftX = x;
-	this.rightX = newX + this.width;
-	this.topY = y;
-	this.bottomY = newY + this.height;
+	this.leftX = Math.floor(x);
+	this.rightX = Math.floor(newX + this.width);
+	this.topY = Math.floor(y);
+	this.bottomY = Math.floor(newY + this.height);
 }
 
 //Jumps to Camera position where the MIDDLE of the screen is passed

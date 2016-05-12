@@ -128,10 +128,13 @@ Player.prototype.update = function () {
 			this.speedX = this.regSpeed;
 		}
 		
-		if(this.im.checkInput("screentest") && gm.cam.isFollowing) {
+		if(this.im.checkInput("screentest") && gm.cam.currentEntity === this) {
+			gm.im.setFalse("screentest");
 			gm.cam.stopFollow();
+			alert(gm.cam.leftX + " " + gm.cam.topY);
 		}
-		else if(this.im.checkInput("screentest") && !gm.cam.isFollowing) {
+		else if(this.im.checkInput("screentest")) {
+			gm.im.setFalse("screentest");
 			gm.cam.follow(this);
 		}
 		

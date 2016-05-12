@@ -121,6 +121,7 @@ Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
 	var yindex = 0;
 	xindex = frame % this.sheetWidth;
 
+	//Choosing character sprite from sheet
 	if(entity.im.checkInput("up") && entity.im.checkInput("left")) {
 		yindex = 8;
 	}
@@ -154,13 +155,6 @@ Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
 	var centerX = Math.floor(dungeonWidth/8  - (64 / 2));
 	var centerY = Math.floor(dungeonHeight/8 - (64 / 2));
 
-	//centering circle for testing
-	if(testingMode) {
-		ctx.arc(dungeonWidth/8,dungeonHeight/8,20,0,2*Math.PI);
-		ctx.stroke();
-	}
-
-	
 	if (x > centerX && x < (screenToMapRatio * dungeonWidth) + centerX) {
 		tempX = centerX;
 	}
@@ -175,7 +169,9 @@ Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
 		tempY = y - (screenToMapRatio * dungeonHeight);
 	}
 	
-	if(gm.cam.currentEntity === this) {
+	
+	//
+	if(gm.cam.currentEntity !== entity) {
 		var screenPoint = gm.cam.getMyScreenXandY(this.x, this.y);
 		tempX = screenPoint.x;
 		tempY = screenPoint.y;
