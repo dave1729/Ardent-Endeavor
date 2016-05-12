@@ -1,6 +1,5 @@
 function Grid()
 {
-    this.ctx = gm.ctx;
     this.visible = true;
     this.tileSize = 64;
     this.rows = 0;
@@ -17,18 +16,18 @@ Grid.prototype.draw = function (ctx) {
         //rows
         for (var r = 0; r < dungeonWidth; r+= this.tileSize)
         {
-            this.ctx.beginPath();
-            this.ctx.moveTo(0, r);
-            this.ctx.lineTo(dungeonWidth, r);
-            this.ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(0, r);
+            ctx.lineTo(dungeonWidth, r);
+            ctx.stroke();
         }
         //cols
         for (var c = 0; c < dungeonHeight; c += this.tileSize)
         {
-            this.ctx.beginPath();
-            this.ctx.moveTo(c, 0);
-            this.ctx.lineTo(c, dungeonHeight);
-            this.ctx.stroke();    
+            ctx.beginPath();
+            ctx.moveTo(c, 0);
+            ctx.lineTo(c, dungeonHeight);
+            ctx.stroke();    
         }
     }
 }
