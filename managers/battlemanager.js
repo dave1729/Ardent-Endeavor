@@ -20,7 +20,7 @@ BattleManager.prototype.createBattle = function () {
         playerUnits: [],
         enemyUnits: []
     }
-    this.currentBattle = 
+    this.currentBattle = new Battle();
 }
 
 BattleManager.prototype.controls = function () {
