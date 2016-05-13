@@ -133,7 +133,11 @@ Player.prototype.update = function () {
 		if(this.im.checkInput("screentest") && gm.cam.currentEntity === this) {
 			gm.im.setFalse("screentest");
 			gm.cam.stopFollow();
+			var sx = prompt("Where should the screen X go?", "0");
+			var sy = prompt("Where should the screen Y go?", "0");
+			gm.cam.jumpToByCorner(sx, sy);
 		}
+		//if he's not being followed ask the user where to put the screen
 		else if(this.im.checkInput("screentest")) {
 			gm.im.setFalse("screentest");
 			gm.cam.follow(this);

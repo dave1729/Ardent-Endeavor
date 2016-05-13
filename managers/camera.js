@@ -84,9 +84,9 @@ Camera.prototype.stopFollow = function() {
 //Jumps to Camera position where the top left CORNER is passed
 Camera.prototype.jumpToByCorner = function(x, y) {
 	this.leftX = Math.floor(x);
-	this.rightX = Math.floor(newX + this.width);
+	this.rightX = Math.floor(x + this.width);
 	this.topY = Math.floor(y);
-	this.bottomY = Math.floor(newY + this.height);
+	this.bottomY = Math.floor(y + this.height);
 }
 
 //Jumps to Camera position where the MIDDLE of the screen is passed
