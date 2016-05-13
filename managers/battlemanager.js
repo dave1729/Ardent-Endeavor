@@ -1,11 +1,10 @@
 function BattleManager() {
     this.cursor = new Cursor();
     this.grid = new Grid();
-    this.currentPhase = undefined;
     this.currentBattle = undefined;
 }
 
-BattleManager.prototype.createBattle = function () {
+BattleManager.prototype.createBattle = function (spec) {
     //do some things to create cool battles
     var spec = {
         validLocations: [
@@ -18,7 +17,8 @@ BattleManager.prototype.createBattle = function () {
         ],
         maxPlayers: 3,
         playerUnits: [],
-        enemyUnits: []
+        enemyUnits: [],
+        enemyType: spec.enemyType
     }
     this.currentBattle = new Battle(spec);
     
@@ -31,80 +31,19 @@ BattleManager.prototype.controls = function () {
 
 BattleManager.prototype.startBattle = function (spec) {
     this.controls();
-    this.createBattle();
+    this.createBattle(spec);
     gm.em.addEntity(this.cursor);
     gm.em.addEntity(this.grid);
     // this.currentPhase = this.currentBattle.setupPhase;     
 }
 
+BattleManager.prototype.draw = function (ctx)
+{
+    this.currentBattle.draw(ctx);
+}
+
 
 
 BattleManager.prototype.update = function () {
-    console.log(this.currentBattle)
     this.currentBattle.currentPhase();
 }
-
-function Battle(spec) 
-{
-    // Unit Spawning
-    this.maxPlayers = spec.maxPlayers;
-    this.validLocations = spec.validLocations;
-    
-    //Phases
-    this.playerUnits = spec.playerUnits;
-    this.enemyUnits = spec.enemyUnits;
-    this.currentPhase = this.setupPhase;
-    this.availableUnits = [];
-    this.spawnEnemies();
-}
-
-Battle.prototype.update = function ()
-{
-    this.currentPhase();
-    // Units are not spawned
-}
-
-Battle.prototype.setupPhase = function () {
-    this.cursor.good = true;
-    if(gm.im.getClick())
-    {
-        if (this.validPlacement(this.cursor.point))
-        {
-            this.spawnPlayer();
-            gm.im.currentgroup.click = null;
-        }
-    }
-    if(this.playerCount === 0)
-    {
-        this.cursor.good = false;
-        this.unitsSpawned = true;
-        this.playersTurn = true;
-        this.currentPhase = this.playerPhase;
-    }
-}
-
-Battle.prototype.playerPhase = function () {
-    if (this.availableUnits.length === 0)
-    {
-        console.log("TURN DONE")
-        this.currentPhase = this.enemyPhase;
-    }
-    if (this.enemyUnits.length === 0)
-    {
-        //End battle
-        //Remove all entities from array
-        console.log("Victory!")
-    }
-        //Check if t has been 
-}
-
-Battle.prototype.enemyPhase = function (params) {
-    console.log("Enemies turn is taken.")
-    if (this.playerUnits.length === 0)
-    {
-        console.log("Defeat.")
-    }
-    this.currentPhase = this.playerPhase;
-        // AI LOGIC calls and stuff
-}
-

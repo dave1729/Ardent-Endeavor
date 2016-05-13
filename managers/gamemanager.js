@@ -105,7 +105,7 @@ GameManager.prototype.startBattle = function (enemy) {
 	gm.em.removeAllEntities();
 	// gm.em.addEntity(map.bgLayer);
 	// gm.em.addEntity(map.cLayer);
-	gm.battle.startBattle(enemy);
+	gm.battle.startBattle({enemyType: enemy});
 	
 	// needs more logic to add battle assets
 	// pause overworld functions
@@ -189,7 +189,7 @@ GameManager.prototype.loop = function () {
     	this.ui.update();
     	this.ui.draw();
     }	
-	if(this.battle.currentPhase) 
+	if(this.battle.currentBattle) 
 	{
 		this.battle.update();
 	}
