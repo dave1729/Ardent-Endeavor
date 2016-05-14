@@ -39,6 +39,18 @@ Player.prototype.controls = function () {
 
 Player.prototype.entityCollisionCheck = function (startX, startY) {
 	var rectMain = {x: this.hitBox.getX(), y: this.hitBox.getY(), width: this.hitBox.width, height: this.hitBox.height}
+	
+	gm.checkMapCollision({x: this.hitBox.getScreenX(), y: this.hitBox.getScreenY(), width: this.hitBox.width, height: this.hitBox.height}, checkCollisionData);
+	
+	function checkCollisionData(wasCollision, pixelPoint, imageData) {
+		if (wasCollision) {
+			// NOTE: Collision needs to be refined so diagonal movement can be done.
+			gm.player.x = startX;
+			gm.player.y = startY;
+		}
+	}
+	
+	var rectMain = {x: this.hitBox.getX(), y: this.hitBox.getY(), width: this.hitBox.width, height: this.hitBox.height}
 	//console.log(rectMain);
 	var i;
 	for (i = 0; i < gm.em.entities.length; ++i) {
