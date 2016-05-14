@@ -56,6 +56,9 @@ EntityManager.prototype.update = function () {
             entity.update();
         }
     }
+    if (gm.bgCollision != null) {
+        gm.bgCollision.update();
+    }
 
     for (var i = this.entities.length - 1; i >= 0; --i) {
         if (this.entities[i].removeFromWorld) {
@@ -73,6 +76,11 @@ EntityManager.prototype.draw = function () {
     	this.entities[i].draw(gm.ctx);
     }
     gm.ctx.restore();
+    
+    gm.ctxCol.clearRect(0, 0, gm.surfaceWidth, gm.surfaceHeight);
+    if (gm.bgCollision != null) {
+    	gm.bgCollision.draw();
+    }
 }
 
 /* Removes all active entities (including map and player) from the game */

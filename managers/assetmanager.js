@@ -19,6 +19,7 @@ AssetManager.prototype.isDone = function () {
 AssetManager.prototype.downloadAll = function (callback) {
     for (var i = 0; i < this.downloadQueue.length; i++) {
         var img = new Image();
+        
         var that = this;
 
         var path = this.downloadQueue[i];
@@ -35,7 +36,7 @@ AssetManager.prototype.downloadAll = function (callback) {
             that.errorCount++;
             if (that.isDone()) callback();
         });
-
+        
         img.src = path;
         this.cache[path] = img;
     }
