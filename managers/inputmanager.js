@@ -12,7 +12,7 @@ function InputManager(firstGroupName) {
 //Adds a new group and switches to it right stat now
 //addGroup(String)
 InputManager.prototype.addGroup = function(newGroupName, ctx) {
-	this.currentgroup = new InputGroup(newGroupName);
+	this.currentgroup = new InputGroup(newGroupName, ctx);
 	this.inputgroup_list.push(this.currentgroup);
 }
 
@@ -136,8 +136,8 @@ InputManager.prototype.start = function () {
         var x = e.clientX - gm.ctx.canvas.getBoundingClientRect().left;
         var y = e.clientY - gm.ctx.canvas.getBoundingClientRect().top;
         if (x < 2048) {
-            x = Math.floor(x / TILE_SIZE);
-            y = Math.floor(y / TILE_SIZE);
+            //x = Math.floor(x );
+            //y = Math.floor(y );
         }
         return { x: x, y: y };
     }

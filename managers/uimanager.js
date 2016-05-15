@@ -49,7 +49,7 @@ UIManager.prototype.draw = function() {
 
 UIManager.prototype.controls = function () {
 	var temp = gm.im.currentgroup.name;
-	gm.im.addGroup("ui");
+	gm.im.addGroup("ui", this.ctx);
 	//console.log(gm.im.currentgroup);
 	gm.im.currentgroup.addMouse();
 	gm.im.addInput(new Input("up", 'w'));
@@ -266,6 +266,7 @@ Button.prototype.moveButton = function (x, y, width, height) {
 Button.prototype.update = function (canvas) {
     
     if (gm.im.checkMouse() && gm.im.getMouse() != null) {
+    	//console.log("x: " + gm.im.getMouse().x + "  y: " + gm.im.getMouse().y);
     	if (gm.im.getMouse().x > this.x && 
 				gm.im.currentgroup.mouse.y > this.y &&
 				gm.im.currentgroup.mouse.x < this.x + this.width &&

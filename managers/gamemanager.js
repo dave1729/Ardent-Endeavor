@@ -1,5 +1,5 @@
 const TILE_SIZE = 64;
-const COLLISION_ACCURACY = 4.0; // Higher is more accurate, but slower.
+const COLLISION_ACCURACY = 3.0; // Higher is more accurate, but slower.
 
 function GameManager(ctx, ctxUI, ctxCollision)
 {
@@ -34,6 +34,7 @@ GameManager.prototype.start = function() {
     this.am.queueDownload("./img/shark.png");
     this.am.queueDownload("./img/alienfirebird.png");
     this.am.queueDownload("./img/temple.jpg");
+    this.am.queueDownload("./img/chest.png");
     this.am.downloadAll(() => {
         this.loop();
         //this.startBattle(new Fire(gm, 64, 256));
@@ -196,7 +197,7 @@ GameManager.prototype.checkMapCollision = function (rectBox, callback) {
 	    for (var offsetX = 0; offsetX < incX; offsetX++ ) {
 	        for (var pixelY = 0+offsetY; pixelY < rectBox.height; pixelY += incY ) {
 	            for (var pixelX = 0+offsetX; pixelX < rectBox.width; pixelX += incX){
-	                if ( imgData.data[(pixelX + pixelY * imgData.width) * 4 + 3] > 0 ) {
+	                if ( imgData.data[(pixelX + pixelY * imgData.width) * 4 + 3] > 50 ) {
 		            	//console.log((pixelX + pixelY * imgData.width) * 4 + 3);
 	                	callback(true, {x: pixelX, y: pixelY}, imgData);
 	                }
