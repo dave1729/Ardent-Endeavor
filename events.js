@@ -9,12 +9,11 @@
  * it will trigger an event in game. The action performed will
  * depend on the type of event triggered.
  */
-function Event(game, mapid, x, y, w, h) {
-	this.mapid = mapid;
+function Event(game, x, y, w, h) {
 	this.w = w;
 	this.h = h;
-	this.screenX = x;
-	this.screenY = y;
+	this.x = x;
+	this.y = y;
 	this.hitBox = new CollisionBox(this, 0, 0, w, h);
 	Entity.call(this, game, x, y);
 }
@@ -30,7 +29,8 @@ Event.prototype.draw = function () {
 	// Visual Debugging of Event Locations
 	if (gm.hitBoxVisible) {
 		gm.ctx.strokeStyle = "red";
-	    gm.ctx.strokeRect(this.screenX, this.screenY, this.w, this.h);
+		gm.ctx.strokeRect(this.hitBox.getScreenX(), this.hitBox.getScreenY(),
+				 this.hitBox.width, this.hitBox.height);
 	}
 }
 Event.prototype.interactTrigger = function (player) {
@@ -44,18 +44,23 @@ Event.prototype.interactTrigger = function (player) {
  * correct coordinates.
  */
 function MapTeleportEvent(game, x, y, w, h, destMapid, destx, desty) {
+	this.game = game;
 	this.destMapid = destMapid;
 	this.destx = destx;
 	this.desty = desty;
-	Event.call(this, game, 0, x, y, w, h);
+	this.x = x;
+	this.y = y;
+	this.w = w;
+	this.h = h;
+	this.hitBox = new CollisionBox(this, 0, 0, w, h);
 }
 
 MapTeleportEvent.prototype = new Event();
 MapTeleportEvent.prototype.constructor = MapTeleportEvent;
 
 MapTeleportEvent.prototype.update = function () {
-	this.screenX = this.x - gm.cam.leftX;
-	this.screenY = this.y - gm.cam.topY;
+	//this.screenX = this.x - gm.cam.leftX;
+	//this.screenY = this.y - gm.cam.topY;
 	Event.prototype.update.call(this);
 }
 
