@@ -242,7 +242,7 @@ PlayerUnit.prototype.playerPhase = function ()
     {
         //  console.log("we are on top")
         
-        if (this.cursor.x === this.x && this.cursor.y === this.y)
+        if (this.cursor.getClick().x === this.x && this.cursor.getClick().y === this.y)
         {
             // console.log("I clicked you")
             if (!this.cursor.selected)
