@@ -38,6 +38,7 @@ function BattleOverlay(spec)
     this.highlightUnit = undefined;
     this.highlightSpawn = false;
     this.possibleMoves = [];
+    this.possibleAttacks = [];
     Entity.call(this, 0, 0);
 }
 
@@ -50,18 +51,10 @@ BattleOverlay.prototype.draw = function (ctx)
             //console.log("Highlighting Move")
             this.highlightPossibleMoves(ctx);
         }
-        else if (this.highlightUnit.moved && !this.highlightUnit.attacked)
+        else if (!this.highlightUnit.attacked)
         {
             // console.log("Highlighting Attack")
-            let x = this.highlightUnit.x;
-            let y = this.highlightUnit.y;
-            ctx.strokeStyle  = "rgba(255, 0, 255, 0.5)";    
-            ctx.fillStyle = "rgba(255, 0, 255, 0.5)";
-            ctx.fillRect((x + 1) * 64, y * 64, 64, 64);
-            ctx.fillRect((x - 1) * 64, y * 64, 64, 64);
-            ctx.fillRect(x * 64, (y + 1) * 64, 64, 64);
-            ctx.fillRect(x * 64, (y - 1) * 64, 64, 64);
-            // this.highlightPossibleAttack(ctx);
+            this.highlightPossibleAttacks(ctx);
         }
     }
     if (gm.battle.currentBattle.currentPhase === gm.battle.currentBattle.setupPhase)
@@ -80,6 +73,11 @@ BattleOverlay.prototype.update = function ()
             if (!this.highlightUnit.moved)
             {
                 this.possibleMoves = this.highlightUnit.possibleMoves;
+                // console.log(this.possibleMoves)
+            }
+            else if (!this.highlightUnit.attacked)
+            {
+                this.possibleAttacks = this.highlightUnit.possibleAttacks;
             }
         }
     }
@@ -89,7 +87,7 @@ BattleOverlay.prototype.highlightSpawns = function (ctx) {
     ctx.strokeStyle  = "rgba(0, 255, 0, 0.4)"; 
     ctx.fillStyle  = "rgba(0, 255, 0, 0.4)";     
     this.validLocations.forEach((point) => {
-        ctx.fillRect(point.x * 64, point.y * 64, 64, 64);
+        ctx.fillRect(point.x * TILE_SIZE, point.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
     })
 }
 
@@ -101,6 +99,15 @@ BattleOverlay.prototype.highlightPossibleMoves = function (ctx)
         ctx.fillRect(point.x * TILE_SIZE, point.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
     })
         
+}
+
+BattleOverlay.prototype.highlightPossibleAttacks = function (ctx)
+{
+    ctx.strokeStyle  = "rgba(255, 0, 255, 0.5)";    
+    ctx.fillStyle = "rgba(255, 0, 255, 0.5)";
+    this.possibleAttacks.forEach((point) => {
+        ctx.fillRect(point.x * TILE_SIZE, point.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+    })
 }
 
 
@@ -123,6 +130,7 @@ Cursor.prototype.update = function () {
     if (this.selected && this.target)
     {
         this.target.removeFromWorld = true;
+        this.target = undefined;
     }
 }
 
@@ -212,7 +220,7 @@ Battle.prototype.enemyPhase = function (params) {
 }
 
 Battle.prototype.spawnPlayer = function (params) {
-    let spawn = new PlayerUnit(gm.battle.cursor.x, gm.battle.cursor.y);
+    let spawn = new PlayerUnit({x: gm.battle.cursor.x, y :gm.battle.cursor.y});
     gm.em.addEntity(spawn);
     this.availableUnits.push(spawn);
     this.playerUnits.push(spawn);

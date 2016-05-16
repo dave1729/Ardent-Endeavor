@@ -1,34 +1,34 @@
-function Blue(x, y, cursor, battle) {
-    this.battle = battle;
-    this.moved = false;
-    this.attacked = false;
-    this.x = x;
-    this.y = y;
-    this.selected = false;
-    this.cursor = gm.battle.cursor;
-}
+// function Blue(x, y, cursor, battle) {
+//     this.battle = battle;
+//     this.moved = false;
+//     this.attacked = false;
+//     this.x = x;
+//     this.y = y;
+//     this.selected = false;
+//     this.cursor = gm.battle.cursor;
+// }
 
-function Red(x, y, cursor, battle, enemyType)
-{
-}
-Red.prototype.update = function () {
-    if(this.cursor.attack)
-    {
-        if((this.cursor.attack.x === this.x) && (this.cursor.attack.y === this.y))
-        {
-            this.cursor.goodAttack = true;
-            this.battle.enemyUnits.splice(this.battle.enemyUnits.indexOf(this), 1);
-            this.removeFromWorld = true;
-        }
-    }
-}
+// function Red(x, y, cursor, battle, enemyType)
+// {
+// }
+// Red.prototype.update = function () {
+//     if(this.cursor.attack)
+//     {
+//         if((this.cursor.attack.x === this.x) && (this.cursor.attack.y === this.y))
+//         {
+//             this.cursor.goodAttack = true;
+//             this.battle.enemyUnits.splice(this.battle.enemyUnits.indexOf(this), 1);
+//             this.removeFromWorld = true;
+//         }
+//     }
+// }
+
 function Unit(spec)
 {
-    let temp = new Shark(gm, 0, 0);
     this.overworld = spec.overworld;
-    this.animation = spec.overworld.animation | temp.animation;
-    this.range = spec.range | 3;
-    this.speed = spec.speed | 1;
+    this.animation = this.overworld.animation;
+    this.range = 3;
+    this.speed = 1;
     Entity.call(this, spec.x, spec.y);
 }
 
@@ -44,7 +44,6 @@ Unit.prototype.update = function () {
     {
         if (this.playerPhase)
         {
-            this.possibleMoves = calculatePossibleMoves();
             this.playerPhase();
         }
     }
@@ -60,17 +59,18 @@ Unit.prototype.update = function () {
     }
 }
 
-Unit.prototype.calculatePossibleMoves = function (spec)
+Unit.prototype.calculateActionRadius = function (spec)
 {
    let x = this.x;
    let y = this.y;
-   let dist = this.distance;
-   let speed = this.speed;
+   let dist = spec.range;
+   let offset = spec.offset
+   let speed = spec.speed;
    let points = [];
    let count = 0;
-    for(var i = dist; i >= 1; i--) 
+    for(var i = dist; i >= offset; i--) 
     {
-        for(var j = dist; j >= 1; j--) 
+        for(var j = dist; j >= offset; j--) 
         {
             
             if((Math.abs(i) + Math.abs(j)) <= dist)
@@ -110,24 +110,61 @@ EnemyUnit.prototype.enemyPhase = function (params) {
 
 function PlayerUnit(spec)
 {
+    spec.overworld = new Shark(gm, spec.x, spec.y);
     this.moved = false;
     this.selected = false;
     this.cursor = gm.battle.cursor;
+    this.possibleMoves = [];
+    this.possibleAttacks = [];
     Unit.call(this, spec);
 }
 
 PlayerUnit.prototype = Object.create(Unit.prototype);
 PlayerUnit.prototype.constructor = PlayerUnit;
 
+PlayerUnit.prototype.draw = function (ctx)
+{
+    if (this.selected)
+    {   
+        ctx.beginPath();
+        ctx.fillStyle = "rgba(0, 255, 0, 1)";
+        ctx.strokeStyle = "rgba(0, 0, 255, 1)"; 
+        ctx.arc(this.x * 64 + 32,this.y * 64 + 32, 32, 0, 2*Math.PI);
+        ctx.closePath();
+        ctx.fill();
+    }   
+    Unit.prototype.draw.call(this, ctx);
+}
+
+PlayerUnit.prototype.validMove = function (point)
+{
+    var result = false;
+    if(this.x !== this.cursor.x || this.y !== this.cursor.y)
+    {
+        this.possibleMoves.forEach((valid) => {
+            if (point.x === valid.x && point.y === valid.y)
+            {
+                result = true;
+            }
+        })
+    }
+    return result;
+}
+
 PlayerUnit.prototype.playerPhase = function ()
 {
     if (this.selected)
-    {     
-        if (gm.im.getClick())
-        {
-            if(!this.moved)
+    {
+       if(!this.moved)
+       {
+            this.possibleMoves = this.calculateActionRadius({
+                range: this.range,
+                offset: 0,
+                speed: this.speed 
+            });
+            if (gm.im.getClick())
             {
-                if(this.x !== this.cursor.x || this.y !== this.cursor.y)
+                if (this.validMove({x: this.cursor.x, y: this.cursor.y}))               
                 {
                     this.x = this.cursor.x;
                     this.y = this.cursor.y;
@@ -136,7 +173,53 @@ PlayerUnit.prototype.playerPhase = function ()
                     this.moved = true;
                     gm.im.currentgroup.click = null;
                 }
+                else
+                {
+                    gm.im.currentgroup.click = null;
+                }
             }
+        }
+        if (!this.attacked && this.moved)
+        {
+            this.possibleAttacks = this.calculateActionRadius({
+                    range: 1,
+                    offset: 0,
+                    speed: this.speed
+            });
+            if(gm.im.getClick())
+            {
+                if(((this.x + 1) === this.cursor.x && this.y === this.cursor.y) ||
+                    ((this.x - 1) === this.cursor.x && this.y === this.cursor.y) ||
+                    (this.x === this.cursor.x && (this.y + 1) === this.cursor.y) ||
+                    (this.x === this.cursor.x && (this.y - 1) === this.cursor.y))
+                    {
+                        this.cursor.target = this;
+                        // this.cursor.target = gm.battle.currentBattle.
+                        // // this.attack = true;
+                        // this.cursor.attack = {x: this.cursor.point.x, y: this.cursor.point.y};
+                    }
+                    else
+                    {
+                        this.selected = false;
+                        this.cursor.selected = undefined;
+                    }
+            }
+        }
+    }
+    else if(gm.im.getClick())
+    {
+        //  console.log("we are on top")
+        
+        if (this.cursor.x === this.x && this.cursor.y === this.y)
+        {
+            // console.log("I clicked you")
+            if (!this.cursor.selected)
+            {
+                // console.log("your selected")
+                this.selected = true;
+                this.cursor.selected = this;
+            }
+            gm.im.currentgroup.click = null;
         }
     }
 }
@@ -205,23 +288,23 @@ PlayerUnit.prototype.playerPhase = function ()
 // }
 
 
-PlayerUnit.prototype.draw = function (ctx) {
+// PlayerUnit.prototype.draw = function (ctx) {
     
-    // console.log("help");
-    ctx.beginPath();
-    if (this.selected)
-    {
-        ctx.fillStyle = "rgba(0, 255, 0, 1)";
-        ctx.strokeStyle = "rgba(0, 0, 255, 1)";  
-    }
-    else
-    {
-        ctx.fillStyle = "rgba(0, 0, 255, 1)";
-        ctx.strokeStyle = "rgba(0, 0, 255, 1)";    
-    }     
-    ctx.arc(this.x * 64 + 32,this.y * 64 + 32, 32, 0, 2*Math.PI);
-    ctx.closePath();
-    ctx.fill();
-}
+//     // console.log("help");
+//     ctx.beginPath();
+//     if (this.selected)
+//     {
+//         ctx.fillStyle = "rgba(0, 255, 0, 1)";
+//         ctx.strokeStyle = "rgba(0, 0, 255, 1)";  
+//     }
+//     else
+//     {
+//         ctx.fillStyle = "rgba(0, 0, 255, 1)";
+//         ctx.strokeStyle = "rgba(0, 0, 255, 1)";    
+//     }     
+//     ctx.arc(this.x * 64 + 32,this.y * 64 + 32, 32, 0, 2*Math.PI);
+//     ctx.closePath();
+//     ctx.fill();
+// }
 
 
