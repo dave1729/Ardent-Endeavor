@@ -18,15 +18,19 @@ BattleManager.prototype.createBattle = function (spec) {
         maxPlayers: 3,
         playerUnits: [],
         enemyUnits: [],
-        enemyType: spec.enemyType
+        enemyType: spec.enemyType,
+        immovableTiles: [{x: 0, y: 5}]
     }
     this.currentBattle = new Battle(spec);
+    this.currentBattle.init();
     
 }
 
 BattleManager.prototype.controls = function () {
     gm.im.addGroup("battle", gm.ctx);
     gm.im.currentgroup.addMouse();
+    gm.im.addInput(new Input("endTurn", "e"))
+    gm.im.addInput(new Input("endTurnO", "o"))
 }
 
 BattleManager.prototype.startBattle = function (spec) {

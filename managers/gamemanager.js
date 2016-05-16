@@ -114,6 +114,7 @@ GameManager.prototype.startBattle = function (enemy) {
 /* Disables battle scene, loading regular functionality to overworld. */
 GameManager.prototype.endBattle = function () {
 	this.em.removeAllEntities();
+	gm.bm.currentBattle = undefined;
 	this.em.restoreEntities();
 	// remove battle assets
 	// resume overworld functions

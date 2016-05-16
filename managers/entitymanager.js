@@ -80,17 +80,18 @@ EntityManager.prototype.removeAllEntities = function () {
     this.entities.forEach((entity) => {
         entity.removeFromWorld = true;
     })
+    console.log(this.tempEntities)
     this.update();
 }
 
 /* Creates a shallow copy of entities[] from game engine and stores in temp */
 EntityManager.prototype.cacheEntities = function () {
-	this.tempEntities = this.entities;
+	this.tempEntities = this.entities.slice(0);
 }
 
 /* Restores the entities from cache */
 EntityManager.prototype.restoreEntities = function () {
-	this.entities = this.tempEntities;s
+	this.entities = this.tempEntities.slice(0);
 }
 
 /* Remove specific entity from active list. */

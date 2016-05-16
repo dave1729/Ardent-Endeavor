@@ -86,6 +86,11 @@ BattleOverlay.prototype.update = function ()
             this.possibleAttacks = [];
         }
     }
+    else
+    {
+        this.possibleMoves = [];
+        this.possibleAttacks = [];
+    }
 }
 
 BattleOverlay.prototype.highlightSpawns = function (ctx) {
@@ -125,6 +130,11 @@ function Cursor ()
     Entity.call(this, -TILE_SIZE, -TILE_SIZE);
 }
 
+Cursor.prototype.deselect = function () {
+    this.selected.deselect();
+    this.selected = undefined;
+}
+
 Cursor.prototype.update = function () {
     if (this.getMouse())
     {
@@ -133,11 +143,11 @@ Cursor.prototype.update = function () {
         this.y = m.y;
     }
     
-    if (this.selected && this.target)
-    {
-        this.target.removeFromWorld = true;
-        this.target = undefined;
-    }
+    // if (this.selected && this.target)
+    // {
+    //     this.target.removeFromWorld = true;
+    //     this.target = undefined;
+    // }
 }
 
 Cursor.prototype.draw = function (ctx) {
@@ -194,13 +204,13 @@ Cursor.prototype.isCellOccupied = function (point)
     point = point ? point : {x: this.x, y: this.y};
     let occupy = gm.bm.currentBattle.getOccupiedCells();
     let result = undefined;
-    occupy.forEach((opoint) => {
-        if(point.x === opoint.x && point.y === opoint.y)
+    occupy.forEach((object) => {
+        if(point.x === object.x && point.y === object.y)
         {
-            result = this;
+            result = object;
         }
     })
-    return undefined;
+    return result;
 }
 
 // Unit Placement
@@ -220,16 +230,19 @@ function Battle(spec)
     this.currentPhase = this.setupPhase;
     this.availableUnits = [];
     this.enemyType = spec.enemyType;
+}
+
+Battle.prototype.init = function () {
     this.spawnEnemies();
-    gm.em.addEntity(new BattleOverlay(spec));
+    gm.em.addEntity(new BattleOverlay({validLocations: this.validLocations}));
 }
 
 Battle.prototype.getOccupiedCells = function () {
-    let points = immovableTiles;
-    let units = [playerUnits, enemyUnits]
+    let points = [];
+    let units = [this.playerUnits, this.enemyUnits, this.immovableTiles]
     units.forEach((array) => {
         array.forEach((object) => {
-            points.push({x: object.x, y: object.y})
+            points.push(object)
         })
     })
     return points;
@@ -245,9 +258,16 @@ Battle.prototype.setupPhase = function () {
     gm.bm.cursor.good = true;
     if(gm.im.getClick())
     {
-        if (this.validPlacement(gm.bm.cursor.x, gm.bm.cursor.y))
+        if(!gm.bm.cursor.isCellOccupied())
         {
-            this.spawnPlayer();
+            if (this.validPlacement(gm.bm.cursor.x, gm.bm.cursor.y))
+            {
+                this.spawnPlayer();
+                gm.im.currentgroup.click = null;
+            }
+        }
+        else
+        {
             gm.im.currentgroup.click = null;
         }
     }
@@ -259,10 +279,18 @@ Battle.prototype.setupPhase = function () {
 }
 
 Battle.prototype.resolveFight = function () {
-    if(gm.bm.cursor.selected && gm.bm.target)
+    let attacker = gm.bm.cursor.selected;
+    let defender = gm.bm.cursor.target;
+    if (defender.selected === undefined)
     {
-        gm.bm.target.removeFromWorld = true;
+        this.enemyUnits.splice(this.enemyUnits.indexOf(defender), 1);
     }
+    else
+    {
+        this.playerUnits.splice(this.playerUnits.indexOf(defender), 1);
+    }
+   gm.bm.cursor.target.removeFromWorld = true;
+   gm.bm.cursor.target = undefined;
 }
 
 Battle.prototype.playerPhase = function () {
@@ -271,23 +299,54 @@ Battle.prototype.playerPhase = function () {
         console.log("TURN DONE")
         this.currentPhase = this.enemyPhase;
     }
+    if (gm.bm.cursor.selected && gm.bm.cursor.target)
+    {
+        this.resolveFight();
+        gm.bm.cursor.deselect();
+        gm.im.currentgroup.click = undefined;
+    }
+    if(gm.im.checkInput("endTurn"))
+    {
+        console.log("TURN DONE")
+        this.playerUnits.forEach((unit) =>
+        {
+            unit.selected = false;
+        })
+        gm.bm.cursor.selected = undefined;
+        gm.bm.cursor.target = undefined;
+        this.currentPhase = this.enemyPhase;
+    }
     if (this.enemyUnits.length === 0)
     {
         //End battle
         //Remove all entities from array
         console.log("Victory!")
+        gm.endBattle();
     }
         //Check if t has been 
 }
 
 Battle.prototype.enemyPhase = function (params) {
-    console.log("Enemies turn is taken.")
     if (this.playerUnits.length === 0)
     {
         console.log("Defeat.")
     }
-    this.currentPhase = this.playerPhase;
+    if (gm.im.checkInput("endTurnO"))
+    {
+        console.log("Enemies turn is taken.")
+        this.resetPUnitActions();
+        gm.im.currentgroup.click = undefined;
+        this.currentPhase = this.playerPhase;
+    }
         // AI LOGIC calls and stuff
+}
+
+Battle.prototype.resetPUnitActions = function () {
+    this.playerUnits.forEach((unit) =>
+    {
+        unit.moved = false;
+        unit.attacked = false;
+    })
 }
 
 Battle.prototype.spawnPlayer = function (params) {
@@ -332,7 +391,7 @@ function* positionMaker(min, max) {
 Battle.prototype.spawnEnemy = function (loc) {
     let point = {x: loc.next().value, y: loc.next().value}
     
-    if(!gm.battle.cursor.isCellOccupied(point))
+    if(!gm.bm.cursor.isCellOccupied(point))
     {
         let spawn = new EnemyUnit({x: point.x, y: point.y, overworld: this.enemyType});
         gm.em.addEntity(spawn);

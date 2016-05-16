@@ -27,6 +27,8 @@ function Unit(spec)
 {
     this.overworld = spec.overworld;
     this.animation = this.overworld.animation;
+    this.health = 100;
+    this.damage = 5;
     this.range = 3;
     this.speed = 1;
     Entity.call(this, spec.x, spec.y);
@@ -40,19 +42,19 @@ Unit.prototype.draw = function (ctx) {
 }
 
 Unit.prototype.update = function () {
-    if (gm.bm.currentPhase === gm.bm.playerPhase)
+    if (gm.bm.currentBattle.currentPhase === gm.bm.currentBattle.playerPhase)
     {
         if (this.playerPhase)
         {
             this.playerPhase();
         }
     }
-    else if (gm.bm.currentPhase === gm.bm.enemyPhase)
+    else if (gm.bm.currentBattle.currentPhase === gm.bm.currentBattle.enemyPhase)
     {
         if (this.enemyPhase)
             this.enemyPhase();
     }
-    else if (gm.bm.currentPhase === gm.bm.setupPhase)
+    else if (gm.bm.currentBattle.currentPhase === gm.bm.currentBattle.setupPhase)
     {
         if (this.setupPhase)
             this.setupPhase();
@@ -135,6 +137,10 @@ PlayerUnit.prototype.draw = function (ctx)
     Unit.prototype.draw.call(this, ctx);
 }
 
+PlayerUnit.prototype.deselect = function () {
+    this.selected = false;
+}
+
 PlayerUnit.prototype.validAction = function (validActions, point)
 {
     var result = false;
@@ -174,11 +180,19 @@ PlayerUnit.prototype.playerPhase = function ()
             {
                 if (this.validAction(this.possibleMoves, {x: this.cursor.x, y: this.cursor.y}))               
                 {
-                    this.x = this.cursor.x;
-                    this.y = this.cursor.y;
-                    this.selected = true;
-                    this.cursor.selected = this;
-                    this.moved = true;
+                    if (!gm.bm.cursor.isCellOccupied())
+                    {
+                        this.x = this.cursor.x;
+                        this.y = this.cursor.y;
+                        this.selected = true;
+                        this.cursor.selected = this;
+                        this.moved = true;
+                    }
+                    else
+                    {
+                        this.selected = false;
+                        this.cursor.selected = undefined;
+                    }
                     gm.im.currentgroup.click = null;
                 }
                 else
@@ -199,15 +213,21 @@ PlayerUnit.prototype.playerPhase = function ()
             if(gm.bm.cursor.getClick())
             {
                 let point = {x: this.cursor.x, y: this.cursor.y};
+                
                 if(this.validAction(this.possibleAttacks, point))
                 {
-                    this.cursor.targetPoint = point;
-                    // this.cursor.target = gm.battle.currentBattle.
-                    // // this.attack = true;
-                    // this.cursor.attack = {x: this.cursor.point.x, y: this.cursor.point.y};
-                    this.selected = false;
-                    this.cursor.selected = undefined;
-                    gm.im.currentgroup.click = undefined;
+                    let object = this.cursor.isCellOccupied();
+                    
+                    if(object && object.health)
+                    {
+                        this.cursor.target = object;
+                    }
+                    else
+                    {
+                        this.selected = false;
+                        this.cursor.selected = undefined;
+                        
+                    }
                 }
                 else
                 {
