@@ -186,6 +186,21 @@ Cursor.prototype.getRClick = function () {
     {
         return this.screenToTile(p)
     }
+    return p;
+}
+
+Cursor.prototype.isCellOccupied = function (point) 
+{
+    point = point ? point : {x: this.x, y: this.y};
+    let occupy = gm.bm.currentBattle.getOccupiedCells();
+    let result = undefined;
+    occupy.forEach((opoint) => {
+        if(point.x === opoint.x && point.y === opoint.y)
+        {
+            result = this;
+        }
+    })
+    return undefined;
 }
 
 // Unit Placement
@@ -201,11 +216,23 @@ function Battle(spec)
     //Phases
     this.playerUnits = spec.playerUnits;
     this.enemyUnits = spec.enemyUnits;
+    this.immovableTiles = spec.immovableTiles;
     this.currentPhase = this.setupPhase;
     this.availableUnits = [];
     this.enemyType = spec.enemyType;
     this.spawnEnemies();
     gm.em.addEntity(new BattleOverlay(spec));
+}
+
+Battle.prototype.getOccupiedCells = function () {
+    let points = immovableTiles;
+    let units = [playerUnits, enemyUnits]
+    units.forEach((array) => {
+        array.forEach((object) => {
+            points.push({x: object.x, y: object.y})
+        })
+    })
+    return points;
 }
 
 Battle.prototype.update = function ()
@@ -228,6 +255,13 @@ Battle.prototype.setupPhase = function () {
     {
         gm.bm.cursor.good = false;
         this.currentPhase = this.playerPhase;
+    }
+}
+
+Battle.prototype.resolveFight = function () {
+    if(gm.bm.cursor.selected && gm.bm.target)
+    {
+        gm.bm.target.removeFromWorld = true;
     }
 }
 
@@ -296,10 +330,18 @@ function* positionMaker(min, max) {
 }
 
 Battle.prototype.spawnEnemy = function (loc) {
-    let spawn = new EnemyUnit({x: loc.next().value, y: loc.next().value, overworld: this.enemyType});
-    // let spawn = new Red(loc.next().value, loc.next().value, gm.battle.cursor, this, this.enemyType);
-    gm.em.addEntity(spawn);
-    this.enemyUnits.push(spawn);
+    let point = {x: loc.next().value, y: loc.next().value}
+    
+    if(!gm.battle.cursor.isCellOccupied(point))
+    {
+        let spawn = new EnemyUnit({x: point.x, y: point.y, overworld: this.enemyType});
+        gm.em.addEntity(spawn);
+        this.enemyUnits.push(spawn);
+    }
+    else
+    {
+        this.spawnEnemy(loc);
+    }
 }
 
 

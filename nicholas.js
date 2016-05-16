@@ -36,7 +36,7 @@ Unit.prototype = Object.create(Entity.prototype);
 Unit.prototype.constructor = Unit;
 
 Unit.prototype.draw = function (ctx) {
-    this.animation.drawEntity(gm.clockTick, ctx, this.x * 64, this.y * 64);
+    this.animation.drawEntity(gm.clockTick, ctx, this.x * TILE_SIZE, this.y * TILE_SIZE);
 }
 
 Unit.prototype.update = function () {
@@ -71,8 +71,7 @@ Unit.prototype.calculateActionRadius = function (spec)
     for(var i = dist; i >= offset; i--) 
     {
         for(var j = dist; j >= offset; j--) 
-        {
-            
+        {  
             if((Math.abs(i) + Math.abs(j)) <= dist)
             {
                 points.push({x:i + x, y: j + y});
@@ -136,12 +135,12 @@ PlayerUnit.prototype.draw = function (ctx)
     Unit.prototype.draw.call(this, ctx);
 }
 
-PlayerUnit.prototype.validMove = function (point)
+PlayerUnit.prototype.validAction = function (validActions, point)
 {
     var result = false;
     if(this.x !== this.cursor.x || this.y !== this.cursor.y)
     {
-        this.possibleMoves.forEach((valid) => {
+        validActions.forEach((valid) => {
             if (point.x === valid.x && point.y === valid.y)
             {
                 result = true;
@@ -149,6 +148,15 @@ PlayerUnit.prototype.validMove = function (point)
         })
     }
     return result;
+}
+
+PlayerUnit.prototype.isAvailable = function ()
+{
+    if (gm.bm.currentBattle.availableUnits.includes(this))
+    {
+        return true;
+    }
+    return false;
 }
 
 PlayerUnit.prototype.playerPhase = function ()
@@ -164,7 +172,7 @@ PlayerUnit.prototype.playerPhase = function ()
             });
             if (gm.bm.cursor.getClick())
             {
-                if (this.validMove({x: this.cursor.x, y: this.cursor.y}))               
+                if (this.validAction(this.possibleMoves, {x: this.cursor.x, y: this.cursor.y}))               
                 {
                     this.x = this.cursor.x;
                     this.y = this.cursor.y;
@@ -190,22 +198,23 @@ PlayerUnit.prototype.playerPhase = function ()
             });
             if(gm.bm.cursor.getClick())
             {
-                if(((this.x + 1) === this.cursor.x && this.y === this.cursor.y) ||
-                    ((this.x - 1) === this.cursor.x && this.y === this.cursor.y) ||
-                    (this.x === this.cursor.x && (this.y + 1) === this.cursor.y) ||
-                    (this.x === this.cursor.x && (this.y - 1) === this.cursor.y))
-                    {
-                        this.cursor.target = this;
-                        // this.cursor.target = gm.battle.currentBattle.
-                        // // this.attack = true;
-                        // this.cursor.attack = {x: this.cursor.point.x, y: this.cursor.point.y};
-                    }
-                    else
-                    {
-                        this.selected = false;
-                        this.cursor.selected = undefined;
-                        gm.im.currentgroup.click = null;
-                    }
+                let point = {x: this.cursor.x, y: this.cursor.y};
+                if(this.validAction(this.possibleAttacks, point))
+                {
+                    this.cursor.targetPoint = point;
+                    // this.cursor.target = gm.battle.currentBattle.
+                    // // this.attack = true;
+                    // this.cursor.attack = {x: this.cursor.point.x, y: this.cursor.point.y};
+                    this.selected = false;
+                    this.cursor.selected = undefined;
+                    gm.im.currentgroup.click = undefined;
+                }
+                else
+                {
+                    this.selected = false;
+                    this.cursor.selected = undefined;
+                    gm.im.currentgroup.click = undefined;
+                }
             }
         }
     }
