@@ -74,7 +74,7 @@ GameManager.prototype.init = function () {
     this.timer = new Timer();
     this.disableInput = false;
     this.startInput();
-    this.hitBoxVisible = true;
+    this.hitBoxVisible = false;
     console.log('game initialized');
 }
 /* unloads the old map, then loads in the new map and all the entities */
