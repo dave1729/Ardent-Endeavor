@@ -57,7 +57,7 @@ BattleOverlay.prototype.draw = function (ctx)
             this.highlightPossibleAttacks(ctx);
         }
     }
-    if (gm.battle.currentBattle.currentPhase === gm.battle.currentBattle.setupPhase)
+    if (gm.bm.currentBattle.currentPhase === gm.bm.currentBattle.setupPhase)
     {
         this.highlightSpawns(ctx)    
     }
@@ -65,11 +65,11 @@ BattleOverlay.prototype.draw = function (ctx)
 
 BattleOverlay.prototype.update = function () 
 {
-    if (gm.battle.currentBattle.currentPhase === gm.battle.currentBattle.playerPhase)
+    if (gm.bm.currentBattle.currentPhase === gm.bm.currentBattle.playerPhase)
     {
-        if (gm.battle.cursor.selected)
+        if (gm.bm.cursor.selected)
         {
-            this.highlightUnit = gm.battle.cursor.selected;
+            this.highlightUnit = gm.bm.cursor.selected;
             if (!this.highlightUnit.moved)
             {
                 this.possibleMoves = this.highlightUnit.possibleMoves;
@@ -79,6 +79,11 @@ BattleOverlay.prototype.update = function ()
             {
                 this.possibleAttacks = this.highlightUnit.possibleAttacks;
             }
+        }
+        else
+        {
+            this.possibleMoves = [];
+            this.possibleAttacks = [];
         }
     }
 }
@@ -121,12 +126,13 @@ function Cursor ()
 }
 
 Cursor.prototype.update = function () {
-    if (gm.im.getMouse())
+    if (this.getMouse())
     {
-        let m = gm.im.getMouse();
+        let m = this.getMouse();
         this.x = m.x;
         this.y = m.y;
     }
+    
     if (this.selected && this.target)
     {
         this.target.removeFromWorld = true;
@@ -148,6 +154,37 @@ Cursor.prototype.draw = function (ctx) {
             ctx.fillStyle  = "rgba(0, 0, 0, 0.5)";
         }
         ctx.fillRect(this.x * 64,this.y * 64, 64, 64);    
+    }
+}
+
+Cursor.prototype.screenToTile = function (point)
+{
+    return {x: Math.floor(point.x / TILE_SIZE) , y: Math.floor(point.y / TILE_SIZE)}
+}
+
+Cursor.prototype.getMouse = function () {
+    let p = gm.im.getMouse()
+    if(p)
+    {
+        return this.screenToTile(p)
+    }
+    return p;
+}
+
+Cursor.prototype.getClick = function () {
+    let p = gm.im.getClick()
+    if(p)
+    {
+        return this.screenToTile(p)
+    }
+    return p;
+}
+
+Cursor.prototype.getRClick = function () {
+    let p = gm.im.getRClick()
+    if(p)
+    {
+        return this.screenToTile(p)
     }
 }
 
@@ -178,10 +215,10 @@ Battle.prototype.update = function ()
 }
 
 Battle.prototype.setupPhase = function () {
-    gm.battle.cursor.good = true;
+    gm.bm.cursor.good = true;
     if(gm.im.getClick())
     {
-        if (this.validPlacement(gm.battle.cursor.x, gm.battle.cursor.y))
+        if (this.validPlacement(gm.bm.cursor.x, gm.bm.cursor.y))
         {
             this.spawnPlayer();
             gm.im.currentgroup.click = null;
@@ -189,7 +226,7 @@ Battle.prototype.setupPhase = function () {
     }
     if(this.maxPlayers === 0)
     {
-        gm.battle.cursor.good = false;
+        gm.bm.cursor.good = false;
         this.currentPhase = this.playerPhase;
     }
 }
@@ -220,7 +257,7 @@ Battle.prototype.enemyPhase = function (params) {
 }
 
 Battle.prototype.spawnPlayer = function (params) {
-    let spawn = new PlayerUnit({x: gm.battle.cursor.x, y :gm.battle.cursor.y});
+    let spawn = new PlayerUnit({x: gm.bm.cursor.x, y :gm.bm.cursor.y});
     gm.em.addEntity(spawn);
     this.availableUnits.push(spawn);
     this.playerUnits.push(spawn);

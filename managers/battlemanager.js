@@ -42,8 +42,6 @@ BattleManager.prototype.draw = function (ctx)
     this.currentBattle.draw(ctx);
 }
 
-
-
 BattleManager.prototype.update = function () {
     this.currentBattle.currentPhase();
 }

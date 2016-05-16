@@ -40,19 +40,19 @@ Unit.prototype.draw = function (ctx) {
 }
 
 Unit.prototype.update = function () {
-    if (gm.battle.currentPhase === gm.battle.playerPhase)
+    if (gm.bm.currentPhase === gm.bm.playerPhase)
     {
         if (this.playerPhase)
         {
             this.playerPhase();
         }
     }
-    else if (gm.battle.currentPhase === gm.battle.enemyPhase)
+    else if (gm.bm.currentPhase === gm.bm.enemyPhase)
     {
         if (this.enemyPhase)
             this.enemyPhase();
     }
-    else if (gm.battle.currentPhase === gm.battle.setupPhase)
+    else if (gm.bm.currentPhase === gm.bm.setupPhase)
     {
         if (this.setupPhase)
             this.setupPhase();
@@ -113,7 +113,7 @@ function PlayerUnit(spec)
     spec.overworld = new Shark(gm, spec.x, spec.y);
     this.moved = false;
     this.selected = false;
-    this.cursor = gm.battle.cursor;
+    this.cursor = gm.bm.cursor;
     this.possibleMoves = [];
     this.possibleAttacks = [];
     Unit.call(this, spec);
@@ -162,7 +162,7 @@ PlayerUnit.prototype.playerPhase = function ()
                 offset: 0,
                 speed: this.speed 
             });
-            if (gm.im.getClick())
+            if (gm.bm.cursor.getClick())
             {
                 if (this.validMove({x: this.cursor.x, y: this.cursor.y}))               
                 {
@@ -175,6 +175,8 @@ PlayerUnit.prototype.playerPhase = function ()
                 }
                 else
                 {
+                    this.selected = false;
+                    this.cursor.selected = undefined;
                     gm.im.currentgroup.click = null;
                 }
             }
@@ -186,7 +188,7 @@ PlayerUnit.prototype.playerPhase = function ()
                     offset: 0,
                     speed: this.speed
             });
-            if(gm.im.getClick())
+            if(gm.bm.cursor.getClick())
             {
                 if(((this.x + 1) === this.cursor.x && this.y === this.cursor.y) ||
                     ((this.x - 1) === this.cursor.x && this.y === this.cursor.y) ||
@@ -202,11 +204,12 @@ PlayerUnit.prototype.playerPhase = function ()
                     {
                         this.selected = false;
                         this.cursor.selected = undefined;
+                        gm.im.currentgroup.click = null;
                     }
             }
         }
     }
-    else if(gm.im.getClick())
+    else if(gm.bm.cursor.getClick())
     {
         //  console.log("we are on top")
         

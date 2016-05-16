@@ -63,7 +63,7 @@ GameManager.prototype.initManagers = function (params) {
     this.em = new EntityManager();
     this.im = new InputManager("Dungeon");
     this.ui = new UIManager();
-	this.battle = new BattleManager();
+	this.bm = new BattleManager();
 	this.mm = new MapManager();
 	
 	console.log("Managers Initialized");
@@ -105,7 +105,7 @@ GameManager.prototype.startBattle = function (enemy) {
 	gm.em.removeAllEntities();
 	// gm.em.addEntity(map.bgLayer);
 	// gm.em.addEntity(map.cLayer);
-	gm.battle.startBattle({enemyType: enemy});
+	gm.bm.startBattle({enemyType: enemy});
 	
 	// needs more logic to add battle assets
 	// pause overworld functions
@@ -189,9 +189,9 @@ GameManager.prototype.loop = function () {
     	this.ui.update();
     	this.ui.draw();
     }	
-	if(this.battle.currentBattle) 
+	if(this.bm.currentBattle) 
 	{
-		this.battle.update();
+		this.bm.update();
 	}
     
     requestAnimationFrame(this.loop.bind(this), this.ctx.canvas);

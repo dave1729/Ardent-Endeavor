@@ -135,10 +135,6 @@ InputManager.prototype.start = function () {
     var getXandY = function (e) {
         var x = e.clientX - gm.ctx.canvas.getBoundingClientRect().left;
         var y = e.clientY - gm.ctx.canvas.getBoundingClientRect().top;
-        if (x < 2048) {
-            x = Math.floor(x / TILE_SIZE);
-            y = Math.floor(y / TILE_SIZE);
-        }
         return { x: x, y: y };
     }
 
@@ -206,9 +202,9 @@ function InputGroup(theName, ctx) {
 	this.ctx = ctx;
     this.input_list = [];
     this.isUsingMouse = false;
-    this.click = null;
-    this.rclick = null;
-    this.mouse = null;
+    this.click = undefined;
+    this.rclick = undefined;
+    this.mouse = undefined;
 }
 
 //adds a new input to the input group
