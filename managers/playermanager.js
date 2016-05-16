@@ -15,7 +15,7 @@ function Player(spritesheet) {
 	this.entityID = 1;
 	this.ctx = gm.ctx;
 	this.controls();
-	this.interactRange = 2;
+	this.interactRange = 5;
 	// When changing the hitbox, also change x and y shift in draw collision box
 	this.hitBox = new CollisionBox(this, 18, 34, this.spriteSquareSize-36, this.spriteSquareSize-36);
 }
@@ -38,6 +38,18 @@ Player.prototype.controls = function () {
 }
 
 Player.prototype.entityCollisionCheck = function (startX, startY) {
+	var rectMain = {x: this.hitBox.getX(), y: this.hitBox.getY(), width: this.hitBox.width, height: this.hitBox.height}
+	
+	gm.checkMapCollision({x: this.hitBox.getScreenX(), y: this.hitBox.getScreenY(), width: this.hitBox.width, height: this.hitBox.height}, checkCollisionData);
+	
+	function checkCollisionData(wasCollision, pixelPoint, imageData) {
+		if (wasCollision) {
+			// NOTE: Collision needs to be refined so diagonal movement can be done.
+			gm.player.x = startX;
+			gm.player.y = startY;
+		}
+	}
+	
 	var rectMain = {x: this.hitBox.getX(), y: this.hitBox.getY(), width: this.hitBox.width, height: this.hitBox.height}
 	//console.log(rectMain);
 	var i;

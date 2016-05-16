@@ -37,10 +37,11 @@ MapManager.prototype.getMap = function (mapid) {
  * .addEntity (entity)
  * 
  */
-function Map(game, mapid, backgroundLayer, collisionLayer) {
+function Map(game, mapid, backgroundLayer, collisionLayer, collisionMask) {
 	this.id = mapid;
 	this.bgLayer = backgroundLayer;
 	this.cLayer = collisionLayer;
+	this.cMask = collisionMask;
 	this.spawnZones = [];
 	this.entities = [];
 }

@@ -95,7 +95,7 @@ function Collidable_background(game, spritesheet) {
 	this.spritesheet = spritesheet;
 	this.game = game;
 	this.layer = 2;
-	this.ctx = game.ctx;
+	this.ctx = game.ctxCol;
 };
 
 Collidable_background.prototype.draw = function () {
@@ -190,7 +190,7 @@ Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
 	// Collision Box
 	if (gm.hitBoxVisible) {
 		ctx.strokeStyle = "yellow";
-	    ctx.strokeRect(tempX + entity.hitBox.offsetX , tempY + entity.hitBox.offsetY,
+	    ctx.strokeRect(0 + entity.hitBox.getScreenX() , 0 + entity.hitBox.getScreenY(),
 	    				entity.hitBox.width, entity.hitBox.height);
 	}
 	
@@ -248,7 +248,10 @@ window.addEventListener('load', () => {
 	var canvasUI = document.getElementById("uiLayer");
 	var ctxUI = canvasUI.getContext("2d");
 	
-	gm = new GameManager(ctx, ctxUI);
+	var canvasCollision = document.getElementById("collisionMask");
+	var ctxCol = canvasCollision.getContext("2d");
+	
+	gm = new GameManager(ctx, ctxUI, ctxCol);
 	gm.start();
 
 });

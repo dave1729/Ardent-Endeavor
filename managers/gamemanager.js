@@ -1,10 +1,14 @@
 const TILE_SIZE = 64;
-function GameManager(ctx, ctxUI)
+const COLLISION_ACCURACY = 3.0; // Higher is more accurate, but slower.
+
+function GameManager(ctx, ctxUI, ctxCollision)
 {
     this.controlEntity = null;
     this.backgroundEntity = null;
+    this.bgCollision = null;
     this.ctx = ctx;
     this.ctxUI = ctxUI;
+    this.ctxCol = ctxCollision;
     this.surfaceWidth = null;
     this.surfaceHeight = null;
     this.hitBoxVisible = null;
@@ -30,6 +34,7 @@ GameManager.prototype.start = function() {
     this.am.queueDownload("./img/shark.png");
     this.am.queueDownload("./img/alienfirebird.png");
     this.am.queueDownload("./img/temple.jpg");
+    this.am.queueDownload("./img/chest.png");
     this.am.downloadAll(() => {
         this.loop();
         //this.startBattle(new Fire(gm, 64, 256));
@@ -69,7 +74,7 @@ GameManager.prototype.init = function () {
     this.timer = new Timer();
     this.disableInput = false;
     this.startInput();
-    this.hitBoxVisible = true;
+    this.hitBoxVisible = false;
     console.log('game initialized');
 }
 /* unloads the old map, then loads in the new map and all the entities */
@@ -81,8 +86,10 @@ GameManager.prototype.loadMap = function (mapid, destx, desty) {
 	this.player.y = desty;
 	
 	this.em.addEntity(this.map.bgLayer);
-	this.em.addEntity(this.player);
 	this.em.addEntity(this.map.cLayer);
+	this.em.addEntity(this.player);
+	
+	this.bgCollision = this.map.cMask;	
 	
 	//need logic for spawning enemies in spawn zones
 	for (var i = 0; i < this.map.entities.length; ++i) {
@@ -99,7 +106,7 @@ GameManager.prototype.startBattle = function (enemy) {
 	// this.game.em.addEntity(map.bgLayer);
 	// this.game.em.addEntity(map.cLayer);
 	this.em.addEntity(new Grid(this))
-	let c = new Cursor(this);
+	var c = new Cursor(this);
 	this.em.addEntity(c);
 	this.em.addEntity(new Battle(this, c, enemy));
 	// let b = new Battle(this.game);
@@ -175,6 +182,29 @@ GameManager.prototype.closeDialogueBox = function () {
 	this.startInput(this.ctx);
 	this.ui.showDialogue = false;
 	document.getElementById("uiLayer").style.zIndex = "-1";
+}
+
+GameManager.prototype.checkMapCollision = function (rectBox, callback) {
+	imgData = this.ctxCol.getImageData(rectBox.x, rectBox.y, rectBox.width, rectBox.height);
+	
+	var incX = rectBox.width / COLLISION_ACCURACY;
+	var incY = rectBox.height / COLLISION_ACCURACY;
+	
+	incX = (~~incX === incX) ? incX : (incX+1 | 0 );
+	incY = (~~incY === incY) ? incY : (incY+1 | 0 );
+	
+	for (var offsetY = 0; offsetY < incY; offsetY++ ) {
+	    for (var offsetX = 0; offsetX < incX; offsetX++ ) {
+	        for (var pixelY = 0+offsetY; pixelY < rectBox.height; pixelY += incY ) {
+	            for (var pixelX = 0+offsetX; pixelX < rectBox.width; pixelX += incX){
+	                if ( imgData.data[(pixelX + pixelY * imgData.width) * 4 + 3] > 50 ) {
+		            	//console.log((pixelX + pixelY * imgData.width) * 4 + 3);
+	                	callback(true, {x: pixelX, y: pixelY}, imgData);
+	                }
+	            }
+	        }
+	    }
+	}
 }
 
 GameManager.prototype.loop = function () {
