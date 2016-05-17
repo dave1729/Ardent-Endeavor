@@ -16,9 +16,9 @@ MapManager.prototype.initialize = function () {
 	
 	/* Map 1 - grasslands */
 	var map01 = new Map(gm, 1,
-		    new Background(gm, gm.am.getAsset("./img/GrassOnlyBackground.png")),
-		    new Background(gm, gm.am.getAsset("./img/collidable_background.png")),
-		    new Collidable_background(gm, gm.am.getAsset("./img/collidable_background.png"))
+		    new Background(gm, gm.am.getAsset("./img/Background_Layer.png")),
+		    new Background(gm, gm.am.getAsset("./img/Foreground_Layer.png")),
+		    new Collidable_background(gm, gm.am.getAsset("./img/Collision_Layer.png"))
 	);
 	map01.addEntity(new MapTeleportEvent(gm, 400, 400, 50, 50, 2, 800, 800));
 	map01.addEntity(new MapTeleportEvent(gm, 700, 700, 50, 50, 2, 500, 500));

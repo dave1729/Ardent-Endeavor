@@ -27,8 +27,11 @@ GameManager.prototype.start = function() {
     this.initManagers();
     this.init();
     this.am.queueDownload("./img/player.png");
-    this.am.queueDownload("./img/GrassOnlyBackground.png");
-    this.am.queueDownload("./img/collidable_background.png");
+    //this.am.queueDownload("./img/GrassOnlyBackground.png");
+    //this.am.queueDownload("./img/collidable_background.png");
+    this.am.queueDownload("./img/Background_Layer.png");
+    this.am.queueDownload("./img/Collision_Layer.png");
+    this.am.queueDownload("./img/Foreground_Layer.png");
     this.am.queueDownload("./img/werewolf.png");
     this.am.queueDownload("./img/greenrage.png");
     this.am.queueDownload("./img/shark.png");
