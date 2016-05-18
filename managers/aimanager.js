@@ -85,15 +85,21 @@ AIManager.prototype.updatePlayerPositions = function () {
 AIManager.prototype.runEnemyPhase = function () {
 	this.updatePlayerPositions();
 	this.pathFinder.setGrid(this.tileMap);
-	console.log(this.tileMap)
-	console.log(this.enemyList)
+//	for (var i = 0; i < this.tileMap.length; i++) {
+//		console.log(this.tileMap[i]);
+//	}
+	
 	var moveList = [];
 	
 	// For each enemy, generate a move, update the grid, then add to the move list.
 	for (var e = 0; e < this.enemyList.length; e++) {
-		var move = this.getEnemyMove(this.enemyList[e])
-		this.tileMap[this.enemyList[e].y][this.enemyList[e].x] = 0;
-		this.tileMap[move.path[path.length-1].y][move.path[path.length-1].y] = 2;
+		var move = this.getEnemyMove(this.enemyList[e], updateEnemy)
+		//this.tileMap[this.enemyList[e].y][this.enemyList[e].x] = 0;
+	}
+	
+	function updateEnemy(move) {
+		gm.ai.tileMap[move.path[0].y][move.path[0].x] = 0;
+		gm.ai.tileMap[move.path[move.path.length-1].y][move.path[move.path.length-1].x] = 2;
 		moveList.push(move);
 	}
 	return moveList;
@@ -104,8 +110,8 @@ AIManager.prototype.runEnemyPhase = function () {
  * 
  * @param {object} enemy: The enemy being processed.
  */
-AIManager.prototype.getEnemyMove = function (enemy) {
-	return enemy.AIPackage(this, enemy);
+AIManager.prototype.getEnemyMove = function (enemy, callback) {
+	return enemy.AIPackage(this, enemy, callback);
 }
 
 
@@ -122,9 +128,8 @@ function AIPackages() {
 	 * Berserker AI will take the shortest path to the
 	 * closest player and attack them if they are in range.
 	 */
-	this.Berserker = function (AIManager, enemy) {
+	this.Berserker = function (AIManager, enemy, callback) {
 		var pathList = [];
-		console.log(enemy)
 		// Find the shortest path to each player.
 		for (var i = 0; i < AIManager.playerList.length; i++) {
 			var pc = AIManager.playerList[i];
@@ -133,41 +138,56 @@ function AIPackages() {
 			
 			function onPathFound(path) {
 				pathList.push(path);
+				
+				// Done finding paths, call next method.
+				if (pathList.length === AIManager.playerList.length) {
+					runThisAI(pathList, callback);
+				}
 			}
 		}
 		
-		// Find the closest player.
-		var min = -1;
-		if (pathList[0] != null) {
-			min = 0;
-		}
-		for (var j = 1; j < pathList.length; j++) {
-			if (pathList[j] != null && pathList[j].length < pathList[min].length) {
-				min = j;
+		function runThisAI(pathList, callback) {
+			//console.log("run last, PathList: " + pathList);
+			// Find the closest player.
+			var min = -1;
+			if (pathList[0] != null) {
+				min = 0;
 			}
-		}
-		if (min === -1) {
-			console.error("No paths were found");
-			return null;
+			for (var j = 1; j < pathList.length; j++) {
+				if (min === -1 && pathList[j] != null) {
+					min = j;
+				}
+				
+				if (pathList[j] != null && pathList[j].length < pathList[min].length) {
+					min = j;
+				}
+			}
+			if (min === -1) {
+				console.error("No paths were found");
+				callback(null);
+			}
+			
+			// Figure out how far along the path the enemy can go.
+			var thePath = pathList[min];
+			var distanceAway = 0;
+			var isAttacking = false;
+			
+			if (thePath.length - 2 <= enemy.moveRange) {
+				thePath.splice(thePath.length - 1, 1);
+			} else {
+				distanceAway = thePath.length - enemy.moveRange + 1;
+				thePath.splice(enemy.moveRange + 2, distanceAway);
+			}
+			
+			// Is the target within range of the monster?
+			if (distanceAway <= enemy.attackRange) {
+				isAttacking = true;
+			}
+			var theMove = new Move(enemy, thePath, isAttacking, AIManager.playerList[min]);
+
+			callback(theMove);
 		}
 		
-		// Figure out how far along the path the enemy can go.
-		var thePath = pathList[min];
-		var distanceAway = 0;
-		var isAttacking = false;
-		
-		if (thePath.length - 2 <= enemy.moveRange) {
-			thePath.splice(thePath.length - 1, 1);
-		} else {
-			distanceAway = thePath.length - enemy.moveRange + 1;
-			thePath.splice(enemy.moveRange + 2, distanceAway);
-		}
-		
-		// Is the target within range of the monster?
-		if (distanceAway <= enemy.attackRange) {
-			isAttacking = true;
-		}
-		return new Move(enemy, thePath, isAttacking, AIManager.playerList[min]);
 	} /* END OF BERSERKER */
 }
 
@@ -630,22 +650,22 @@ EasyStar.js = function() {
 			callbackWrapper([]);
 			return;
 		}
-
+		
 		// End point is not an acceptable tile.
 		var endTile = collisionGrid[endY][endX];
-		var isAcceptable = false;
+		/***** Changed this to true, default is false ******/
+		var isAcceptable = true;
 		for (var i = 0; i < acceptableTiles.length; i++) {
 			if (endTile === acceptableTiles[i]) {
 				isAcceptable = true;
 				break;
 			}
 		}
-
+		
 		if (isAcceptable === false) {
 			callbackWrapper(null);
 			return;
 		}
-
 		// Create the instance
 		var instance = new EasyStar.instance();
 		instance.openList = new EasyStar.PriorityQueue("bestGuessDistance",EasyStar.PriorityQueue.MIN_HEAP);
@@ -673,6 +693,7 @@ EasyStar.js = function() {
 		if (instances.length === 0 || collisionGrid === undefined || acceptableTiles === undefined) {
 			return;
 		}
+
 		for (iterationsSoFar = 0; iterationsSoFar < iterationsPerCalculation; iterationsSoFar++) {
 			if (instances.length === 0) {
 				return;
