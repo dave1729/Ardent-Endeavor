@@ -80,7 +80,7 @@ EntityManager.prototype.removeAllEntities = function () {
     this.entities.forEach((entity) => {
         entity.removeFromWorld = true;
     })
-    console.log(this.tempEntities)
+    // console.log(this.tempEntities)
     this.update();
 }
 

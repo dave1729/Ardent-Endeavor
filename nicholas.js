@@ -241,17 +241,19 @@ PlayerUnit.prototype.playerPhase = function ()
     else if(gm.bm.cursor.getClick())
     {
         //  console.log("we are on top")
-        
-        if (this.cursor.getClick().x === this.x && this.cursor.getClick().y === this.y)
+        if (!this.attacked || !this.moved)
         {
-            // console.log("I clicked you")
-            if (!this.cursor.selected)
+            if (this.cursor.getClick().x === this.x && this.cursor.getClick().y === this.y)
             {
-                // console.log("your selected")
-                this.selected = true;
-                this.cursor.selected = this;
+                // console.log("I clicked you")
+                if (!this.cursor.selected)
+                {
+                    // console.log("your selected")
+                    this.selected = true;
+                    this.cursor.selected = this;
+                }
+                gm.im.currentgroup.click = null;
             }
-            gm.im.currentgroup.click = null;
         }
     }
 }

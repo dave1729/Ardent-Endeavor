@@ -38,6 +38,7 @@ BattleManager.prototype.startBattle = function (spec) {
     this.createBattle(spec);
     gm.em.addEntity(this.cursor);
     gm.em.addEntity(this.grid);
+    
     // this.currentPhase = this.currentBattle.setupPhase;     
 }
 

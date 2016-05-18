@@ -274,6 +274,7 @@ Battle.prototype.setupPhase = function () {
     if(this.maxPlayers === 0)
     {
         gm.bm.cursor.good = false;
+        gm.ai.newBattle(7, 7, this.playerUnits, this.enemyUnits, this.immovableTiles);
         this.currentPhase = this.playerPhase;
     }
 }
@@ -289,16 +290,17 @@ Battle.prototype.resolveFight = function () {
     {
         this.playerUnits.splice(this.playerUnits.indexOf(defender), 1);
     }
-   gm.bm.cursor.target.removeFromWorld = true;
-   gm.bm.cursor.target = undefined;
+    attacker.attacked = true;
+    gm.bm.cursor.target.removeFromWorld = true;
+    gm.bm.cursor.target = undefined;
 }
 
 Battle.prototype.playerPhase = function () {
-    if (this.availableUnits.length === 0)
-    {
-        console.log("TURN DONE")
-        this.currentPhase = this.enemyPhase;
-    }
+    // if (this.availableUnits.length === 0)
+    // {
+    //     console.log("TURN DONE")
+    //     this.currentPhase = this.enemyPhase;
+    // }
     if (gm.bm.cursor.selected && gm.bm.cursor.target)
     {
         this.resolveFight();
@@ -327,18 +329,14 @@ Battle.prototype.playerPhase = function () {
 }
 
 Battle.prototype.enemyPhase = function (params) {
+    let enemyMoves = gm.ai.runEnemyPhase();
     if (this.playerUnits.length === 0)
     {
         console.log("Defeat.")
     }
-    if (gm.im.checkInput("endTurnO"))
-    {
-        console.log("Enemies turn is taken.")
-        this.resetPUnitActions();
-        gm.im.currentgroup.click = undefined;
-        this.currentPhase = this.playerPhase;
-    }
-        // AI LOGIC calls and stuff
+    this.resetPUnitActions();
+    gm.im.currentgroup.click = undefined;
+    this.currentPhase = this.playerPhase;
 }
 
 Battle.prototype.resetPUnitActions = function () {

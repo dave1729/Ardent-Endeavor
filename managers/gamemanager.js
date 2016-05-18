@@ -61,6 +61,7 @@ GameManager.prototype.startInput = function (ctx) {
 GameManager.prototype.initManagers = function (params) {
 	this.am = new AssetManager();
     this.em = new EntityManager();
+	this.ai = new AIManager();
     this.im = new InputManager("Dungeon");
     this.ui = new UIManager();
 	this.bm = new BattleManager();

@@ -17,6 +17,7 @@ function AIManager() {
 	
 	this.playerList = [];
 	this.enemyList = [];
+	this.collidableTiles = [];
 	
 	// Contains the AI packages available for enemies.
 	this.AIPackages = new AIPackages();
@@ -35,12 +36,13 @@ function AIManager() {
 AIManager.prototype.newBattle = function (gridWidth, gridHeight, players, enemies, collidableTiles) {
 	this.playerList = players;
 	this.enemyList = enemies;
+	this.collidableTiles = collidableTiles;
 	
 	// Generate blank map with 0's (blank terrain).
 	this.tileMap.length = 0;
 	var blankRow = [];
 	for (var row = 0; row < gridWidth; row++) {
-		this.blankRow.push(0);
+		blankRow.push(0);
 	}
 	for (var col = 0; col < gridHeight; col++) {
 		this.tileMap.push(blankRow);
@@ -48,15 +50,15 @@ AIManager.prototype.newBattle = function (gridWidth, gridHeight, players, enemie
 	
 	// Insert battle entities into map.
 	for (var p = 0; p < this.playerList.length; p++) {
-		this.tileMap[playerList[p].y][playerList[p].x] = 1;
+		this.tileMap[this.playerList[p].y][this.playerList[p].x] = 1;
 		this.playerList[p].startX = this.playerList[p].x;
 		this.playerList[p].startY = this.playerList[p].y;
 	}
 	for (var e = 0; e < this.enemyList.length; e++) {
-		this.tileMap[enemyList[e].y][enemyList[e].x] = 2;
+		this.tileMap[this.enemyList[e].y][this.enemyList[e].x] = 2;
 	}
 	for (var c = 0; c < this.collidableTiles.length; c++) {
-		this.tileMap[collidableTiles[c].y][collidableTiles[c].x] = 3;
+		this.tileMap[this.collidableTiles[c].y][this.collidableTiles[c].x] = 3;
 	}
 }
 
@@ -68,8 +70,8 @@ AIManager.prototype.newBattle = function (gridWidth, gridHeight, players, enemie
 AIManager.prototype.updatePlayerPositions = function () {
 	
 	for (var p = 0; p < this.playerList.length; p++) {
-		this.tileMap[playerList[p].startY][playerList[p].startX] = 0;
-		this.tileMap[playerList[p].y][playerList[p].x] = 1;
+		this.tileMap[this.playerList[p].startY][this.playerList[p].startX] = 0;
+		this.tileMap[this.playerList[p].y][this.playerList[p].x] = 1;
 		this.playerList[p].startX = this.playerList[p].x;
 		this.playerList[p].startY = this.playerList[p].y;
 	}
@@ -87,8 +89,8 @@ AIManager.prototype.runEnemyPhase = function () {
 	
 	// For each enemy, generate a move, update the grid, then add to the move list.
 	for (var e = 0; e < this.enemyList.length; e++) {
-		var move = this.getEnemyMove(enemyList[e])
-		this.tileMap[enemyList[e].y][enemyList[e].x] = 0;
+		var move = this.getEnemyMove(this.enemyList[e])
+		this.tileMap[this.enemyList[e].y][this.enemyList[e].x] = 0;
 		this.tileMap[move.path[path.length-1].y][move.path[path.length-1].y] = 2;
 		moveList.push(move);
 	}
