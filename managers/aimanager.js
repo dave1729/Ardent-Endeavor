@@ -125,7 +125,6 @@ function AIPackages() {
 	this.Berserker = function (AIManager, enemy) {
 		var pathList = [];
 		console.log(enemy)
-		console.log(this.tileMap)
 		// Find the shortest path to each player.
 		for (var i = 0; i < AIManager.playerList.length; i++) {
 			var pc = AIManager.playerList[i];
