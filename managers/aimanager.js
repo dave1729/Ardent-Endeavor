@@ -82,7 +82,7 @@ AIManager.prototype.updatePlayerPositions = function () {
  * 
  * @return {List} List of Move objects.
  */
-AIManager.prototype.runEnemyPhase = function () {
+AIManager.prototype.runEnemyPhase = function (callback) {
 	this.updatePlayerPositions();
 	this.pathFinder.setGrid(this.tileMap);
 //	for (var i = 0; i < this.tileMap.length; i++) {
@@ -90,19 +90,20 @@ AIManager.prototype.runEnemyPhase = function () {
 //	}
 	
 	var moveList = [];
-	
-	// For each enemy, generate a move, update the grid, then add to the move list.
-	for (var e = 0; e < this.enemyList.length; e++) {
-		var move = this.getEnemyMove(this.enemyList[e], updateEnemy)
-		//this.tileMap[this.enemyList[e].y][this.enemyList[e].x] = 0;
-	}
-	
 	function updateEnemy(move) {
 		gm.ai.tileMap[move.path[0].y][move.path[0].x] = 0;
 		gm.ai.tileMap[move.path[move.path.length-1].y][move.path[move.path.length-1].x] = 2;
 		moveList.push(move);
 	}
-	return moveList;
+	
+	// For each enemy, generate a move, update the grid, then add to the move list.
+	for (var e = 0; e < this.enemyList.length; e++) {
+		var move = this.getEnemyMove(this.enemyList[e], updateEnemy)
+		
+		//this.tileMap[this.enemyList[e].y][this.enemyList[e].x] = 0;
+	}
+	console.log(moveList)
+	callback(moveList);
 }
 
 /**
@@ -209,6 +210,10 @@ function Move(enemy, path, isAttacking, target) {
 	this.path = path;
 	this.isAttacking = isAttacking;
 	this.target = target;
+}
+
+Move.prototype.endPoint = () => {
+	return this.path[this.path.length - 1];
 }
 
 /*********************************************************************/

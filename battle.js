@@ -222,7 +222,7 @@ function Battle(spec)
     // Unit Spawning
     this.maxPlayers = spec.maxPlayers;
     this.validLocations = spec.validLocations;
-    
+    this.aiCalled = false;
     //Phases
     this.playerUnits = spec.playerUnits;
     this.enemyUnits = spec.enemyUnits;
@@ -316,6 +316,7 @@ Battle.prototype.playerPhase = function () {
         })
         gm.bm.cursor.selected = undefined;
         gm.bm.cursor.target = undefined;
+        gm.im.setFalse("endTurn");
         this.currentPhase = this.enemyPhase;
     }
     if (this.enemyUnits.length === 0)
@@ -328,14 +329,41 @@ Battle.prototype.playerPhase = function () {
         //Check if t has been 
 }
 
-Battle.prototype.enemyPhase = function (params) {
-    let enemyMoves = gm.ai.runEnemyPhase();
+Battle.prototype.enemyPhase = function () {
+
+    gm.im.setFalse("endTurn");
+    if(!this.aiCalled)
+    {
+        gm.ai.runEnemyPhase(this.enemyPhaseTest);
+        this.aiCalled = true;
+    }
+}
+
+Battle.prototype.enemyPhaseTest = function (enemyMoves) 
+{
+    console.log(enemyMoves)
+    enemyMoves.forEach((move) => {
+        let dest = move.endPoint();
+        move.enemy.x = dest.x;
+        move.enemy.y = dest.y;
+        if(move.isAttacking)
+        {
+            this.playerUnits.splice(this.playerUnits.indexOf(move.target), 1);
+        }
+    })
     if (this.playerUnits.length === 0)
     {
         console.log("Defeat.")
+        gm.endBattle();
+    }
+    if (this.enemyUnits.length === 0)
+    {
+        console.log("Victory!")
+        gm.endBattle();
     }
     this.resetPUnitActions();
     gm.im.currentgroup.click = undefined;
+    this.aiCalled = false;
     this.currentPhase = this.playerPhase;
 }
 
