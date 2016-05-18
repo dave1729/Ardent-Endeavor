@@ -45,7 +45,7 @@ AIManager.prototype.newBattle = function (gridWidth, gridHeight, players, enemie
 		blankRow.push(0);
 	}
 	for (var col = 0; col < gridHeight; col++) {
-		this.tileMap.push(blankRow);
+		this.tileMap.push(blankRow.slice());
 	}
 	
 	// Insert battle entities into map.
@@ -85,6 +85,8 @@ AIManager.prototype.updatePlayerPositions = function () {
 AIManager.prototype.runEnemyPhase = function () {
 	this.updatePlayerPositions();
 	this.pathFinder.setGrid(this.tileMap);
+	console.log(this.tileMap)
+	console.log(this.enemyList)
 	var moveList = [];
 	
 	// For each enemy, generate a move, update the grid, then add to the move list.
@@ -103,7 +105,6 @@ AIManager.prototype.runEnemyPhase = function () {
  * @param {object} enemy: The enemy being processed.
  */
 AIManager.prototype.getEnemyMove = function (enemy) {
-	console.log(this.tileMap)
 	return enemy.AIPackage(this, enemy);
 }
 
@@ -123,7 +124,8 @@ function AIPackages() {
 	 */
 	this.Berserker = function (AIManager, enemy) {
 		var pathList = [];
-		
+		console.log(enemy)
+		console.log(this.tileMap)
 		// Find the shortest path to each player.
 		for (var i = 0; i < AIManager.playerList.length; i++) {
 			var pc = AIManager.playerList[i];
@@ -155,15 +157,15 @@ function AIPackages() {
 		var distanceAway = 0;
 		var isAttacking = false;
 		
-		if (thePath.length - 2 <= enemy.speed) {
+		if (thePath.length - 2 <= enemy.moveRange) {
 			thePath.splice(thePath.length - 1, 1);
 		} else {
-			distanceAway = thePath.length - enemy.speed + 1;
-			thePath.splice(enemy.speed + 2, distanceAway);
+			distanceAway = thePath.length - enemy.moveRange + 1;
+			thePath.splice(enemy.moveRange + 2, distanceAway);
 		}
 		
 		// Is the target within range of the monster?
-		if (distanceAway <= enemy.range) {
+		if (distanceAway <= enemy.attackRange) {
 			isAttacking = true;
 		}
 		return new Move(enemy, thePath, isAttacking, AIManager.playerList[min]);

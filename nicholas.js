@@ -29,8 +29,8 @@ function Unit(spec)
     this.animation = this.overworld.animation;
     this.health = 100;
     this.damage = 5;
-    this.range = 3;
-    this.speed = 1;
+    this.attackRange = 1;
+    this.moveRange = 3;
     Entity.call(this, spec.x, spec.y);
 }
 
@@ -65,9 +65,8 @@ Unit.prototype.calculateActionRadius = function (spec)
 {
    let x = this.x;
    let y = this.y;
-   let dist = spec.range;
+   let dist = spec.actionRange;
    let offset = spec.offset
-   let speed = spec.speed;
    let points = [];
    let count = 0;
     for(var i = dist; i >= offset; i--) 
@@ -98,7 +97,7 @@ Unit.prototype.calculateActionRadius = function (spec)
 
 function EnemyUnit(spec)
 {
-    this.AIPackage = new AIPackages().Berserker;
+    this.AIPackage = gm.ai.AIPackages.Berserker;
     Unit.call(this, spec);
 }
 
@@ -114,6 +113,7 @@ function PlayerUnit(spec)
     spec.overworld = new Shark(gm, spec.x, spec.y);
     this.moved = false;
     this.selected = false;
+    this.selectedAction = {move: false, attack: false}
     this.cursor = gm.bm.cursor;
     this.possibleMoves = [];
     this.possibleAttacks = [];
@@ -169,12 +169,12 @@ PlayerUnit.prototype.playerPhase = function ()
 {
     if (this.selected)
     {
+        // gm.openBattleMenu();
        if(!this.moved)
        {
             this.possibleMoves = this.calculateActionRadius({
-                range: this.range,
-                offset: 0,
-                speed: this.speed 
+                actionRange: this.moveRange,
+                offset: 0
             });
             if (gm.bm.cursor.getClick())
             {
@@ -206,9 +206,8 @@ PlayerUnit.prototype.playerPhase = function ()
         if (!this.attacked && this.moved)
         {
             this.possibleAttacks = this.calculateActionRadius({
-                    range: 1,
-                    offset: 0,
-                    speed: this.speed
+                    actionRange: this.attackRange,
+                    offset: 0
             });
             if(gm.bm.cursor.getClick())
             {

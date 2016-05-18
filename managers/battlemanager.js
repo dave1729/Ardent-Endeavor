@@ -30,7 +30,7 @@ BattleManager.prototype.controls = function () {
     gm.im.addGroup("battle", gm.ctx);
     gm.im.currentgroup.addMouse();
     gm.im.addInput(new Input("endTurn", "e"))
-    gm.im.addInput(new Input("endTurnO", "o"))
+    // gm.im.addInput(new Input("endTurnO", "o"))
 }
 
 BattleManager.prototype.startBattle = function (spec) {

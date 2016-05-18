@@ -82,8 +82,7 @@ function GameMenu(uimanager, ctx, x, y) {
 }
 GameMenu.prototype.update = function () {
 	// Update buttons
-	var i;
-	for (i = 0; i < this.buttons.length; i++) {
+	for (var i = 0; i < this.buttons.length; i++) {
 		this.buttons[i].update(this.ctx);
 	}
 	

@@ -143,6 +143,8 @@ GameManager.prototype.closeGameMenu = function () {
 
 /* Opens the game menu, switching canvas focus and keybinds */
 GameManager.prototype.openBattleMenu = function (x, y) {
+	x ? x : 200;
+	y ? y : 200;
 	this.gamePaused = false;
 	this.showUI = true;
 	this.im.changeCurrentGroupTo("ui");
