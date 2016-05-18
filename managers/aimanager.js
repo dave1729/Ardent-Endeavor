@@ -103,7 +103,8 @@ AIManager.prototype.runEnemyPhase = function () {
  * @param {object} enemy: The enemy being processed.
  */
 AIManager.prototype.getEnemyMove = function (enemy) {
-	return enemy.runAIPackage(this, enemy);
+	console.log(this.tileMap)
+	return enemy.AIPackage(this, enemy);
 }
 
 

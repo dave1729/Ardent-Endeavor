@@ -98,7 +98,7 @@ Unit.prototype.calculateActionRadius = function (spec)
 
 function EnemyUnit(spec)
 {
-    this.ai = spec.ai;
+    this.AIPackage = new AIPackages().Berserker;
     Unit.call(this, spec);
 }
 
