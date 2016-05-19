@@ -27,8 +27,8 @@ GameManager.prototype.start = function() {
     this.init();
 	this.queueAssets();
     this.am.downloadAll(() => {
-		this.startBattle(new Fire(gm, 64, 256));
-		// this.initialize(new Player(this.am.getAsset("./img/player.png")), 1, 900, 900);
+		// this.startBattle(new Fire(gm, 64, 256));
+	 	this.initialize(new Player(this.am.getAsset("./img/player.png")), 1, 900, 900);
         this.loop();
     })
 }
@@ -61,6 +61,7 @@ GameManager.prototype.startInput = function (ctx) {
 GameManager.prototype.initManagers = function (params) {
 	this.am = new AssetManager();
     this.em = new EntityManager();
+	console.log(this.em)
 	this.ai = new AIManager();
     this.im = new InputManager("Dungeon");
     this.ui = new UIManager();
@@ -102,11 +103,12 @@ GameManager.prototype.loadMap = function (mapid, destx, desty) {
 /* Loads battle scene, disabling overworld entities and controls */
 GameManager.prototype.startBattle = function (enemy) {
 	// Lets ignore this for now
-	gm.em.cacheEntities();
-	gm.em.removeAllEntities();
+	enemy.removeFromWorld = true;
+	this.em.cacheEntities();
+	this.em.removeAllEntities();
 	// gm.em.addEntity(map.bgLayer);
 	// gm.em.addEntity(map.cLayer);
-	gm.bm.startBattle({enemyType: enemy});
+	this.bm.startBattle({enemyType: enemy});
 	
 	// needs more logic to add battle assets
 	// pause overworld functions
@@ -116,7 +118,10 @@ GameManager.prototype.startBattle = function (enemy) {
 GameManager.prototype.endBattle = function () {
 	this.em.removeAllEntities();
 	gm.bm.currentBattle = undefined;
+	this.em.changePPos();
 	this.em.restoreEntities();
+	this.im.changeCurrentGroupTo("Dungeon")
+	
 	// remove battle assets
 	// resume overworld functions
 }

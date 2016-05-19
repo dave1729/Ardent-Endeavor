@@ -42,7 +42,9 @@ Unit.prototype.draw = function (ctx) {
 }
 
 Unit.prototype.update = function () {
-    if (gm.bm.currentBattle.currentPhase === gm.bm.currentBattle.playerPhase)
+    if(gm.bm.currentBattle)
+    {
+            if (gm.bm.currentBattle.currentPhase === gm.bm.currentBattle.playerPhase)
     {
         if (this.playerPhase)
         {
@@ -59,6 +61,8 @@ Unit.prototype.update = function () {
         if (this.setupPhase)
             this.setupPhase();
     }
+    }
+
 }
 
 Unit.prototype.calculateActionRadius = function (spec)

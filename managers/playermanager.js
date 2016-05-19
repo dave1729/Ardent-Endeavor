@@ -5,28 +5,28 @@ function Player(spritesheet) {
 	this.scale = 1;
 	//Animation: spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale
 	this.animation = new Animation(spritesheet, this.spriteSquareSize, this.spriteSquareSize, 9, 0.1, 32, true, this.scale);
-	this.x = 235;
-	this.y = 215;
 	this.regSpeed = 325;
 	this.speedX = 0;
 	this.speedY = 0;
-	this.im = gm.im;
 	this.layer = 4;
 	this.entityID = 1;
-	this.ctx = gm.ctx;
-	this.controls();
 	this.interactRange = 2;
 	// When changing the hitbox, also change x and y shift in draw collision box
 	this.hitBox = new CollisionBox(this, 18, 34, this.spriteSquareSize-36, this.spriteSquareSize-36);
+	this.controls();
+	Entity.call(this, 235, 215);
 }
 
+// Player.prototype = Object.create(Entity.prototype);
+// Player.prototype.constructor = Player;
+
 Player.prototype.controls = function () {
-	this.im.addInput(new Input("up", 'w'));
-    this.im.addInput(new Input("down", 's'));
-    this.im.addInput(new Input("left", 'a'));
-    this.im.addInput(new Input("right", 'd'));
-    this.im.addInput(new Input("menu", 'i'));
-    this.im.addInput(new Input("interact", 'e'));
+	gm.im.addInput(new Input("up", 'w'));
+    gm.im.addInput(new Input("down", 's'));
+    gm.im.addInput(new Input("left", 'a'));
+    gm.im.addInput(new Input("right", 'd'));
+    gm.im.addInput(new Input("menu", 'i'));
+    gm.im.addInput(new Input("interact", 'e'));
 }
 
 Player.prototype.entityCollisionCheck = function (startX, startY) {
@@ -75,8 +75,8 @@ Player.prototype.interactFind = function () {
 	}
 }
 
-Player.prototype.draw = function () {
-	this.animation.drawPlayer(gm.clockTick, this.ctx, this.x, this.y, this);
+Player.prototype.draw = function (ctx) {
+	this.animation.drawPlayer(gm.clockTick, ctx, this.x, this.y, this);
 }
 
 Player.prototype.update = function () {
@@ -85,48 +85,48 @@ Player.prototype.update = function () {
 		var startX = this.x;
 		var startY = this.y;
 
-		if (this.im.checkInput("menu")) {
+		if (gm.im.checkInput("menu")) {
 			gm.openGameMenu();
 			gm.im.currentgroup.input_list[4].isPressed = false;
 		}
-		else if (this.im.checkInput("interact")) {
+		else if (gm.im.checkInput("interact")) {
 			this.interactFind();
 		}
-		else if(this.im.checkInput("up") && this.im.checkInput("left")) {
+		else if(gm.im.checkInput("up") && gm.im.checkInput("left")) {
+			console.log("here")
 			this.speedY = -1 * this.regSpeed * sqrtOneHalf;
 			this.speedX = -1 * this.regSpeed * sqrtOneHalf;
 		}
-		else if(this.im.checkInput("up") && this.im.checkInput("right")) {
+		else if(gm.im.checkInput("up") && gm.im.checkInput("right")) {
 			this.speedY = -1 * this.regSpeed * sqrtOneHalf;
 			this.speedX = this.regSpeed * sqrtOneHalf;
 		}
-		else if(this.im.checkInput("down") && this.im.checkInput("left")) {
+		else if(gm.im.checkInput("down") && gm.im.checkInput("left")) {
 			this.speedY = this.regSpeed * sqrtOneHalf;
 			this.speedX = -1 * this.regSpeed * sqrtOneHalf;
 		}
-		else if(this.im.checkInput("down") && this.im.checkInput("right")) {
+		else if(gm.im.checkInput("down") && gm.im.checkInput("right")) {
 			this.speedY = this.regSpeed * sqrtOneHalf;
 			this.speedX = this.regSpeed * sqrtOneHalf;
 		}
-		else if(this.im.checkInput("up")) {
+		else if(gm.im.checkInput("up")) {
 			this.speedY = -1 * this.regSpeed;
 		}
-		else if(this.im.checkInput("down")) {
+		else if(gm.im.checkInput("down")) {
 			this.speedY = this.regSpeed;
 		}
-		else if(this.im.checkInput("left")) {
+		else if(gm.im.checkInput("left")) {
 			this.speedX = -1 * this.regSpeed;
 		}
-		else if(this.im.checkInput("right")) {
+		else if(gm.im.checkInput("right")) {
 			this.speedX = this.regSpeed;
 		}
 		
-		if(!(this.im.checkInput("up") || this.im.checkInput("down") ||
-		     this.im.checkInput("left") || this.im.checkInput("right"))) {
+		if(!(gm.im.checkInput("up") || gm.im.checkInput("down") ||
+		     gm.im.checkInput("left") || gm.im.checkInput("right"))) {
 			this.speedX = 0;
 			this.speedY = 0;
 		}
-
 		var newX = this.x + gm.clockTick * this.speedX;
 		var newY = this.y + gm.clockTick * this.speedY;
 
@@ -160,5 +160,5 @@ Player.prototype.update = function () {
 		// COLLISION
 		this.entityCollisionCheck(startX, startY);
 	}
-	Entity.prototype.update.call(this);
+	// Entity.prototype.update.call(this);
 }

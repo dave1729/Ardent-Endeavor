@@ -39,6 +39,7 @@ function BattleOverlay(spec)
     this.highlightSpawn = false;
     this.possibleMoves = [];
     this.possibleAttacks = [];
+    this.currentPhase = undefined;
     Entity.call(this, 0, 0);
 }
 
@@ -57,27 +58,37 @@ BattleOverlay.prototype.draw = function (ctx)
             this.highlightPossibleAttacks(ctx);
         }
     }
-    if (gm.bm.currentBattle.currentPhase === gm.bm.currentBattle.setupPhase)
+    if (gm.bm.currentBattle)
     {
-        this.highlightSpawns(ctx)    
+        if (this.currentPhase === gm.bm.currentBattle.setupPhase)
+            this.highlightSpawns(ctx)    
     }
 }
 
 BattleOverlay.prototype.update = function () 
-{
-    if (gm.bm.currentBattle.currentPhase === gm.bm.currentBattle.playerPhase)
+{   
+    if(gm.bm.currentBattle)
     {
-        if (gm.bm.cursor.selected)
+        this.currentPhase = gm.bm.currentBattle.currentPhase
+        if (this.currentPhase === gm.bm.currentBattle.playerPhase)
         {
-            this.highlightUnit = gm.bm.cursor.selected;
-            if (!this.highlightUnit.moved)
+            if (gm.bm.cursor.selected)
             {
-                this.possibleMoves = this.highlightUnit.possibleMoves;
-                // console.log(this.possibleMoves)
+                this.highlightUnit = gm.bm.cursor.selected;
+                if (!this.highlightUnit.moved)
+                {
+                    this.possibleMoves = this.highlightUnit.possibleMoves;
+                    // console.log(this.possibleMoves)
+                }
+                else if (!this.highlightUnit.attacked)
+                {
+                    this.possibleAttacks = this.highlightUnit.possibleAttacks;
+                }
             }
-            else if (!this.highlightUnit.attacked)
+            else
             {
-                this.possibleAttacks = this.highlightUnit.possibleAttacks;
+                this.possibleMoves = [];
+                this.possibleAttacks = [];
             }
         }
         else
@@ -85,11 +96,6 @@ BattleOverlay.prototype.update = function ()
             this.possibleMoves = [];
             this.possibleAttacks = [];
         }
-    }
-    else
-    {
-        this.possibleMoves = [];
-        this.possibleAttacks = [];
     }
 }
 
@@ -317,7 +323,7 @@ Battle.prototype.playerPhase = function () {
         gm.bm.cursor.selected = undefined;
         gm.bm.cursor.target = undefined;
         gm.im.setFalse("endTurn");
-        console.log("SWITCHING")
+        // console.log("SWITCHING")
         this.currentPhase = this.enemyPhase;
     }
     if (this.enemyUnits.length === 0)
@@ -334,10 +340,10 @@ Battle.prototype.enemyPhase = function () {
     gm.im.setFalse("endTurn");
     if(!this.aiCalled)
     {
-        console.log("Running AI")
+        // console.log("Running AI")
         this.aiCalled = true;
         gm.ai.runEnemyPhase(this.enemyPhaseTest.bind(this));
-        console.log("AI DONE")
+        // console.log("AI DONE")
     }
 }
 
@@ -350,7 +356,6 @@ Battle.prototype.enemyPhaseTest = function (enemyMoves)
         if(move.isAttacking)
         {
             let unit = this.playerUnits.splice(this.playerUnits.indexOf(move.target), 1)[0];
-            console.log(unit)
             if (unit)
             {
                 unit.removeFromWorld = true;

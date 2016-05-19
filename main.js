@@ -58,21 +58,23 @@ Animation.prototype.updateEntity = function (entity) {
 
 //no inheritance
 function Background(game, spritesheet) {
-	this.x = 0;
-	this.y = 0;
 	this.entityID = 0;
 	this.spritesheet = spritesheet;
-	this.game = game;
+	this.game = gm;
 	this.layer = 1;
 	this.control = false;
-	this.ctx = game.ctx;
+	Entity.call(this, 0, 0);
 };
 
-Background.prototype.draw = function () {
+Background.prototype = Object.create(Entity.prototype);
+Background.prototype.constructor = Background;
+// Background.prototype
+
+Background.prototype.draw = function (ctx) {
 	//context.drawImage(img,sx,sy,swidth,sheight,x,y,width,height);
 	var width = Math.floor(dungeonWidth/4);
 	var heigth = Math.floor(dungeonHeight/4);
-	this.ctx.drawImage(this.spritesheet,this.x, this.y, width, heigth,
+	ctx.drawImage(this.spritesheet,this.x, this.y, width, heigth,
 			0, 0, width, heigth);
 };
 
@@ -98,20 +100,21 @@ Background.prototype.update = function () {
 
 //no inheritance
 function Collidable_background(game, spritesheet) {
-	this.x = 0;
-	this.y = 0;
 	this.entityID = 3;
 	this.spritesheet = spritesheet;
-	this.game = game;
+	this.game = gm;
 	this.layer = 2;
-	this.ctx = game.ctx;
+	Entity.call(this, 0, 0);
 };
 
-Collidable_background.prototype.draw = function () {
+Collidable_background.prototype = Object.create(Entity.prototype);
+Collidable_background.prototype.constructor = Collidable_background;
+
+Collidable_background.prototype.draw = function (ctx) {
 	//context.drawImage(img,sx,sy,swidth,sheight,x,y,width,height);
 	var width = Math.floor(dungeonWidth/4);
 	var heigth = Math.floor(dungeonHeight/4);
-	this.ctx.drawImage(this.spritesheet,this.x, this.y, width, heigth,
+	ctx.drawImage(this.spritesheet,this.x, this.y, width, heigth,
 			0, 0, width, heigth);
 };
 
@@ -174,28 +177,28 @@ Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
 	var yindex = 0;
 	xindex = frame % this.sheetWidth;
 
-	if(entity.im.checkInput("up") && entity.im.checkInput("left")) {
+	if(gm.im.checkInput("up") && gm.im.checkInput("left")) {
 		yindex = 8;
 	}
-	else if(entity.im.checkInput("up") && entity.im.checkInput("right")) {
+	else if(gm.im.checkInput("up") && gm.im.checkInput("right")) {
 		yindex = 8;
 	}
-	else if(entity.im.checkInput("down") && entity.im.checkInput("left")) {
+	else if(gm.im.checkInput("down") && gm.im.checkInput("left")) {
 		yindex = 10;
 	}
-	else if(entity.im.checkInput("down") && entity.im.checkInput("right")) {
+	else if(gm.im.checkInput("down") && gm.im.checkInput("right")) {
 		yindex = 10;
 	}
-	else if(entity.im.checkInput("up")) {
+	else if(gm.im.checkInput("up")) {
 		yindex = 8;
 	}
-	else if(entity.im.checkInput("down")) {
+	else if(gm.im.checkInput("down")) {
 		yindex = 10;
 	}
-	else if(entity.im.checkInput("left")) {
+	else if(gm.im.checkInput("left")) {
 		yindex = 9;
 	}
-	else if(entity.im.checkInput("right")) {
+	else if(gm.im.checkInput("right")) {
 		yindex = 11;
 	}
 	else {

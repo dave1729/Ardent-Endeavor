@@ -44,6 +44,22 @@ EntityManager.prototype.removeEntityA = function (remove) {
     })
 }
 
+EntityManager.prototype.changePPos = function (id)
+{
+    this.tempEntities.forEach((entity) =>
+    {
+        if(entity.entityID === 0) 
+            this.backgroundEntity = entity;
+        if (entity.entityID === 1)
+        {
+            console.log("here")
+            this.controlEntity = entity;
+            entity.x = entity.x + 100;
+            entity.y = entity.y - 20;
+        }
+    })
+}
+
 EntityManager.prototype.removeEntity = function (id) {
     this.entities.forEach((entity) => {
         if(entity.entityID === id)
@@ -54,10 +70,6 @@ EntityManager.prototype.removeEntity = function (id) {
 }
 
 EntityManager.prototype.update = function () {
-	//var entitiesCount = this.entities.length;
-	//console.log(this.entities);
-	//console.log(this.entities.length);
-	
 	
     for (var i = 0; i < this.entities.length; i++) {
         var entity = this.entities[i];
@@ -95,14 +107,13 @@ EntityManager.prototype.removeAllEntities = function () {
 
 /* Creates a shallow copy of entities[] from game engine and stores in temp */
 EntityManager.prototype.cacheEntities = function () {
-	this.tempEntities = this.entities.slice(0);
+	this.tempEntities = _.cloneDeep(this.entities);
 }
 
 /* Restores the entities from cache */
 EntityManager.prototype.restoreEntities = function () {
-	this.entities = this.tempEntities.slice(0);
+	this.entities = _.cloneDeep(this.tempEntities);
 }
-
 /* Remove specific entity from active list. */
 EntityManager.prototype.removeEntity = function (entity) {
 	var index = this.entities.indexOf(entity);
