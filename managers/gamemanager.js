@@ -29,6 +29,8 @@ GameManager.prototype.start = function() {
     this.am.queueDownload("./img/player.png");
     //this.am.queueDownload("./img/GrassOnlyBackground.png");
     //this.am.queueDownload("./img/collidable_background.png");
+    this.am.queueDownload("./img/GrassOnlyBackground.png");
+    this.am.queueDownload("./img/collidable_background.png");
     this.am.queueDownload("./img/Background_Layer.png");
     this.am.queueDownload("./img/Collision_Layer.png");
     this.am.queueDownload("./img/Foreground_Layer.png");

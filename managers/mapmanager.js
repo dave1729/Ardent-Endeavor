@@ -41,6 +41,7 @@ function Map(game, mapid, backgroundLayer, collisionLayer, collisionMask) {
 	this.id = mapid;
 	this.bgLayer = backgroundLayer;
 	this.cLayer = collisionLayer;
+	this.cLayer.layer = 10;
 	this.cMask = collisionMask;
 	this.spawnZones = [];
 	this.entities = [];
