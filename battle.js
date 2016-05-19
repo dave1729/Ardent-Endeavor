@@ -160,7 +160,7 @@ Battle.prototype.enemyPhase = function (params) {
 }
 
 Battle.prototype.spawnPlayer = function (params) {
-    let spawn = new Blue(this.cursor.point.x, this.cursor.point.y, this.cursor, this);
+    var spawn = new Blue(this.cursor.point.x, this.cursor.point.y, this.cursor, this);
     gm.em.addEntity(spawn);
     this.availableUnits.push(spawn);
     this.playerUnits.push(spawn);

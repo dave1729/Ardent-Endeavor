@@ -8,14 +8,23 @@ function Enemy(game, x, y) {
 	this.game = game;
 	this.x = x;
 	this.y = y;
+	this.overWorldSpeed = 1;
 }
 
 Enemy.prototype = new Event();
 Enemy.prototype.constructor = Enemy;
 
 Enemy.prototype.update = function () {
-	this.screenX = this.x - gm.em.backgroundEntity.x;
-	this.screenY = this.y - gm.em.backgroundEntity.y;
+//	this.screenX = this.x - gm.em.backgroundEntity.x;
+//	this.screenY = this.y - gm.em.backgroundEntity.y;
+	var deltaX = gm.player.hitBox.getScreenX() - this.hitBox.getScreenX();
+	var deltaY = gm.player.hitBox.getScreenY() - this.hitBox.getScreenY();
+	if (Math.abs(deltaX) < 4*TILE_SIZE && Math.abs(deltaY) < 4*TILE_SIZE) {
+		var angle = Math.atan2(deltaY, deltaX);
+		this.x += this.overWorldSpeed * Math.cos(angle);
+		this.y += this.overWorldSpeed * Math.sin(angle);
+	}
+	
 	Event.prototype.update.call(this);
 }
 
@@ -32,7 +41,7 @@ Enemy.prototype.draw = function () {
 Enemy.prototype.collisionTrigger = function (player) {
 	console.log("Enemy Collision: " + this.constructor.name);
 	// Put logic here for transition to battle scene.
-	gm.startBattle(this);
+	//gm.startBattle(this);
 }
 
 
@@ -46,15 +55,13 @@ function Werewolf(game, x, y) {
 					 		TILE_SIZE, TILE_SIZE, 4, 0.20, 16, true, 1);
 	this.x = x;
 	this.y = y;
-	this.screenX = this.x;
-	this.screenY = this.y;
 	this.hitBox = new CollisionBox(this, 10, 10, TILE_SIZE-20, TILE_SIZE-20);
 }
 Werewolf.prototype = new Enemy();
 Werewolf.prototype.constructor = Werewolf;
 
 Werewolf.prototype.draw = function () {
-	this.animation.drawEntity(gm.clockTick, gm.ctx, this.screenX, this.screenY);
+	this.animation.drawEntity(gm.clockTick, gm.ctx, this.x, this.y);
 	Enemy.prototype.draw.call(this);
 }
 Werewolf.prototype.update = function () {
@@ -76,15 +83,13 @@ function Green(game, x, y) {
 							TILE_SIZE, TILE_SIZE, 8, 0.07, 60, true, 1.0);
 	this.x = x;
 	this.y = y;
-	this.screenX = this.x;
-	this.screenY = this.y;
 	this.hitBox = new CollisionBox(this, 5, 10, TILE_SIZE-20, TILE_SIZE-10);
 }
 Green.prototype = new Enemy();
 Green.prototype.constructor = Green;
 
 Green.prototype.draw = function () {
-	this.animation.drawEntity(gm.clockTick, gm.ctx, this.screenX, this.screenY);
+	this.animation.drawEntity(gm.clockTick, gm.ctx, this.x, this.y);
 	Enemy.prototype.draw.call(this);
 }
 Green.prototype.update = function () {
@@ -106,15 +111,13 @@ function Shark(game, x, y) {
 							TILE_SIZE, TILE_SIZE, 4, 0.1, 16, true, 1.0);
 	this.x = x;
 	this.y = y;
-	this.screenX = this.x;
-	this.screenY = this.y;
 	this.hitBox = new CollisionBox(this, 13, 10, TILE_SIZE-20, TILE_SIZE-20);
 }
 Shark.prototype = new Enemy();
 Shark.prototype.constructor = Shark;
 
 Shark.prototype.draw = function () {
-	this.animation.drawEntity(gm.clockTick, gm.ctx, this.screenX, this.screenY);
+	this.animation.drawEntity(gm.clockTick, gm.ctx, this.x, this.y);
 	Enemy.prototype.draw.call(this);
 }
 Shark.prototype.update = function () {
@@ -135,15 +138,13 @@ function Fire(game, x, y, spritesheet) {
 							TILE_SIZE, TILE_SIZE, 2, 0.15, 4, true, 1.0);
 	this.x = x;
 	this.y = y;
-	this.screenX = this.x;
-	this.screenY = this.y;
 	this.hitBox = new CollisionBox(this, 5, 10, TILE_SIZE-20, TILE_SIZE-20);
 }
 Fire.prototype = new Enemy();
 Fire.prototype.constructor = Fire;
 
 Fire.prototype.draw = function () {
-	this.animation.drawEntity(gm.clockTick, gm.ctx, this.screenX, this.screenY);
+	this.animation.drawEntity(gm.clockTick, gm.ctx, this.x, this.y);
 	Enemy.prototype.draw.call(this);
 }
 Fire.prototype.update = function () {
