@@ -83,7 +83,7 @@ AIManager.prototype.updatePlayerPositions = function () {
  * 
  * @return {List} List of Move objects.
  */
-AIManager.prototype.runEnemyPhase = function (battle, callback) {
+AIManager.prototype.runEnemyPhase = function (callback) {
 	this.updatePlayerPositions();
 	this.pathFinder.setGrid(this.tileMap);
 //	for (var i = 0; i < this.tileMap.length; i++) {
@@ -104,7 +104,7 @@ AIManager.prototype.runEnemyPhase = function (battle, callback) {
 		//this.tileMap[this.enemyList[e].y][this.enemyList[e].x] = 0;
 	}
 	console.log(moveList)
-	callback(battle, moveList);
+	callback(moveList);
 }
 
 /**
@@ -164,30 +164,37 @@ function AIPackages() {
 					min = j;
 				}
 			}
+			// if (min === -1) {
+			// 	console.log(AIManager.tileMap)
+			// 	console.error("No paths were found");
+			// 	callback(null);
+			// }
+			
 			if (min === -1) {
-				console.error("No paths were found");
-				callback(null);
+				console.log("No paths were found");
 			}
 			
 			// Figure out how far along the path the enemy can go.
 			var thePath = pathList[min];
 			var distanceAway = 0;
 			var isAttacking = false;
-			
-			if (thePath.length - 2 <= enemy.moveRange) {
-				thePath.splice(thePath.length - 1, 1);
-			} else {
-				distanceAway = thePath.length - enemy.moveRange + 1;
-				thePath.splice(enemy.moveRange + 2, distanceAway);
-			}
-			
-			// Is the target within range of the monster?
-			if (distanceAway <= enemy.attackRange) {
-				isAttacking = true;
-			}
-			var theMove = new Move(enemy, thePath, isAttacking, AIManager.playerList[min]);
-
+			if (thePath)
+			{
+				if (thePath.length - 2 <= enemy.moveRange) {
+					thePath.splice(thePath.length - 1, 1);
+				} else {
+					distanceAway = thePath.length - enemy.moveRange + 1;
+					thePath.splice(enemy.moveRange + 2, distanceAway);
+				}
+				
+				// Is the target within range of the monster?
+				if (distanceAway <= enemy.attackRange) {
+					isAttacking = true;
+				}
+				var theMove = new Move(enemy, thePath, isAttacking, AIManager.playerList[min]);
+				
 			callback(theMove);
+			}
 		}
 		
 	} /* END OF BERSERKER */

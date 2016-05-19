@@ -336,12 +336,12 @@ Battle.prototype.enemyPhase = function () {
     {
         console.log("Running AI")
         this.aiCalled = true;
-        gm.ai.runEnemyPhase(this, this.enemyPhaseTest.bind(this));
+        gm.ai.runEnemyPhase(this.enemyPhaseTest.bind(this));
         console.log("AI DONE")
     }
 }
 
-Battle.prototype.enemyPhaseTest = function (battle, enemyMoves) 
+Battle.prototype.enemyPhaseTest = function (enemyMoves) 
 {
     enemyMoves.forEach((move) => {
         let dest = move.endPoint();
@@ -349,9 +349,12 @@ Battle.prototype.enemyPhaseTest = function (battle, enemyMoves)
         move.enemy.y = dest.y;
         if(move.isAttacking)
         {
-            let unit = this.playerUnits.splice(this.playerUnits.indexOf(move.target), 1);
+            let unit = this.playerUnits.splice(this.playerUnits.indexOf(move.target), 1)[0];
+            console.log(unit)
             if (unit)
-                unit[0].removeFromWorld = true;
+            {
+                unit.removeFromWorld = true;
+            }
         }
     })
     if (this.playerUnits.length === 0)
@@ -366,7 +369,7 @@ Battle.prototype.enemyPhaseTest = function (battle, enemyMoves)
     }
     this.resetPUnitActions();
     gm.im.currentgroup.click = undefined;
-    battle.aiCalled = false;
+    this.aiCalled = false;
     this.currentPhase = this.playerPhase;
 }
 
