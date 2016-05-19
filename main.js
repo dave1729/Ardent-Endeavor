@@ -82,8 +82,7 @@ Background.prototype.draw = function (ctx) {
 	//context.drawImage(img,sx,sy,swidth,sheight,x,y,width,height);
 	var width = Math.floor(gm.canvas.width);
 	var heigth = Math.floor(gm.canvas.height);
-	ctx.drawImage(this.spritesheet, gm.cam.leftX, gm.cam.topY, gm.cam.width, gm.cam.height,
-			0, 0, gm.cam.width, gm.cam.height);
+	ctx.drawImage(this.spritesheet, gm.cam.leftX, gm.cam.topY, gm.cam.width, gm.cam.height, 0, 0, gm.cam.width, gm.cam.height);
 };
 
 Background.prototype.update = function () {
