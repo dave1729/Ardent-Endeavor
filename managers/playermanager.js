@@ -108,7 +108,7 @@ Player.prototype.update = function () {
 		var currentAdjust = gm.clockTick * this.speed;
 		var startX = this.x;
 		var startY = this.y;
-
+		console.log(this === gm.player)
 		if (gm.im.checkInput("menu")) {
 			gm.openGameMenu();
 			gm.im.currentgroup.input_list[4].isPressed = false;
@@ -117,7 +117,6 @@ Player.prototype.update = function () {
 			this.interactFind();
 		}
 		else if(gm.im.checkInput("up") && gm.im.checkInput("left")) {
-			console.log("here")
 			this.speedY = -1 * this.regSpeed * sqrtOneHalf;
 			this.speedX = -1 * this.regSpeed * sqrtOneHalf;
 		}

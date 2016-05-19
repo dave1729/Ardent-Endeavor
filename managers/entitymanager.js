@@ -44,20 +44,9 @@ EntityManager.prototype.removeEntityA = function (remove) {
     })
 }
 
-EntityManager.prototype.changePPos = function (id)
+EntityManager.prototype.removeImmediate = function (enemy)
 {
-    this.tempEntities.forEach((entity) =>
-    {
-        if(entity.entityID === 0) 
-            this.backgroundEntity = entity;
-        if (entity.entityID === 1)
-        {
-            console.log("here")
-            this.controlEntity = entity;
-            entity.x = entity.x + 100;
-            entity.y = entity.y - 20;
-        }
-    })
+    this.entities.slice(this.entities.indexOf(enemy), 1);
 }
 
 EntityManager.prototype.removeEntity = function (id) {
@@ -86,8 +75,11 @@ EntityManager.prototype.update = function () {
         	}
         }
     }
-    if (gm.bgCollision != null) {
-        gm.bgCollision.update();
+    if (!gm.bm.currentBattle)
+    {
+        if (gm.bgCollision != null) {
+            gm.bgCollision.update();
+        }
     }
 
     for (var i = this.entities.length - 1; i >= 0; --i) {
@@ -100,6 +92,14 @@ EntityManager.prototype.update = function () {
 }
 
 EntityManager.prototype.draw = function () {
+    gm.ctxCol.clearRect(0, 0, gm.surfaceWidth, gm.surfaceHeight);
+    if (!gm.bm.currentBattle)
+    {
+        if (gm.bgCollision != null)
+        {
+            gm.bgCollision.draw(gm.ctx);
+        }
+    }
 	gm.ctx.clearRect(0, 0, gm.surfaceWidth, gm.surfaceHeight);
     gm.ctx.save();
     for (var i = 0; i < this.entities.length; i++) {
@@ -116,11 +116,6 @@ EntityManager.prototype.draw = function () {
     	
     }
     gm.ctx.restore();
-    
-    gm.ctxCol.clearRect(0, 0, gm.surfaceWidth, gm.surfaceHeight);
-    if (gm.bgCollision != null) {
-    	gm.bgCollision.draw(gm.ctx);
-    }
 }
 
 /* Removes all active entities (including map and player) from the game */
@@ -134,12 +129,35 @@ EntityManager.prototype.removeAllEntities = function () {
 
 /* Creates a shallow copy of entities[] from game engine and stores in temp */
 EntityManager.prototype.cacheEntities = function () {
+    //Remove things marked for removable before caching
+    for (var i = this.entities.length - 1; i >= 0; --i) {
+        if (this.entities[i].removeFromWorld) {
+        	this.entities[i].removeFromWorld = false;
+            this.entities.splice(i, 1);
+            
+        }
+    }
 	this.tempEntities = _.cloneDeep(this.entities);
 }
 
 /* Restores the entities from cache */
 EntityManager.prototype.restoreEntities = function () {
 	this.entities = _.cloneDeep(this.tempEntities);
+    //reset the references other places
+    this.entities.forEach((entity) =>
+    {
+        if(entity.entityID === 0) 
+            this.backgroundEntity = entity;
+        if (entity.entityID === 1)
+        {
+            gm.player = entity;
+            this.controlEntity = entity;
+            
+            // entity.x = entity.x + 100;
+            // entity.y = entity.y - 20;
+        }
+    })
+    
 }
 /* Remove specific entity from active list. */
 EntityManager.prototype.removeEntity = function (entity) {

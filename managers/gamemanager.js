@@ -114,10 +114,13 @@ GameManager.prototype.loadMap = function (mapid, destx, desty) {
 }
 /* Loads battle scene, disabling overworld entities and controls */
 GameManager.prototype.startBattle = function (enemy) {
-	// Lets ignore this for now
-	enemy.removeFromWorld = true;
+	
+	this.cam.stopFollow();
+	this.cam.jumpToByCorner(0, 0);
+	
 	this.em.cacheEntities();
 	this.em.removeAllEntities();
+	
 	// gm.em.addEntity(map.bgLayer);
 	// gm.em.addEntity(map.cLayer);
 	this.bm.startBattle({enemyType: enemy});
@@ -129,10 +132,10 @@ GameManager.prototype.startBattle = function (enemy) {
 /* Disables battle scene, loading regular functionality to overworld. */
 GameManager.prototype.endBattle = function () {
 	this.em.removeAllEntities();
-	gm.bm.currentBattle = undefined;
-	this.em.changePPos();
+    gm.bm.currentBattle = undefined;
 	this.em.restoreEntities();
 	this.im.changeCurrentGroupTo("Dungeon")
+	this.cam.follow(this.player);
 	
 	// remove battle assets
 	// resume overworld functions
