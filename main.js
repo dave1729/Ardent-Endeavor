@@ -80,16 +80,9 @@ Background.prototype.constructor = Background;
 
 Background.prototype.draw = function (ctx) {
 	//context.drawImage(img,sx,sy,swidth,sheight,x,y,width,height);
-<<<<<<< HEAD
-	var width = Math.floor(dungeonWidth/4);
-	var heigth = Math.floor(dungeonHeight/4);
-
-	ctx.drawImage(this.spritesheet, gm.cam.leftX, gm.cam.topY, gm.cam.width, gm.cam.height,
-=======
 	var width = Math.floor(gm.canvas.width);
 	var heigth = Math.floor(gm.canvas.height);
-	this.ctx.drawImage(this.spritesheet, gm.cam.leftX, gm.cam.topY, gm.cam.width, gm.cam.height,
->>>>>>> refs/remotes/origin/master
+	ctx.drawImage(this.spritesheet, gm.cam.leftX, gm.cam.topY, gm.cam.width, gm.cam.height,
 			0, 0, gm.cam.width, gm.cam.height);
 };
 
