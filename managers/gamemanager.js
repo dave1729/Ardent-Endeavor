@@ -1,9 +1,10 @@
 const TILE_SIZE = 64;
 const COLLISION_ACCURACY = 3.0; // Higher is more accurate, but slower.
 
-function GameManager(ctx, ctxUI, ctxCollision)
+function GameManager(ctx, ctxUI, ctxCollision, canvas)
 {
     this.controlEntity = null;
+    this.canvas = canvas;
     this.backgroundEntity = null;
     this.bgCollision = null;
     this.ctx = ctx;
@@ -12,13 +13,17 @@ function GameManager(ctx, ctxUI, ctxCollision)
     this.surfaceWidth = null;
     this.surfaceHeight = null;
     this.hitBoxVisible = null;
+	
+	this.im = null; // InputManager
     this.am = null; // AssetManager
+	this.ai = null;
+	this.bm = null; // BattleManager
     this.cam = null; // Camera
-    this.im = null; // InputManager
     this.mm = null; // MapManager
     this.em = null; // EntityManager
     this.sm = null; // SceneManager
     this.ui = null; // UIManager
+	
     this.timer = null;
     this.gamePaused = false;
     
@@ -26,20 +31,27 @@ function GameManager(ctx, ctxUI, ctxCollision)
 GameManager.prototype.start = function() {
     this.initManagers();
     this.init();
-    this.am.queueDownload("./img/player.png");
+	this.queueAssets();
+    this.am.downloadAll(() => {
+		// this.startBattle(new Fire(gm, 64, 256));
+	 	this.initialize(new Player(this.am.getAsset("./img/player.png")), 1, 900, 900);
+        this.loop();
+    })
+}
+
+GameManager.prototype.queueAssets = function () {
+	this.am.queueDownload("./img/player.png");
     this.am.queueDownload("./img/GrassOnlyBackground.png");
     this.am.queueDownload("./img/collidable_background.png");
+    this.am.queueDownload("./img/Background_Layer.png");
+    this.am.queueDownload("./img/Collision_Layer.png");
+    this.am.queueDownload("./img/Foreground_Layer.png");
     this.am.queueDownload("./img/werewolf.png");
     this.am.queueDownload("./img/greenrage.png");
     this.am.queueDownload("./img/shark.png");
     this.am.queueDownload("./img/alienfirebird.png");
     this.am.queueDownload("./img/temple.jpg");
     this.am.queueDownload("./img/chest.png");
-    this.am.downloadAll(() => {
-        this.loop();
-        //this.startBattle(new Fire(gm, 64, 256));
-        this.initialize(new Player(this.am.getAsset("./img/player.png")), 1, 900, 900);
-    })
 }
 
 /* loads the starting map and character's starting position. */
@@ -50,7 +62,7 @@ GameManager.prototype.initialize = function (player, mapid, destx, desty) {
 	this.gamePaused = false;
 }
 
-GameManager.prototype.startInput = function (ctx) {
+GameManager.prototype.startInput = function () {
     console.log('Starting input');
     this.im.start();
     console.log('Input started');
@@ -59,10 +71,11 @@ GameManager.prototype.startInput = function (ctx) {
 GameManager.prototype.initManagers = function (params) {
 	this.am = new AssetManager();
     this.em = new EntityManager();
-    this.cam = new Camera(this.ctx.canvas.width, this.ctx.canvas.height);
+	this.ai = new AIManager();
+	this.bm = new BattleManager();
+    this.cam = new Camera(this.canvas.width, this.canvas.height);
     this.im = new InputManager("Dungeon");
     this.ui = new UIManager();
-	//this.battle = new BattleManager();
 	this.mm = new MapManager();
 	
 	console.log("Managers Initialized");
@@ -71,6 +84,8 @@ GameManager.prototype.initManagers = function (params) {
 GameManager.prototype.init = function () {
     this.surfaceWidth = this.ctx.canvas.width;
     this.surfaceHeight = this.ctx.canvas.height;
+	
+	this.initManagers();
     this.timer = new Timer();
     this.disableInput = false;
     this.startInput();
@@ -99,18 +114,17 @@ GameManager.prototype.loadMap = function (mapid, destx, desty) {
 }
 /* Loads battle scene, disabling overworld entities and controls */
 GameManager.prototype.startBattle = function (enemy) {
-	// Lets ignore this for now
-	gm.em.cacheEntities();
-	gm.em.removeAllEntities();
 	
-	// this.game.em.addEntity(map.bgLayer);
-	// this.game.em.addEntity(map.cLayer);
-	this.em.addEntity(new Grid(this))
-	var c = new Cursor(this);
-	this.em.addEntity(c);
-	this.em.addEntity(new Battle(this, c, enemy));
-	// let b = new Battle(this.game);
-	// b.start();
+	this.cam.stopFollow();
+	this.cam.jumpToByCorner(0, 0);
+	
+	this.em.cacheEntities();
+	this.em.removeAllEntities();
+	
+	// gm.em.addEntity(map.bgLayer);
+	// gm.em.addEntity(map.cLayer);
+	this.im.setAllFalse("Dungeon");
+	this.bm.startBattle({enemyType: enemy});
 	
 	// needs more logic to add battle assets
 	// pause overworld functions
@@ -119,7 +133,11 @@ GameManager.prototype.startBattle = function (enemy) {
 /* Disables battle scene, loading regular functionality to overworld. */
 GameManager.prototype.endBattle = function () {
 	this.em.removeAllEntities();
+    gm.bm.currentBattle = undefined;
 	this.em.restoreEntities();
+	this.im.changeCurrentGroupTo("Dungeon")
+	this.cam.follow(this.player);
+	
 	// remove battle assets
 	// resume overworld functions
 }
@@ -139,13 +157,15 @@ GameManager.prototype.closeGameMenu = function () {
 	this.gamePaused = false;
 	this.showUI = false;
 	this.im.changeCurrentGroupTo("Dungeon");
-	this.startInput(this.ctx);
+	this.startInput();
 	this.ui.showGameMenu = false;
 	document.getElementById("uiLayer").style.zIndex = "-1";
 }
 
 /* Opens the game menu, switching canvas focus and keybinds */
 GameManager.prototype.openBattleMenu = function (x, y) {
+	x ? x : 200;
+	y ? y : 200;
 	this.gamePaused = false;
 	this.showUI = true;
 	this.im.changeCurrentGroupTo("ui");
@@ -160,7 +180,7 @@ GameManager.prototype.closeBattleMenu = function () {
 	this.gamePaused = false;
 	this.showUI = false;
 	this.im.changeCurrentGroupTo("Dungeon");
-	this.startInput(this.ctx);
+	this.startInput();
 	this.ui.showBattleMenu = false;
 	document.getElementById("uiLayer").style.zIndex = "-1";
 }
@@ -219,9 +239,9 @@ GameManager.prototype.loop = function () {
     	this.ui.update();
     	this.ui.draw();
     }	
-	if(this.battle) 
+	if(this.bm.currentBattle) 
 	{
-		this.battle.update();
+		this.bm.update();
 	}
     
     requestAnimationFrame(this.loop.bind(this), this.ctx.canvas);

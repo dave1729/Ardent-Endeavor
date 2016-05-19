@@ -1,13 +1,12 @@
-function Grid(game) {
-    this.game = game;
-    this.ctx = this.game.ctx;
+function Grid()
+{
     this.visible = true;
-    this.tileSize = 64;
     this.rows = 0;
     this.cols = 0;
 }
 
 Grid.prototype.update = function () {
+    
 }
 
 Grid.prototype.draw = function (ctx) {
@@ -15,35 +14,146 @@ Grid.prototype.draw = function (ctx) {
     {
         ctx.strokeStyle = "black"
         //rows
-        for (var r = 0; r < dungeonWidth; r+= this.tileSize)
+        for (var r = 0; r < dungeonWidth; r += TILE_SIZE)
         {
-            this.ctx.beginPath();
-            this.ctx.moveTo(0, r);
-            this.ctx.lineTo(dungeonWidth, r);
-            this.ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(0, r);
+            ctx.lineTo(dungeonWidth, r);
+            ctx.stroke();
         }
         //cols
-        for (var c = 0; c < dungeonHeight; c += this.tileSize)
+        for (var c = 0; c < dungeonHeight; c += TILE_SIZE)
         {
-            this.ctx.beginPath();
-            this.ctx.moveTo(c, 0);
-            this.ctx.lineTo(c, dungeonHeight);
-            this.ctx.stroke();    
+            ctx.beginPath();
+            ctx.moveTo(c, 0);
+            ctx.lineTo(c, dungeonHeight);
+            ctx.stroke();    
         }
     }
 }
 
-function Cursor (game)
+function BattleOverlay(spec) 
 {
-    this.game = game;
+    this.validLocations = spec.validLocations;
+    this.highlightUnit = undefined;
+    this.highlightSpawn = false;
+    this.possibleMoves = [];
+    this.possibleAttacks = [];
+    this.currentPhase = undefined;
+    Entity.call(this, 0, 0);
+}
+
+BattleOverlay.prototype.draw = function (ctx)
+{
+    if (this.highlightUnit)
+    {
+        if (!this.highlightUnit.moved)
+        {
+            //console.log("Highlighting Move")
+            this.highlightPossibleMoves(ctx);
+        }
+        else if (!this.highlightUnit.attacked)
+        {
+            // console.log("Highlighting Attack")
+            this.highlightPossibleAttacks(ctx);
+        }
+    }
+    if (gm.bm.currentBattle)
+    {
+        if (this.currentPhase === gm.bm.currentBattle.setupPhase)
+            this.highlightSpawns(ctx)    
+    }
+}
+
+BattleOverlay.prototype.update = function () 
+{   
+    if(gm.bm.currentBattle)
+    {
+        this.currentPhase = gm.bm.currentBattle.currentPhase
+        if (this.currentPhase === gm.bm.currentBattle.playerPhase)
+        {
+            if (gm.bm.cursor.selected)
+            {
+                this.highlightUnit = gm.bm.cursor.selected;
+                if (!this.highlightUnit.moved)
+                {
+                    this.possibleMoves = this.highlightUnit.possibleMoves;
+                    // console.log(this.possibleMoves)
+                }
+                else if (!this.highlightUnit.attacked)
+                {
+                    this.possibleAttacks = this.highlightUnit.possibleAttacks;
+                }
+            }
+            else
+            {
+                this.possibleMoves = [];
+                this.possibleAttacks = [];
+            }
+        }
+        else
+        {
+            this.possibleMoves = [];
+            this.possibleAttacks = [];
+        }
+    }
+}
+
+BattleOverlay.prototype.highlightSpawns = function (ctx) {
+    ctx.strokeStyle  = "rgba(0, 255, 0, 0.4)"; 
+    ctx.fillStyle  = "rgba(0, 255, 0, 0.4)";     
+    this.validLocations.forEach((point) => {
+        ctx.fillRect(point.x * TILE_SIZE, point.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+    })
+}
+
+BattleOverlay.prototype.highlightPossibleMoves = function (ctx) 
+{
+    ctx.strokeStyle  = "rgba(0, 0, 255, 0.4)"; 
+    ctx.fillStyle  = "rgba(0, 0, 255, 0.4)";
+    this.possibleMoves.forEach((point) => {
+        ctx.fillRect(point.x * TILE_SIZE, point.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+    })
+        
+}
+
+BattleOverlay.prototype.highlightPossibleAttacks = function (ctx)
+{
+    ctx.strokeStyle  = "rgba(255, 0, 255, 0.5)";    
+    ctx.fillStyle = "rgba(255, 0, 255, 0.5)";
+    this.possibleAttacks.forEach((point) => {
+        ctx.fillRect(point.x * TILE_SIZE, point.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+    })
+}
+
+
+function Cursor ()
+{
     this.visible = true;
     this.goodAttack = false;
-    this.point = {x: 0, y:0}
+    this.selected = undefined;
+    this.target = undefined;
+    Entity.call(this, -TILE_SIZE, -TILE_SIZE);
+}
+
+Cursor.prototype.deselect = function () {
+    this.selected.deselect();
+    this.selected = undefined;
 }
 
 Cursor.prototype.update = function () {
-    if (gm.im.getMouse())
-        this.point = gm.im.getMouse();
+    if (this.getMouse())
+    {
+        let m = this.getMouse();
+        this.x = m.x;
+        this.y = m.y;
+    }
+    
+    // if (this.selected && this.target)
+    // {
+    //     this.target.removeFromWorld = true;
+    //     this.target = undefined;
+    // }
 }
 
 Cursor.prototype.draw = function (ctx) {
@@ -59,60 +169,89 @@ Cursor.prototype.draw = function (ctx) {
             ctx.strokeStyle = "rgba(0, 0, 0, 0.5)";
             ctx.fillStyle  = "rgba(0, 0, 0, 0.5)";
         }
-        ctx.fillRect(this.point.x * 64,this.point.y * 64, 64, 64);    
+        ctx.fillRect(this.x * 64,this.y * 64, 64, 64);    
     }
 }
 
-function tileToWorldLeftTop(x, y) {
-    
-    
+Cursor.prototype.screenToTile = function (point)
+{
+    return {x: Math.floor(point.x / TILE_SIZE) , y: Math.floor(point.y / TILE_SIZE)}
+}
+
+Cursor.prototype.getMouse = function () {
+    let p = gm.im.getMouse()
+    if(p)
+    {
+        return this.screenToTile(p)
+    }
+    return p;
+}
+
+Cursor.prototype.getClick = function () {
+    let p = gm.im.getClick()
+    if(p)
+    {
+        return this.screenToTile(p)
+    }
+    return p;
+}
+
+Cursor.prototype.getRClick = function () {
+    let p = gm.im.getRClick()
+    if(p)
+    {
+        return this.screenToTile(p)
+    }
+    return p;
+}
+
+Cursor.prototype.isCellOccupied = function (point) 
+{
+    point = point ? point : {x: this.x, y: this.y};
+    let occupy = gm.bm.currentBattle.getOccupiedCells();
+    let result = undefined;
+    occupy.forEach((object) => {
+        if(point.x === object.x && point.y === object.y)
+        {
+            result = object;
+        }
+    })
+    return result;
 }
 
 // Unit Placement
 // Battl Start
 // Battle End
 
-function Battle(game, cursor, enemy)
- {
-    this.game = game;
-    this.currentPhase = this.setupPhase;
+function Battle(spec) 
+{
     // Unit Spawning
-    this.playerCount = 3;
-    this.validLocations = [
-        {x: 0,
-         y: 2},
-        {x: 0,
-         y: 3},
-        {x: 0,
-         y: 4},
-    ];
-    
+    this.maxPlayers = spec.maxPlayers;
+    this.validLocations = spec.validLocations;
+    this.aiCalled = false;
     //Phases
-    this.playerUnits = [];
-    this.enemyType = enemy;
-    this.enemyUnits = [];
+    this.playerUnits = spec.playerUnits;
+    this.enemyUnits = spec.enemyUnits;
+    this.immovableTiles = spec.immovableTiles;
+    this.currentPhase = this.setupPhase;
     this.availableUnits = [];
-    this.cursor = cursor;
-    this.init();
+    this.enemyType = spec.enemyType;
 }
 
-Battle.prototype.controls = function () {
-	//var temp = gm.im.currentgroup.name;
-	gm.im.addGroup("battle");
-	//console.log(gm.im.currentgroup);
-	gm.im.currentgroup.addMouse();
-	// gm.im.addInput(new Input("up", 'w'));
-	// gm.im.addInput(new Input("down", 's'));
-	// gm.im.addInput(new Input("left", 'a'));
-	// gm.im.addInput(new Input("right", 'd'));
-	// gm.im.addInput(new Input("menu", 'i'));
-	// gm.im.addInput(new Input("confirm", 'e'));
-	// gm.im.changeCurrentGroupTo(temp);
-}
-
-Battle.prototype.init = function (params) {
+Battle.prototype.init = function () {
     this.spawnEnemies();
-    this.controls();
+    gm.em.addEntity(new BattleOverlay({validLocations: this.validLocations}));
+}
+
+Battle.prototype.getOccupiedCells = function () {
+    let points = [];
+    let units = [this.playerUnits, this.enemyUnits, this.immovableTiles]
+    units.forEach((array) => {
+        array.forEach((object) => {
+            points.push(object)
+        })
+    })
+    return points;
 }
 
 Battle.prototype.update = function ()
@@ -122,76 +261,143 @@ Battle.prototype.update = function ()
 }
 
 Battle.prototype.setupPhase = function () {
-            this.cursor.good = true;
-            if(gm.im.getClick())
+    gm.bm.cursor.good = true;
+    if(gm.im.getClick())
+    {
+        if(!gm.bm.cursor.isCellOccupied())
+        {
+            if (this.validPlacement(gm.bm.cursor.x, gm.bm.cursor.y))
             {
-                if (this.validPlacement(this.cursor.point))
-                {
-                    this.spawnPlayer();
-                    gm.im.currentgroup.click = null;
-                }
+                this.spawnPlayer();
+                gm.im.currentgroup.click = null;
             }
-            if(this.playerCount === 0)
-            {
-                this.cursor.good = false;
-                this.unitsSpawned = true;
-                this.playersTurn = true;
-                this.currentPhase = this.playerPhase;
-            }
+        }
+        else
+        {
+            gm.im.currentgroup.click = null;
+        }
+    }
+    if(this.maxPlayers === 0)
+    {
+        gm.bm.cursor.good = false;
+        gm.ai.newBattle(7, 7, this.playerUnits, this.enemyUnits, this.immovableTiles);
+        this.currentPhase = this.playerPhase;
+    }
+}
+
+Battle.prototype.resolveFight = function () {
+    let attacker = gm.bm.cursor.selected;
+    let defender = gm.bm.cursor.target;
+    if (defender.selected === undefined)
+    {
+        this.enemyUnits.splice(this.enemyUnits.indexOf(defender), 1);
+    }
+    else
+    {
+        this.playerUnits.splice(this.playerUnits.indexOf(defender), 1);
+    }
+    attacker.attacked = true;
+    gm.bm.cursor.target.removeFromWorld = true;
+    gm.bm.cursor.target = undefined;
 }
 
 Battle.prototype.playerPhase = function () {
-    if (this.availableUnits.length === 0)
+    // if (this.availableUnits.length === 0)
+    // {
+    //     console.log("TURN DONE")
+    //     this.currentPhase = this.enemyPhase;
+    // }
+    if (gm.bm.cursor.selected && gm.bm.cursor.target)
+    {
+        this.resolveFight();
+        gm.bm.cursor.deselect();
+        gm.im.currentgroup.click = undefined;
+    }
+    if(gm.im.checkInput("endTurn"))
     {
         console.log("TURN DONE")
+        this.playerUnits.forEach((unit) =>
+        {
+            unit.selected = false;
+        })
+        gm.bm.cursor.selected = undefined;
+        gm.bm.cursor.target = undefined;
+        gm.im.setFalse("endTurn");
+        // console.log("SWITCHING")
         this.currentPhase = this.enemyPhase;
     }
-        if (this.enemyUnits.length === 0)
-        {
-            //End battle
-            //Remove all entities from array
-            console.log("Victory!")
-        }
+    if (this.enemyUnits.length === 0)
+    {
+        //End battle
+        //Remove all entities from array
+        console.log("Victory!")
+        gm.endBattle();
+    }
         //Check if t has been 
 }
 
-Battle.prototype.enemyPhase = function (params) {
-        console.log("Enemies turn is taken.")
-        if (this.playerUnits.length === 0)
-        {
-            console.log("Defeat.")
-        }
-        this.currentPhase = this.playerPhase;
-        // AI LOGIC calls and stuff
-}
-
-Battle.prototype.spawnPlayer = function (params) {
-    var spawn = new Blue(this.cursor.point.x, this.cursor.point.y, this.cursor, this);
-    gm.em.addEntity(spawn);
-    this.availableUnits.push(spawn);
-    this.playerUnits.push(spawn);
-    this.playerCount--;
-}
-
-Battle.prototype.validPlacement = function (point) {
-    return this.validLocations.filter((validPoint) => {
-        return validPoint.x === point.x && validPoint.y === point.y;
-    }).length  !== 0;
-}
-
-Battle.prototype.draw = function (ctx) {
-    if (this.currentPhase === this.setupPhase)
+Battle.prototype.enemyPhase = function () {
+    gm.im.setFalse("endTurn");
+    if(!this.aiCalled)
     {
-        this.highlightSpawns(ctx)    
+        // console.log("Running AI")
+        this.aiCalled = true;
+        gm.ai.runEnemyPhase(this.enemyPhaseTest.bind(this));
+        // console.log("AI DONE")
     }
 }
 
-Battle.prototype.highlightSpawns = function (ctx) {
-    ctx.strokeStyle  = "rgba(0, 255, 0, 0.4)"; 
-    ctx.fillStyle  = "rgba(0, 255, 0, 0.4)";     
-    this.validLocations.forEach((point) => {
-        ctx.fillRect(point.x * 64, point.y * 64, 64, 64);
+Battle.prototype.enemyPhaseTest = function (enemyMoves) 
+{
+    enemyMoves.forEach((move) => {
+        let dest = move.endPoint();
+        move.enemy.x = dest.x;
+        move.enemy.y = dest.y;
+        if(move.isAttacking)
+        {
+            let unit = this.playerUnits.splice(this.playerUnits.indexOf(move.target), 1)[0];
+            if (unit)
+            {
+                unit.removeFromWorld = true;
+            }
+        }
     })
+    if (this.playerUnits.length === 0)
+    {
+        console.log("Defeat.")
+        gm.endBattle();
+    }
+    if (this.enemyUnits.length === 0)
+    {
+        console.log("Victory!")
+        gm.endBattle();
+    }
+    this.resetPUnitActions();
+    gm.im.currentgroup.click = undefined;
+    this.aiCalled = false;
+    this.currentPhase = this.playerPhase;
+}
+
+Battle.prototype.resetPUnitActions = function () {
+    this.playerUnits.forEach((unit) =>
+    {
+        unit.moved = false;
+        unit.attacked = false;
+    })
+}
+
+Battle.prototype.spawnPlayer = function (params) {
+    let spawn = new PlayerUnit({x: gm.bm.cursor.x, y :gm.bm.cursor.y});
+    gm.em.addEntity(spawn);
+    this.availableUnits.push(spawn);
+    this.playerUnits.push(spawn);
+    this.maxPlayers--;
+}
+
+Battle.prototype.validPlacement = function (x, y) {
+    return this.validLocations.filter((point) => {
+        return point.x === x && point.y === y;
+    }).length  !== 0;
 }
 
 Battle.prototype.unitUsed = function (unit) 
@@ -204,7 +410,7 @@ Battle.prototype.resetUnits = function () {
 }
 
 Battle.prototype.disableInput = function () {
-    this.game.disableInput = true;
+    gm.disableInput = true;
 }
 
 Battle.prototype.spawnEnemies = function () {
@@ -214,11 +420,31 @@ Battle.prototype.spawnEnemies = function () {
     this.spawnEnemy(loc);
             
 }
+function* positionMaker(min, max)
+{
+  while(true)
+    yield Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function* idMaker(min, max)
+{
+  while(true)
+    yield Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 Battle.prototype.spawnEnemy = function (loc) {
-    let spawn = new Red(this.game, loc.next().value, loc.next().value, this.cursor, this, this.enemyType);
-    this.game.em.addEntity(spawn);
-    this.enemyUnits.push(spawn);
+    let point = {x: loc.next().value, y: loc.next().value}
+    
+    if(!gm.bm.cursor.isCellOccupied(point))
+    {
+        let spawn = new EnemyUnit({x: point.x, y: point.y, overworld: this.enemyType});
+        gm.em.addEntity(spawn);
+        this.enemyUnits.push(spawn);
+    }
+    else
+    {
+        this.spawnEnemy(loc);
+    }
 }
 
 
