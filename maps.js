@@ -27,9 +27,9 @@ MapManager.prototype.initialize = function () {
     map01.addEntity(new Shark(gm, 64, 128));
     map01.addEntity(new Fire(gm, 64, 256));
     map01.addEntity(new Billy(gm, 64, 256+64));
-    map01.addEntity(new Chest(gm, 5*64, 2*64, 1, "Peanut"));
-    map01.addEntity(new Chest(gm, 6*64, 2*64, 0, "Pinecone"));
-    map01.addEntity(new Chest(gm, 7*64, 2*64, 2, "Excalibur"));
+    map01.addEntity(new Chest(gm, 5*TILE_SIZE, 2*TILE_SIZE, 1, "Peanut"));
+    map01.addEntity(new Chest(gm, 6*TILE_SIZE, 2*TILE_SIZE, 0, "Pinecone"));
+    map01.addEntity(new Chest(gm, 7*TILE_SIZE, 2*TILE_SIZE, 2, "Excalibur"));
     this.addMap(map01);
     
     
