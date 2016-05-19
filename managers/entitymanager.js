@@ -74,8 +74,20 @@ EntityManager.prototype.update = function () {
     for (var i = 0; i < this.entities.length; i++) {
         var entity = this.entities[i];
         if (!entity.removeFromWorld) {
-            entity.update();
+        	if (!(entity instanceof Event)) {
+        		entity.update();
+        	} else if (entity.hitBox.getScreenX() < gm.surfaceWidth + 2*TILE_SIZE &&
+        			entity.hitBox.getScreenX() > -2*TILE_SIZE &&
+        			entity.hitBox.getScreenY() < gm.surfaceWidth + 2*TILE_SIZE &&
+        			entity.hitBox.getScreenY() > -2*TILE_SIZE ) {
+        		// Only update entity if it is in range of the screen.
+        		entity.update();
+        		//console.log(entity.constructor.name + " is being updated.");
+        	}
         }
+    }
+    if (gm.bgCollision != null) {
+        gm.bgCollision.update();
     }
 
     for (var i = this.entities.length - 1; i >= 0; --i) {
@@ -91,9 +103,24 @@ EntityManager.prototype.draw = function () {
 	gm.ctx.clearRect(0, 0, gm.surfaceWidth, gm.surfaceHeight);
     gm.ctx.save();
     for (var i = 0; i < this.entities.length; i++) {
-    	this.entities[i].draw(gm.ctx);
+    	if (!(this.entities[i] instanceof Event)) {
+    		this.entities[i].draw(gm.ctx);
+    	} else if (this.entities[i].hitBox.getScreenX() < gm.surfaceWidth + 1*TILE_SIZE &&
+    			this.entities[i].hitBox.getScreenX() > -1*TILE_SIZE &&
+    			this.entities[i].hitBox.getScreenY() < gm.surfaceWidth + 1*TILE_SIZE &&
+    			this.entities[i].hitBox.getScreenY() > -1*TILE_SIZE ) {
+    		// Only draw entities within range of the screen.
+    		this.entities[i].draw(gm.ctx);
+    		//console.log(this.entities[i].constructor.name + " is being drawn.");
+    	}
+    	
     }
     gm.ctx.restore();
+    
+    gm.ctxCol.clearRect(0, 0, gm.surfaceWidth, gm.surfaceHeight);
+    if (gm.bgCollision != null) {
+    	gm.bgCollision.draw();
+    }
 }
 
 /* Removes all active entities (including map and player) from the game */

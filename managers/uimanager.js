@@ -4,14 +4,17 @@
 
 function UIManager() {
 	this.ctx = gm.ctxUI;
+	this.ctx.lineWidth="2";
 	this.screenWidth = this.ctx.canvas.width;
 	this.screenHeight = this.ctx.canvas.height;
 	this.gameMenu = new GameMenu(this, this.ctx, 10, 10);
 	this.gameMenu.addButtonPackage(this.gameMenu.getGameMenuButtons());
 	this.dialogueBox = new DialogueBox(this, this.ctx);
+	this.optionsMenu = new OptionsMenu(this, this.ctx, this.screenWidth / 4 + 15, 10);
 	this.showDialogue = false;
 	this.showGameMenu = false;
 	this.showBattleMenu = false;
+	this.menuState = "none";
 	
 	this.battleMenu = new GameMenu(this, this.ctx, 100, 100);
     this.battleMenu.addButtonPackage(this.battleMenu.getBattleMenuButtons());
@@ -24,6 +27,13 @@ function UIManager() {
 UIManager.prototype.update = function() {
 	if (this.showGameMenu) {
 		this.gameMenu.update();
+		
+		switch(this.menuState) {
+			case "options":
+				this.optionsMenu.update();
+				break;
+		}
+		
 	}
 	if (this.showBattleMenu) {
 		this.battleMenu.update();
@@ -38,6 +48,13 @@ UIManager.prototype.draw = function() {
 	this.ctx.clearRect(0, 0, this.screenWidth, this.screenHeight);
 	if (this.showGameMenu) {
 		this.gameMenu.draw();
+		
+		switch(this.menuState) {
+		case "options":
+			this.optionsMenu.draw();
+			break;
+	}
+		
 	}
 	if (this.showDialogue) {
 		this.dialogueBox.draw();
@@ -49,7 +66,7 @@ UIManager.prototype.draw = function() {
 
 UIManager.prototype.controls = function () {
 	var temp = gm.im.currentgroup.name;
-	gm.im.addGroup("ui");
+	gm.im.addGroup("ui", this.ctx);
 	//console.log(gm.im.currentgroup);
 	gm.im.currentgroup.addMouse();
 	gm.im.addInput(new Input("up", 'w'));
@@ -145,6 +162,7 @@ GameMenu.prototype.getGameMenuButtons = function () {
 			this.BUTTON_HEIGHT,
 			openItems = function () {
 				console.log("Open Items");
+				gm.ui.menuState = "items";
 			}));
 	
 	buttons.push(new Button(this, this.ctx, "Magic",
@@ -154,6 +172,7 @@ GameMenu.prototype.getGameMenuButtons = function () {
 			this.BUTTON_HEIGHT,
 			openMagic = function () {
 				console.log("Open Magic");
+				gm.ui.menuState = "magic";
 			}));
 	
 	buttons.push(new Button(this, this.ctx, "Equipment",
@@ -163,6 +182,7 @@ GameMenu.prototype.getGameMenuButtons = function () {
 			this.BUTTON_HEIGHT,
 			openEquipment = function () {
 				console.log("Open Equipment");
+				gm.ui.menuState = "equipment";
 			}));
 	
 	buttons.push(new Button(this, this.ctx, "Status",
@@ -172,6 +192,7 @@ GameMenu.prototype.getGameMenuButtons = function () {
 			this.BUTTON_HEIGHT,
 			openStatus = function () {
 				console.log("Open Status");
+				gm.ui.menuState = "status";
 				//gm.openBattleMenu(300, 300);
 			}));
 	
@@ -182,6 +203,7 @@ GameMenu.prototype.getGameMenuButtons = function () {
 			this.BUTTON_HEIGHT,
 			openOptions = function () {
 				console.log("Open Options");
+				gm.ui.menuState = "options";
 			}));
 	
 	buttons.push(new Button(this, this.ctx, "Save",
@@ -191,6 +213,7 @@ GameMenu.prototype.getGameMenuButtons = function () {
 			this.BUTTON_HEIGHT,
 			openSave = function () {
 				console.log("Open Save");
+				gm.ui.menuState = "save";
 				//gm.openDialogueBox("Star Wars", "CHEWBACCA: A legendary Wookiee warrior and Han Solo’s co-pilot aboard the Millennium Falcon, Chewbacca was part of a core group of Rebels who restored freedom to the galaxy. Known for his short temper and accuracy with a bowcaster, Chewie also has a big heart -- and is unwavering in his loyalty to his friends. He has stuck with Han through years of turmoil that have changed both the galaxy and their lives.");
 			}));
 	return buttons;
@@ -235,6 +258,56 @@ GameMenu.prototype.getBattleMenuButtons = function () {
 }
 
 
+/* +------------------------------------------+ */
+/* |          ===  Options Menu  ===          | */
+/* +------------------------------------------+ */
+function OptionsMenu(uimanager, ctx, x, y) {
+	this.ui = uimanager;
+	this.VERT_PADDING = this.ui.screenWidth / 50;
+	this.BUTTON_HEIGHT = this.ui.screenHeight / 12;
+	this.MENU_WIDTH = this.ui.screenWidth * 3 / 4 - 20;
+	this.TOP_BOT_PADDING = this.ui.screenHeight / 48;
+	
+	this.x = x;
+	this.y = y;
+	this.ctx = ctx;
+	this.items = [];
+	this.init();
+}
+
+OptionsMenu.prototype.init = function () {
+	this.items.push(new CheckBox(this, this.ctx, "DEBUG: Display Collision",
+			this.x + this.VERT_PADDING,
+			this.y + (this.BUTTON_HEIGHT*0 + this.TOP_BOT_PADDING),
+			20,
+			20,
+			toggleDrawCollision = function () {
+				console.log("check da box");
+				gm.hitBoxVisible = this.isChecked;
+			}));
+}
+OptionsMenu.prototype.update = function () {
+	// Update buttons
+	var i;
+	for (i = 0; i < this.items.length; i++) {
+		this.items[i].update(this.ctx);
+	}
+	
+}
+OptionsMenu.prototype.draw = function () {
+	// Draw the backdrop and border
+	this.ctx.strokeStyle = "rgb(255, 255, 255)";
+	this.ctx.fillStyle = "rgba(0, 98, 130, 0.7)";
+	roundRect(this.ctx, this.x, this.y, this.MENU_WIDTH, (this.BUTTON_HEIGHT * this.items.length + this.TOP_BOT_PADDING*2), 15, true, true);
+			
+	// Draw buttons
+	var i;
+	for (i = 0; i < this.items.length; i++) {
+		this.items[i].draw(this.ctx);
+	}
+}
+
+
 
 
 
@@ -265,6 +338,7 @@ Button.prototype.moveButton = function (x, y, width, height) {
 Button.prototype.update = function (canvas) {
     
     if (gm.im.checkMouse() && gm.im.getMouse() != null) {
+    	//console.log("x: " + gm.im.getMouse().x + "  y: " + gm.im.getMouse().y);
     	if (gm.im.getMouse().x > this.x && 
 				gm.im.currentgroup.mouse.y > this.y &&
 				gm.im.currentgroup.mouse.x < this.x + this.width &&
@@ -305,6 +379,94 @@ Button.prototype.draw = function(ctx) {
 	var textSize = ctx.measureText(this.text);
 	var textX = this.x + (this.width/2) - (textSize.width/2);
 	var textY = this.y + (this.height) - (fontSize/2);
+	
+	// Draw text
+	ctx.fillText(this.text, textX, textY);
+}
+
+/* +------------------------------------------+ */
+/* |            ===  CheckBox  ===            | */
+/* +------------------------------------------+ */
+
+function CheckBox(parent, ctx, text, x, y, width, height, onClickEvent, isChecked) {
+	this.parent = parent;
+	this.ctx = ctx;
+	this.text = text;
+	this.x = x;
+	this.y = y;
+	this.width = width;
+	this.height = height;
+	this.hovered = false;
+	this.isChecked = isChecked;
+	this.onClickEvent = onClickEvent;
+}
+
+CheckBox.prototype.moveCheckBox = function (x, y, width, height) {
+	this.x = x;
+	this.y = y;
+	this.width = width;
+	this.height = height;
+}
+
+CheckBox.prototype.update = function (canvas) {
+    
+    if (gm.im.checkMouse() && gm.im.getMouse() != null) {
+    	//console.log("x: " + gm.im.getMouse().x + "  y: " + gm.im.getMouse().y);
+    	if (gm.im.getMouse().x > this.x && 
+				gm.im.currentgroup.mouse.y > this.y &&
+				gm.im.currentgroup.mouse.x < this.x + this.width &&
+				gm.im.currentgroup.mouse.y < this.y + this.height) {
+			this.hovered = true;
+		} else {
+			this.hovered = false;
+		}
+    }
+    if (gm.im.checkMouse() && gm.im.getClick() != null) {
+    	if (gm.im.getMouse().x > this.x && 
+				gm.im.currentgroup.mouse.y > this.y &&
+				gm.im.currentgroup.mouse.x < this.x + this.width &&
+				gm.im.currentgroup.mouse.y < this.y + this.height) {
+    		//console.log(this.text + " menu option was clicked");
+    		if (this.isChecked) {
+    			this.isChecked = false;
+    		} else {
+    			this.isChecked = true;
+    		}
+    		this.onClickEvent(this.isChecked);
+    	}
+    }
+}
+
+CheckBox.prototype.draw = function(ctx) {
+	// Checkbox highlight color
+	if (this.hovered) {
+		ctx.fillStyle = 'rgba(255,165,0,0.5)';
+	} else {
+		ctx.fillStyle = 'rgba(0,0,0,0)';
+	}
+	ctx.fillRect(this.x, this.y, this.width, this.height);
+	
+	ctx.strokeRect(this.x, this.y, this.width, this.height);
+	if (this.isChecked) {
+		ctx.lineWidth="2";
+		ctx.beginPath();
+		ctx.moveTo(this.x, this.y);
+		ctx.lineTo(this.x + this.width, this.y + this.height);
+		ctx.moveTo(this.x, this.y + this.height);
+		ctx.lineTo(this.x + this.width, this.y);
+		ctx.stroke();
+		//ctx.lineWidth="1";
+	}
+	
+	// Font options
+	var fontSize = 20;
+	ctx.fillStyle = "rgb(255, 255, 255)";
+	ctx.font = fontSize + "px sans-serif";
+	
+	// Text position
+	var textSize = ctx.measureText(this.text);
+	var textX = this.x + (this.width) + 10;
+	var textY = this.y + (this.height);// - (fontSize/2);
 	
 	// Draw text
 	ctx.fillText(this.text, textX, textY);

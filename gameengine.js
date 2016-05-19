@@ -22,9 +22,9 @@ CollisionBox.prototype.getY = function () {
 }
 /* getScreenX() function is for non player entities. */
 CollisionBox.prototype.getScreenX = function () {
-	return (this.entity.x + this.offsetX) - gm.em.backgroundEntity.x;
+	return (this.entity.x + this.offsetX) - gm.cam.leftX;
 }
 CollisionBox.prototype.getScreenY = function () {
-	return (this.entity.y + this.offsetY) - gm.em.backgroundEntity.y;
+	return (this.entity.y + this.offsetY) - gm.cam.topY;
 }
 

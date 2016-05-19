@@ -1,19 +1,24 @@
 const TILE_SIZE = 64;
-function GameManager(ctx, ctxUI)
+const COLLISION_ACCURACY = 3.0; // Higher is more accurate, but slower.
+
+function GameManager(ctx, ctxUI, ctxCollision)
 {
     this.controlEntity = null;
     this.backgroundEntity = null;
-	
+    this.bgCollision = null;
     this.ctx = ctx;
     this.ctxUI = ctxUI;
-	
+    this.ctxCol = ctxCollision;
     this.surfaceWidth = null;
     this.surfaceHeight = null;
     this.hitBoxVisible = null;
 	
 	this.im = null; // InputManager
     this.am = null; // AssetManager
-	this.battle = null; // BattleManager
+	this.ai = null;
+	this.bm = null; // BattleManager
+    this.cam = null; // Camera
+    this.im = null; // InputManager
     this.mm = null; // MapManager
     this.em = null; // EntityManager
     this.sm = null; // SceneManager
@@ -24,6 +29,7 @@ function GameManager(ctx, ctxUI)
     
 }
 GameManager.prototype.start = function() {
+    this.initManagers();
     this.init();
 	this.queueAssets();
     this.am.downloadAll(() => {
@@ -37,11 +43,15 @@ GameManager.prototype.queueAssets = function () {
 	this.am.queueDownload("./img/player.png");
     this.am.queueDownload("./img/GrassOnlyBackground.png");
     this.am.queueDownload("./img/collidable_background.png");
+    this.am.queueDownload("./img/Background_Layer.png");
+    this.am.queueDownload("./img/Collision_Layer.png");
+    this.am.queueDownload("./img/Foreground_Layer.png");
     this.am.queueDownload("./img/werewolf.png");
     this.am.queueDownload("./img/greenrage.png");
     this.am.queueDownload("./img/shark.png");
     this.am.queueDownload("./img/alienfirebird.png");
     this.am.queueDownload("./img/temple.jpg");
+    this.am.queueDownload("./img/chest.png");
 }
 
 /* loads the starting map and character's starting position. */
@@ -61,11 +71,11 @@ GameManager.prototype.startInput = function (ctx) {
 GameManager.prototype.initManagers = function (params) {
 	this.am = new AssetManager();
     this.em = new EntityManager();
-	console.log(this.em)
 	this.ai = new AIManager();
+	this.bm = new BattleManager();
+    this.cam = new Camera(this.ctx.canvas.width, this.ctx.canvas.height);
     this.im = new InputManager("Dungeon");
     this.ui = new UIManager();
-	this.bm = new BattleManager();
 	this.mm = new MapManager();
 	
 	console.log("Managers Initialized");
@@ -79,7 +89,7 @@ GameManager.prototype.init = function () {
     this.timer = new Timer();
     this.disableInput = false;
     this.startInput();
-    this.hitBoxVisible = true;
+    this.hitBoxVisible = false;
     console.log('game initialized');
 }
 /* unloads the old map, then loads in the new map and all the entities */
@@ -91,8 +101,10 @@ GameManager.prototype.loadMap = function (mapid, destx, desty) {
 	this.player.y = desty;
 	
 	this.em.addEntity(this.map.bgLayer);
-	this.em.addEntity(this.player);
 	this.em.addEntity(this.map.cLayer);
+	this.em.addEntity(this.player);
+	
+	this.bgCollision = this.map.cMask;	
 	
 	//need logic for spawning enemies in spawn zones
 	for (var i = 0; i < this.map.entities.length; ++i) {
@@ -188,10 +200,35 @@ GameManager.prototype.closeDialogueBox = function () {
 	document.getElementById("uiLayer").style.zIndex = "-1";
 }
 
+GameManager.prototype.checkMapCollision = function (rectBox, callback) {
+	imgData = this.ctxCol.getImageData(rectBox.x, rectBox.y, rectBox.width, rectBox.height);
+	
+	var incX = rectBox.width / COLLISION_ACCURACY;
+	var incY = rectBox.height / COLLISION_ACCURACY;
+	
+	incX = (~~incX === incX) ? incX : (incX+1 | 0 );
+	incY = (~~incY === incY) ? incY : (incY+1 | 0 );
+	
+	for (var offsetY = 0; offsetY < incY; offsetY++ ) {
+	    for (var offsetX = 0; offsetX < incX; offsetX++ ) {
+	        for (var pixelY = 0+offsetY; pixelY < rectBox.height; pixelY += incY ) {
+	            for (var pixelX = 0+offsetX; pixelX < rectBox.width; pixelX += incX){
+	                if ( imgData.data[(pixelX + pixelY * imgData.width) * 4 + 3] > 50 ) {
+		            	//console.log((pixelX + pixelY * imgData.width) * 4 + 3);
+	                	callback(true, {x: pixelX, y: pixelY}, imgData);
+	                }
+	            }
+	        }
+	    }
+	}
+}
+
 GameManager.prototype.loop = function () {
     this.clockTick = this.timer.tick();
     if (!this.gamePaused) {
     	this.em.update();
+    	this.cam.update();
+    	this.click = undefined;
     	this.em.draw();
     }
     if (this.showUI) {

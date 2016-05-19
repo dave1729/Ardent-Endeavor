@@ -8,9 +8,12 @@ function Player(spritesheet) {
 	this.regSpeed = 325;
 	this.speedX = 0;
 	this.speedY = 0;
-	this.layer = 4;
+	this.layer = 5;
 	this.entityID = 1;
-	this.interactRange = 2;
+	this.ctx = gm.ctx;
+	this.controls();
+	this.interactRange = 5;
+	
 	// When changing the hitbox, also change x and y shift in draw collision box
 	this.hitBox = new CollisionBox(this, 18, 34, this.spriteSquareSize-36, this.spriteSquareSize-36);
 	this.controls();
@@ -21,15 +24,36 @@ function Player(spritesheet) {
 // Player.prototype.constructor = Player;
 
 Player.prototype.controls = function () {
+	//starting controls
 	gm.im.addInput(new Input("up", 'w'));
     gm.im.addInput(new Input("down", 's'));
     gm.im.addInput(new Input("left", 'a'));
     gm.im.addInput(new Input("right", 'd'));
     gm.im.addInput(new Input("menu", 'i'));
     gm.im.addInput(new Input("interact", 'e'));
+	
+    //turns player follow on and off with 't'
+	gm.im.addInput(new Input("screentest", 't'));
+	
+    gm.im.addInput(new Input("interact", 'e'));
+    
+    //start with camera following Player
+    gm.cam.follow(this);
 }
 
 Player.prototype.entityCollisionCheck = function (startX, startY) {
+	var rectMain = {x: this.hitBox.getX(), y: this.hitBox.getY(), width: this.hitBox.width, height: this.hitBox.height}
+	
+	gm.checkMapCollision({x: this.hitBox.getScreenX(), y: this.hitBox.getScreenY(), width: this.hitBox.width, height: this.hitBox.height}, checkCollisionData);
+	
+	function checkCollisionData(wasCollision, pixelPoint, imageData) {
+		if (wasCollision) {
+			// NOTE: Collision needs to be refined so diagonal movement can be done.
+			gm.player.x = startX;
+			gm.player.y = startY;
+		}
+	}
+	
 	var rectMain = {x: this.hitBox.getX(), y: this.hitBox.getY(), width: this.hitBox.width, height: this.hitBox.height}
 	//console.log(rectMain);
 	var i;
@@ -122,32 +146,33 @@ Player.prototype.update = function () {
 			this.speedX = this.regSpeed;
 		}
 		
-		if(!(gm.im.checkInput("up") || gm.im.checkInput("down") ||
-		     gm.im.checkInput("left") || gm.im.checkInput("right"))) {
-			this.speedX = 0;
-			this.speedY = 0;
+		//screen test allows to switch between following player and not with 't'
+		if(gm.im.checkInput("screentest") && gm.cam.currentEntity === this) {
+			gm.im.setFalse("screentest");
+			gm.cam.stopFollow();
+			var sx = prompt("Where should the screen X go?", "0");
+			var sy = prompt("Where should the screen Y go?", "0");
+			gm.cam.jumpToByCorner(sx, sy);
+		}
+		//if he's not being followed ask the user where to put the screen
+		else if(gm.im.checkInput("screentest")) {
+			gm.im.setFalse("screentest");
+			gm.cam.follow(this);
+		}
+		
+//		if(!(this.im.checkInput("up") || this.im.checkInput("down") ||
+//		     this.im.checkInput("left") || this.im.checkInput("right"))) {
+//			this.speedX = 0;
+//			this.speedY = 0;
+//		}
+		if(!(gm.im.checkInput("up") || gm.im.checkInput("down"))) {
+				this.speedY = 0;
+		}
+		if(!(gm.im.checkInput("left") || gm.im.checkInput("right"))) {
+				this.speedX = 0;
 		}
 		var newX = this.x + gm.clockTick * this.speedX;
 		var newY = this.y + gm.clockTick * this.speedY;
-
-		//attempting to read new layer as collidable layer
-//		var collidable = null;
-//		for (var i = 0; i < this.game.entities.length; i++) {
-//		if(this.game.entities[i].layer === 2) {
-//		collidable = this.entities[i];
-//		}
-//		}
-
-//		var index = (newY*dungeonWidth + newX) * 4;
-//		var alpha = 0;
-
-//		var imgData = collidable.spritesheet.getImageData(0, 0, dungeonWidth, dungeonHeight);
-
-//		alpha = imgData.data[index+3];
-
-//		if(alpha > 0) {
-//		alert(alpha);
-//		}
 
 		//dungeon/8 = half a visible screen, 0.5 = character scale ratio
 		if(newX > 0 && newX < dungeonWidth - 64) {
