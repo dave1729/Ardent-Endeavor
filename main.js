@@ -148,7 +148,8 @@ Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
 		yindex = 11;
 	}
 	else {
-		yindex = 10;
+		xindex = 0;
+		yindex = 6;
 	}
 
 	var tempX = x;
