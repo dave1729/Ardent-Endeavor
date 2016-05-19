@@ -1,9 +1,10 @@
 const TILE_SIZE = 64;
 const COLLISION_ACCURACY = 3.0; // Higher is more accurate, but slower.
 
-function GameManager(ctx, ctxUI, ctxCollision)
+function GameManager(ctx, ctxUI, ctxCollision, canvas)
 {
     this.controlEntity = null;
+    this.canvas = canvas;
     this.backgroundEntity = null;
     this.bgCollision = null;
     this.ctx = ctx;

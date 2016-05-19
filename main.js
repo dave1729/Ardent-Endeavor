@@ -77,8 +77,8 @@ function Background(game, spritesheet) {
 
 Background.prototype.draw = function () {
 	//context.drawImage(img,sx,sy,swidth,sheight,x,y,width,height);
-	var width = Math.floor(dungeonWidth/4);
-	var heigth = Math.floor(dungeonHeight/4);
+	var width = Math.floor(gm.canvas.width);
+	var heigth = Math.floor(gm.canvas.height);
 	this.ctx.drawImage(this.spritesheet, gm.cam.leftX, gm.cam.topY, gm.cam.width, gm.cam.height,
 			0, 0, gm.cam.width, gm.cam.height);
 };
@@ -100,8 +100,8 @@ function Collidable_background(game, spritesheet) {
 
 Collidable_background.prototype.draw = function () {
 	//context.drawImage(img,sx,sy,swidth,sheight,x,y,width,height);
-	var width = Math.floor(dungeonWidth/4);
-	var heigth = Math.floor(dungeonHeight/4);
+	var width = Math.floor(gm.canvas.width);
+	var heigth = Math.floor(gm.canvas.height);
 	this.ctx.drawImage(this.spritesheet, gm.cam.leftX, gm.cam.topY, gm.cam.width, gm.cam.height,
 			0, 0, gm.cam.width, gm.cam.height);
 };
@@ -152,8 +152,8 @@ Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
 
 	var tempX = x;
 	var tempY = y;
-	var centerX = Math.floor(dungeonWidth/8  - (64 / 2));
-	var centerY = Math.floor(dungeonHeight/8 - (64 / 2));
+	var centerX = Math.floor(gm.canvas.width/2  - (64 / 2));
+	var centerY = Math.floor(gm.canvas.height/2 - (64 / 2));
 
 	
 	//If he's not being followed by the camera, just draw him like everyone else is drawn.
@@ -251,7 +251,7 @@ window.addEventListener('load', () => {
 	var canvasCollision = document.getElementById("collisionMask");
 	var ctxCol = canvasCollision.getContext("2d");
 	
-	gm = new GameManager(ctx, ctxUI, ctxCol);
+	gm = new GameManager(ctx, ctxUI, ctxCol, canvas);
 	gm.start();
 
 });
