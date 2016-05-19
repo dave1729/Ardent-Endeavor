@@ -1,9 +1,10 @@
 const TILE_SIZE = 64;
 const COLLISION_ACCURACY = 3.0; // Higher is more accurate, but slower.
 
-function GameManager(ctx, ctxUI, ctxCollision)
+function GameManager(ctx, ctxUI, ctxCollision, canvas)
 {
     this.controlEntity = null;
+    this.canvas = canvas;
     this.backgroundEntity = null;
     this.bgCollision = null;
     this.ctx = ctx;
@@ -18,7 +19,6 @@ function GameManager(ctx, ctxUI, ctxCollision)
 	this.ai = null;
 	this.bm = null; // BattleManager
     this.cam = null; // Camera
-    this.im = null; // InputManager
     this.mm = null; // MapManager
     this.em = null; // EntityManager
     this.sm = null; // SceneManager
@@ -73,7 +73,7 @@ GameManager.prototype.initManagers = function (params) {
     this.em = new EntityManager();
 	this.ai = new AIManager();
 	this.bm = new BattleManager();
-    this.cam = new Camera(this.ctx.canvas.width, this.ctx.canvas.height);
+    this.cam = new Camera(this.canvas.width, this.canvas.height);
     this.im = new InputManager("Dungeon");
     this.ui = new UIManager();
 	this.mm = new MapManager();

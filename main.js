@@ -2,7 +2,8 @@ const testingMode = false;
 const sqrtOneHalf = 0.70711;
 const dungeonWidth = 2048;
 const dungeonHeight = 1920;
-const screenToMapRatio = 0.75;
+const screenToMapRatioX= 0.75;
+const screenToMapRatioY= 0.75;
 
 function Animation(spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale) {
 	this.spriteSheet = spriteSheet;
@@ -79,10 +80,16 @@ Background.prototype.constructor = Background;
 
 Background.prototype.draw = function (ctx) {
 	//context.drawImage(img,sx,sy,swidth,sheight,x,y,width,height);
+<<<<<<< HEAD
 	var width = Math.floor(dungeonWidth/4);
 	var heigth = Math.floor(dungeonHeight/4);
 
 	ctx.drawImage(this.spritesheet, gm.cam.leftX, gm.cam.topY, gm.cam.width, gm.cam.height,
+=======
+	var width = Math.floor(gm.canvas.width);
+	var heigth = Math.floor(gm.canvas.height);
+	this.ctx.drawImage(this.spritesheet, gm.cam.leftX, gm.cam.topY, gm.cam.width, gm.cam.height,
+>>>>>>> refs/remotes/origin/master
 			0, 0, gm.cam.width, gm.cam.height);
 };
 
@@ -104,10 +111,16 @@ Collidable_background.prototype.constructor = Collidable_background;
 
 Collidable_background.prototype.draw = function (ctx) {
 	//context.drawImage(img,sx,sy,swidth,sheight,x,y,width,height);
+<<<<<<< HEAD
 	var width = Math.floor(dungeonWidth/4);
 	var heigth = Math.floor(dungeonHeight/4);
 	
 	ctx.drawImage(this.spritesheet, gm.cam.leftX, gm.cam.topY, gm.cam.width, gm.cam.height,
+=======
+	var width = Math.floor(gm.canvas.width);
+	var heigth = Math.floor(gm.canvas.height);
+	this.ctx.drawImage(this.spritesheet, gm.cam.leftX, gm.cam.topY, gm.cam.width, gm.cam.height,
+>>>>>>> refs/remotes/origin/master
 			0, 0, gm.cam.width, gm.cam.height);
 };
 
@@ -152,13 +165,14 @@ Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
 		yindex = 11;
 	}
 	else {
-		yindex = 10;
+		xindex = 0;
+		yindex = 6;
 	}
 
 	var tempX = x;
 	var tempY = y;
-	var centerX = Math.floor(dungeonWidth/8  - (64 / 2));
-	var centerY = Math.floor(dungeonHeight/8 - (64 / 2));
+	var centerX = Math.floor(gm.canvas.width/2  - (64 / 2));
+	var centerY = Math.floor(gm.canvas.height/2 - (64 / 2));
 
 	
 	//If he's not being followed by the camera, just draw him like everyone else is drawn.
@@ -168,18 +182,18 @@ Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
 		tempY = screenPoint.y;
 	}
 	else {//draw him all special and junk
-		if (x > centerX && x < (screenToMapRatio * dungeonWidth) + centerX) {
+		if (x > centerX && x < (screenToMapRatioX * dungeonWidth) + centerX) {
 			tempX = centerX;
 		}
-		else if (x >= (screenToMapRatio * dungeonWidth) + centerX) {
-			tempX = x - (screenToMapRatio * dungeonWidth);
+		else if (x >= (screenToMapRatioX * dungeonWidth) + centerX) {
+			tempX = x - (screenToMapRatioX * dungeonWidth);
 		}
 	
-		if(y > centerY && y < (screenToMapRatio * dungeonHeight) + centerY) {
+		if(y > centerY && y < (screenToMapRatioY * dungeonHeight) + centerY) {
 			tempY = centerY;
 		}
-		else if (y >= (screenToMapRatio * dungeonHeight) + centerY) {
-			tempY = y - (screenToMapRatio * dungeonHeight);
+		else if (y >= (screenToMapRatioY * dungeonHeight) + centerY) {
+			tempY = y - (screenToMapRatioY * dungeonHeight);
 		}
 	}
 	
@@ -256,7 +270,7 @@ window.addEventListener('load', () => {
 	var canvasCollision = document.getElementById("collisionMask");
 	var ctxCol = canvasCollision.getContext("2d");
 	
-	gm = new GameManager(ctx, ctxUI, ctxCol);
+	gm = new GameManager(ctx, ctxUI, ctxCol, canvas);
 	gm.start();
 
 });
