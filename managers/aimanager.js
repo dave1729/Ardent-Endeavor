@@ -10,6 +10,7 @@ function AIManager() {
 	this.pathFinder = new EasyStar.js();
 	this.pathFinder.disableDiagonals();
 	this.pathFinder.setAcceptableTiles([0]);
+	this.pathFinder.enableSync();
 	
 	this.tileMap = [[0,0,0],
 	                [0,0,0],
@@ -82,7 +83,7 @@ AIManager.prototype.updatePlayerPositions = function () {
  * 
  * @return {List} List of Move objects.
  */
-AIManager.prototype.runEnemyPhase = function (callback) {
+AIManager.prototype.runEnemyPhase = function (battle, callback) {
 	this.updatePlayerPositions();
 	this.pathFinder.setGrid(this.tileMap);
 //	for (var i = 0; i < this.tileMap.length; i++) {
@@ -103,7 +104,7 @@ AIManager.prototype.runEnemyPhase = function (callback) {
 		//this.tileMap[this.enemyList[e].y][this.enemyList[e].x] = 0;
 	}
 	console.log(moveList)
-	callback(moveList);
+	callback(battle, moveList);
 }
 
 /**
@@ -212,7 +213,7 @@ function Move(enemy, path, isAttacking, target) {
 	this.target = target;
 }
 
-Move.prototype.endPoint = () => {
+Move.prototype.endPoint = function () {
 	return this.path[this.path.length - 1];
 }
 

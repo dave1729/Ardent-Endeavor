@@ -35,6 +35,15 @@ EntityManager.prototype.addEntity = function (entity) {
 	);
 }
 
+EntityManager.prototype.removeEntityA = function (remove) {
+    this.entities.forEach((entity) => {
+        if(entity.x ===  remove.x && entity.y === remove.y)
+        {
+            entity.removeFromWorld = true;
+        }
+    })
+}
+
 EntityManager.prototype.removeEntity = function (id) {
     this.entities.forEach((entity) => {
         if(entity.entityID === id)

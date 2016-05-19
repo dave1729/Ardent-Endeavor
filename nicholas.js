@@ -137,6 +137,11 @@ PlayerUnit.prototype.draw = function (ctx)
     Unit.prototype.draw.call(this, ctx);
 }
 
+PlayerUnit.prototype.kill = function () 
+{
+    this.removeFromWorld = true;
+}
+
 PlayerUnit.prototype.deselect = function () {
     this.selected = false;
 }
