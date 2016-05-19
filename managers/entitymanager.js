@@ -35,6 +35,20 @@ EntityManager.prototype.addEntity = function (entity) {
 	);
 }
 
+EntityManager.prototype.removeEntityA = function (remove) {
+    this.entities.forEach((entity) => {
+        if(entity.x ===  remove.x && entity.y === remove.y)
+        {
+            entity.removeFromWorld = true;
+        }
+    })
+}
+
+EntityManager.prototype.removeImmediate = function (enemy)
+{
+    this.entities.slice(this.entities.indexOf(enemy), 1);
+}
+
 EntityManager.prototype.removeEntity = function (id) {
     this.entities.forEach((entity) => {
         if(entity.entityID === id)
@@ -45,10 +59,6 @@ EntityManager.prototype.removeEntity = function (id) {
 }
 
 EntityManager.prototype.update = function () {
-	//var entitiesCount = this.entities.length;
-	//console.log(this.entities);
-	//console.log(this.entities.length);
-	
 	
     for (var i = 0; i < this.entities.length; i++) {
         var entity = this.entities[i];
@@ -65,8 +75,11 @@ EntityManager.prototype.update = function () {
         	}
         }
     }
-    if (gm.bgCollision != null) {
-        gm.bgCollision.update();
+    if (!gm.bm.currentBattle)
+    {
+        if (gm.bgCollision != null) {
+            gm.bgCollision.update();
+        }
     }
 
     for (var i = this.entities.length - 1; i >= 0; --i) {
@@ -79,6 +92,14 @@ EntityManager.prototype.update = function () {
 }
 
 EntityManager.prototype.draw = function () {
+    gm.ctxCol.clearRect(0, 0, gm.surfaceWidth, gm.surfaceHeight);
+    if (!gm.bm.currentBattle)
+    {
+        if (gm.bgCollision != null)
+        {
+            gm.bgCollision.draw(gm.ctxCol);
+        }
+    }
 	gm.ctx.clearRect(0, 0, gm.surfaceWidth, gm.surfaceHeight);
     gm.ctx.save();
     for (var i = 0; i < this.entities.length; i++) {
@@ -95,11 +116,6 @@ EntityManager.prototype.draw = function () {
     	
     }
     gm.ctx.restore();
-    
-    gm.ctxCol.clearRect(0, 0, gm.surfaceWidth, gm.surfaceHeight);
-    if (gm.bgCollision != null) {
-    	gm.bgCollision.draw();
-    }
 }
 
 /* Removes all active entities (including map and player) from the game */
@@ -107,19 +123,39 @@ EntityManager.prototype.removeAllEntities = function () {
     this.entities.forEach((entity) => {
         entity.removeFromWorld = true;
     })
+    // console.log(this.tempEntities)
     this.update();
 }
 
 /* Creates a shallow copy of entities[] from game engine and stores in temp */
 EntityManager.prototype.cacheEntities = function () {
-	this.tempEntities = this.entities;
+    //Remove things marked for removable before caching
+    for (var i = this.entities.length - 1; i >= 0; --i) {
+        if (this.entities[i].removeFromWorld) {
+        	this.entities[i].removeFromWorld = false;
+            this.entities.splice(i, 1);
+            
+        }
+    }
+	this.tempEntities = _.cloneDeep(this.entities);
 }
 
 /* Restores the entities from cache */
 EntityManager.prototype.restoreEntities = function () {
-	this.entities = this.tempEntities;s
+	this.entities = _.cloneDeep(this.tempEntities);
+    //reset the references other places
+    this.entities.forEach((entity) =>
+    {
+        if(entity.entityID === 0) 
+            this.backgroundEntity = entity;
+        if (entity.entityID === 1)
+        {
+            gm.player = entity;
+            this.controlEntity = entity;
+        }
+    })
+    
 }
-
 /* Remove specific entity from active list. */
 EntityManager.prototype.removeEntity = function (entity) {
 	var index = this.entities.indexOf(entity);
