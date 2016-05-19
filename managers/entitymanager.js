@@ -152,9 +152,6 @@ EntityManager.prototype.restoreEntities = function () {
         {
             gm.player = entity;
             this.controlEntity = entity;
-            
-            // entity.x = entity.x + 100;
-            // entity.y = entity.y - 20;
         }
     })
     
