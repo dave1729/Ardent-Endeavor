@@ -2,7 +2,8 @@ const testingMode = false;
 const sqrtOneHalf = 0.70711;
 const dungeonWidth = 2048;
 const dungeonHeight = 1920;
-const screenToMapRatio = 0.75;
+const screenToMapRatioX= 0.75;
+const screenToMapRatioY= 0.75;
 
 function Animation(spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale) {
 	this.spriteSheet = spriteSheet;
@@ -163,18 +164,18 @@ Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
 		tempY = screenPoint.y;
 	}
 	else {//draw him all special and junk
-		if (x > centerX && x < (screenToMapRatio * dungeonWidth) + centerX) {
+		if (x > centerX && x < (screenToMapRatioX * dungeonWidth) + centerX) {
 			tempX = centerX;
 		}
-		else if (x >= (screenToMapRatio * dungeonWidth) + centerX) {
-			tempX = x - (screenToMapRatio * dungeonWidth);
+		else if (x >= (screenToMapRatioX * dungeonWidth) + centerX) {
+			tempX = x - (screenToMapRatioX * dungeonWidth);
 		}
 	
-		if(y > centerY && y < (screenToMapRatio * dungeonHeight) + centerY) {
+		if(y > centerY && y < (screenToMapRatioY * dungeonHeight) + centerY) {
 			tempY = centerY;
 		}
-		else if (y >= (screenToMapRatio * dungeonHeight) + centerY) {
-			tempY = y - (screenToMapRatio * dungeonHeight);
+		else if (y >= (screenToMapRatioY * dungeonHeight) + centerY) {
+			tempY = y - (screenToMapRatioY * dungeonHeight);
 		}
 	}
 	
