@@ -182,11 +182,7 @@ InputManager.prototype.start = function () {
         // console.log("Key Pressed Event - Char " + e.charCode + " Code " + e.keyCode);
     // }, false);
 // 
-<<<<<<< HEAD
-
 // this could be problematic....
-=======
->>>>>>> refs/remotes/origin/master
     this.currentgroup.ctx.canvas.addEventListener("keyup", function (e) {
 		for(var i = 0; i < that.currentgroup.input_list.length; i++) {
 			if(that.currentgroup.input_list[i].charCode === e.which) {
