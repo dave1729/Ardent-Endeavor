@@ -123,6 +123,7 @@ GameManager.prototype.startBattle = function (enemy) {
 	
 	// gm.em.addEntity(map.bgLayer);
 	// gm.em.addEntity(map.cLayer);
+	this.im.setAllFalse("Dungeon");
 	this.bm.startBattle({enemyType: enemy});
 	
 	// needs more logic to add battle assets
@@ -156,7 +157,7 @@ GameManager.prototype.closeGameMenu = function () {
 	this.gamePaused = false;
 	this.showUI = false;
 	this.im.changeCurrentGroupTo("Dungeon");
-	this.startInput(this.ctx);
+	this.startInput();
 	this.ui.showGameMenu = false;
 	document.getElementById("uiLayer").style.zIndex = "-1";
 }
