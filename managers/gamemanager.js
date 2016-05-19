@@ -62,7 +62,7 @@ GameManager.prototype.initialize = function (player, mapid, destx, desty) {
 	this.gamePaused = false;
 }
 
-GameManager.prototype.startInput = function (ctx) {
+GameManager.prototype.startInput = function () {
     console.log('Starting input');
     this.im.start();
     console.log('Input started');

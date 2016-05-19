@@ -106,6 +106,7 @@ Collidable_background.prototype.draw = function (ctx) {
 	//context.drawImage(img,sx,sy,swidth,sheight,x,y,width,height);
 	var width = Math.floor(dungeonWidth/4);
 	var heigth = Math.floor(dungeonHeight/4);
+	
 	ctx.drawImage(this.spritesheet, gm.cam.leftX, gm.cam.topY, gm.cam.width, gm.cam.height,
 			0, 0, gm.cam.width, gm.cam.height);
 };
@@ -126,7 +127,7 @@ Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
 	xindex = frame % this.sheetWidth;
 
 	//Choosing character sprite from sheet
-	if(entity.im.checkInput("up") && entity.im.checkInput("left")) {
+	if(gm.im.checkInput("up") && gm.im.checkInput("left")) {
 		yindex = 8;
 	}
 	else if(gm.im.checkInput("up") && gm.im.checkInput("right")) {
