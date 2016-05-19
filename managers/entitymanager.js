@@ -97,7 +97,7 @@ EntityManager.prototype.draw = function () {
     {
         if (gm.bgCollision != null)
         {
-            gm.bgCollision.draw(gm.ctx);
+            gm.bgCollision.draw(gm.ctxCol);
         }
     }
 	gm.ctx.clearRect(0, 0, gm.surfaceWidth, gm.surfaceHeight);
