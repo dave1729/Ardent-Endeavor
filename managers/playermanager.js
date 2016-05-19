@@ -11,7 +11,6 @@ function Player(spritesheet) {
 	this.speedX = 0;
 	this.speedY = 0;
 	this.im = gm.im;
-	this.layer = 4;
 	this.layer = 5;
 	this.entityID = 1;
 	this.ctx = gm.ctx;
