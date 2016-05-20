@@ -35,18 +35,32 @@ MapManager.prototype.initialize = function () {
     
     /* Map 2 - Temple */
     var map02 = new Map(gm, 2,
-		    new Background(gm, gm.am.getAsset("./img/temple.jpg")),
-		    new Background(gm, gm.am.getAsset("./img/collidable_background.png")),
-		    new Collidable_background(gm, gm.am.getAsset("./img/collidable_background.png"))
+		    new Background(gm, gm.am.getAsset("./img/Background_Layer2.png")),
+		    new Background(gm, gm.am.getAsset("./img/Foreground_Layer2.png")),
+		    new Collidable_background(gm, gm.am.getAsset("./img/Collision_Layer2.png"))
 	);
-	map02.addEntity(new MapTeleportEvent(gm, 400, 400, 50, 50, 1, 800, 800));
-	map02.addEntity(new MapTeleportEvent(gm, 700, 700, 50, 50, 1, 500, 500));
+	map02.addEntity(new MapTeleportEvent(gm, 400, 400, 50, 50, 3, 800, 800));
+	map02.addEntity(new MapTeleportEvent(gm, 700, 700, 50, 50, 3, 500, 500));
 	
 	map02.addEntity(new Green(gm, 64, 64));
     map02.addEntity(new Shark(gm, 64, 128));
     map02.addEntity(new Fire(gm, 64, 256));
     this.addMap(map02);
 	
+    
+    /* Map 2 - Temple */
+    var map03 = new Map(gm, 3,
+		    new Background(gm, gm.am.getAsset("./img/Background_Layer3.png")),
+		    new Background(gm, gm.am.getAsset("./img/Foreground_Layer3.png")),
+		    new Collidable_background(gm, gm.am.getAsset("./img/Collision_Layer3.png"))
+	);
+	map03.addEntity(new MapTeleportEvent(gm, 400, 400, 50, 50, 1, 800, 800));
+	map03.addEntity(new MapTeleportEvent(gm, 700, 700, 50, 50, 1, 500, 500));
+	
+	map03.addEntity(new Green(gm, 64, 64));
+    map03.addEntity(new Shark(gm, 64, 128));
+    map03.addEntity(new Fire(gm, 64, 256));
+    this.addMap(map03);
 	
 	return true;
 }

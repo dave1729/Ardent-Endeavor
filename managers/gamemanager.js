@@ -46,6 +46,12 @@ GameManager.prototype.queueAssets = function () {
     this.am.queueDownload("./img/Background_Layer.png");
     this.am.queueDownload("./img/Collision_Layer.png");
     this.am.queueDownload("./img/Foreground_Layer.png");
+    this.am.queueDownload("./img/Background_Layer2.png");
+    this.am.queueDownload("./img/Collision_Layer2.png");
+    this.am.queueDownload("./img/Foreground_Layer2.png");
+    this.am.queueDownload("./img/Background_Layer3.png");
+    this.am.queueDownload("./img/Collision_Layer3.png");
+    this.am.queueDownload("./img/Foreground_Layer3.png");
     this.am.queueDownload("./img/werewolf.png");
     this.am.queueDownload("./img/greenrage.png");
     this.am.queueDownload("./img/shark.png");
