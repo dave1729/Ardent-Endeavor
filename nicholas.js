@@ -27,8 +27,6 @@ function Unit(spec)
 {
     this.overworld = spec.overworld;
     this.animation = this.overworld.animation;
-    this.health = 100;
-    this.damage = 5;
     this.attackRange = 1;
     this.moveRange = 3;
     Entity.call(this, spec.x, spec.y);
@@ -102,15 +100,13 @@ Unit.prototype.calculateActionRadius = function (spec)
 function EnemyUnit(spec)
 {
     this.AIPackage = gm.ai.AIPackages.Berserker;
+    this.health = spec.health;
+    this.damage = spec.damage;
     Unit.call(this, spec);
 }
 
 EnemyUnit.prototype = Object.create(Unit.prototype);
 EnemyUnit.prototype.constructor = EnemyUnit;
-
-EnemyUnit.prototype.enemyPhase = function (params) {
-    //push this onto ai manager
-}
 
 function PlayerUnit(spec)
 {
@@ -119,6 +115,8 @@ function PlayerUnit(spec)
     this.selected = false;
     this.selectedAction = {move: false, attack: false}
     this.cursor = gm.bm.cursor;
+    this.health = spec.health;
+    this.damage = spec.damage;
     this.possibleMoves = [];
     this.possibleAttacks = [];
     Unit.call(this, spec);
@@ -174,97 +172,229 @@ PlayerUnit.prototype.isAvailable = function ()
     return false;
 }
 
-PlayerUnit.prototype.playerPhase = function ()
+PlayerUnit.prototype.moveSelected = function ()
 {
-    if (this.selected)
+    if (gm.showUI)
     {
-        // gm.openBattleMenu();
-       if(!this.moved)
-       {
-            this.possibleMoves = this.calculateActionRadius({
-                actionRange: this.moveRange,
-                offset: 0
-            });
-            if (gm.bm.cursor.getClick())
+        this.possibleMoves = this.calculateActionRadius({
+            actionRange: this.moveRange,
+            offset: 0
+        });
+        gm.closeBattleMenu();
+        this.cursor.visible = true;
+    }
+    let click = this.cursor.getClick();
+    if (click)
+    {
+        if (this.validAction(this.possibleMoves, {x: click.x, y: click.y}))               
+        {
+            if (!gm.bm.cursor.isCellOccupied())
             {
-                if (this.validAction(this.possibleMoves, {x: this.cursor.x, y: this.cursor.y}))               
-                {
-                    if (!gm.bm.cursor.isCellOccupied())
-                    {
-                        this.x = this.cursor.x;
-                        this.y = this.cursor.y;
-                        this.selected = true;
-                        this.cursor.selected = this;
-                        this.moved = true;
-                    }
-                    else
-                    {
-                        this.selected = false;
-                        this.cursor.selected = undefined;
-                    }
-                    gm.im.currentgroup.click = null;
-                }
-                else
-                {
-                    this.selected = false;
-                    this.cursor.selected = undefined;
-                    gm.im.currentgroup.click = null;
-                }
+                this.x = click.x;
+                this.y = click.y;
+                this.moved = true;
+                this.selectedAction.move = false;
+            }
+            else
+            {
+                this.selected = false;
+                this.cursor.selected = undefined;
+                this.selectedAction.move = false;
             }
         }
-        if (!this.attacked && this.moved)
+        else
         {
-            this.possibleAttacks = this.calculateActionRadius({
-                    actionRange: this.attackRange,
-                    offset: 0
-            });
-            if(gm.bm.cursor.getClick())
+            this.selected = false;
+            this.cursor.selected = undefined;
+            this.selectedAction.move = false;
+        }
+        this.possibleMoves = [];
+        gm.im.currentgroup.click = null;
+    }
+}
+
+PlayerUnit.prototype.attackSelected = function () 
+{
+    if (gm.showUI)
+    {
+        this.possibleAttacks = this.calculateActionRadius({
+            actionRange: this.attackRange,
+            offset: 0
+        });
+        gm.closeBattleMenu();
+        this.cursor.visible = true;
+    }
+    let click = this.cursor.getClick();
+    if(click)
+    {
+        let point = {x: click.x, y: click.y};
+
+        if(this.validAction(this.possibleAttacks, point))
+        {
+            let object = this.cursor.isCellOccupied();
+            console.log(object)
+            if(object && object.AIPackage)
             {
-                let point = {x: this.cursor.x, y: this.cursor.y};
-                
-                if(this.validAction(this.possibleAttacks, point))
-                {
-                    let object = this.cursor.isCellOccupied();
-                    
-                    if(object && object.health)
-                    {
-                        this.cursor.target = object;
-                    }
-                    else
-                    {
-                        this.selected = false;
-                        this.cursor.selected = undefined;
-                        
-                    }
-                }
-                else
-                {
-                    this.selected = false;
-                    this.cursor.selected = undefined;
-                    gm.im.currentgroup.click = undefined;
-                }
+                this.cursor.target = object;
+                this.selectedAction.attack = false;
             }
+            else
+            {
+                this.selected = false;
+                this.cursor.selected = undefined;
+                this.selectedAction.attack = false;
+            }
+        }
+        else
+        {
+            this.selected = false;
+            this.cursor.selected = undefined;
+            this.selectedAction.attack = false;
+            gm.im.currentgroup.click = undefined;
         }
     }
-    else if(gm.bm.cursor.getClick())
+}
+
+PlayerUnit.prototype.playerPhase = function () {     
+    if (this.selected)
     {
-        //  console.log("we are on top")
-        if (!this.attacked || !this.moved)
+        if (this.selectedAction.move || this.selectedAction.attack)
         {
-            if (this.cursor.getClick().x === this.x && this.cursor.getClick().y === this.y)
+            if (!this.moved)
             {
-                // console.log("I clicked you")
-                if (!this.cursor.selected)
+                if (this.selectedAction.move)
                 {
-                    // console.log("your selected")
+                    this.moveSelected();
+                }
+            }
+            if (!this.attacked)
+            {
+                if (this.selectedAction.attack)
+                {
+                    this.attackSelected();
+                }
+            }
+        }
+        else if (!gm.showUI)
+        {
+            gm.openBattleMenu(50, 50);
+            this.cursor.visible = false;
+        }       
+    }
+    else if (!this.cursor.selected)
+    {
+        let click = this.cursor.getClick();
+        if(click)
+        {
+            if (!this.attacked || !this.moved)
+            {
+                if (click.x === this.x && click.y === this.y)
+                {
+                    console.log("your selected")
                     this.selected = true;
                     this.cursor.selected = this;
+                    gm.im.currentgroup.click = null;
                 }
-                gm.im.currentgroup.click = null;
             }
         }
     }
 }
+
+// PlayerUnit.prototype.playerPhaseOLD = function ()
+// {
+//     if (this.selected)
+//     {
+//        if (!gm.showUI)
+//        {
+//             gm.openBattleMenu(0, 0);
+//        }
+       
+//        if(!this.moved)
+//        {
+//             this.possibleMoves = this.calculateActionRadius({
+//                 actionRange: this.moveRange,
+//                 offset: 0
+//             });
+//             if (gm.bm.cursor.getClick())
+//             {
+//                 if (this.validAction(this.possibleMoves, {x: this.cursor.x, y: this.cursor.y}))               
+//                 {
+//                     if (!gm.bm.cursor.isCellOccupied())
+//                     {
+//                         this.x = this.cursor.x;
+//                         this.y = this.cursor.y;
+//                         this.selected = true;
+//                         this.cursor.selected = this;
+//                         this.moved = true;
+//                     }
+//                     else
+//                     {
+//                         this.selected = false;
+//                         this.cursor.selected = undefined;
+//                     }
+//                     gm.im.currentgroup.click = null;
+//                 }
+//                 else
+//                 {
+//                     this.selected = false;
+//                     this.cursor.selected = undefined;
+//                     gm.im.currentgroup.click = null;
+//                 }
+//             }
+//         }
+//         if (!this.attacked && this.moved)
+//         {
+//             this.possibleAttacks = this.calculateActionRadius({
+//                     actionRange: this.attackRange,
+//                     offset: 0
+//             });
+//             if(gm.bm.cursor.getClick())
+//             {
+//                 let point = {x: this.cursor.x, y: this.cursor.y};
+                
+//                 if(this.validAction(this.possibleAttacks, point))
+//                 {
+//                     let object = this.cursor.isCellOccupied();
+                    
+//                     if(object && object.health)
+//                     {
+//                         this.cursor.target = object;
+//                     }
+//                     else
+//                     {
+//                         this.selected = false;
+//                         this.cursor.selected = undefined;
+                        
+//                     }
+//                 }
+//                 else
+//                 {
+//                     this.selected = false;
+//                     this.cursor.selected = undefined;
+//                     gm.im.currentgroup.click = undefined;
+//                 }
+//             }
+//         }
+//     }
+//     else if(gm.bm.cursor.getClick())
+//     {
+//         //  console.log("we are on top")
+//         if (!this.attacked || !this.moved)
+//         {
+//             if (this.cursor.getClick().x === this.x && this.cursor.getClick().y === this.y)
+//             {
+//                 // console.log("I clicked you")
+//                 if (!this.cursor.selected)
+//                 {
+//                     // console.log("your selected")
+//                     this.selected = true;
+//                     this.cursor.selected = this;
+//                 }
+//                 gm.im.currentgroup.click = null;
+//             }
+//         }
+//     }
+// }
 
 // Blue.prototype.update = function () 
 // {
