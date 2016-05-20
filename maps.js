@@ -20,8 +20,7 @@ MapManager.prototype.initialize = function () {
 		    new Background(gm, gm.am.getAsset("./img/Foreground_Layer.png")),
 		    new Collidable_background(gm, gm.am.getAsset("./img/Collision_Layer.png"))
 	);
-	map01.addEntity(new MapTeleportEvent(gm, 400, 400, 50, 50, 2, 800, 800));
-	map01.addEntity(new MapTeleportEvent(gm, 700, 700, 50, 50, 2, 500, 500));
+	map01.addEntity(new MapTeleportEvent(gm, 1984, 1728, 50, 50, 2, 512, 384));
 	
 	map01.addEntity(new Green(gm, 64, 64));
     map01.addEntity(new Shark(gm, 64, 128));
@@ -39,8 +38,7 @@ MapManager.prototype.initialize = function () {
 		    new Background(gm, gm.am.getAsset("./img/Foreground_Layer2.png")),
 		    new Collidable_background(gm, gm.am.getAsset("./img/Collision_Layer2.png"))
 	);
-	map02.addEntity(new MapTeleportEvent(gm, 400, 400, 50, 50, 3, 800, 800));
-	map02.addEntity(new MapTeleportEvent(gm, 700, 700, 50, 50, 3, 500, 500));
+	map02.addEntity(new MapTeleportEvent(gm, 1984, 1472, 50, 50, 3, 960, 1664));
 	
 	map02.addEntity(new Green(gm, 64, 64));
     map02.addEntity(new Shark(gm, 64, 128));
@@ -54,8 +52,7 @@ MapManager.prototype.initialize = function () {
 		    new Background(gm, gm.am.getAsset("./img/Foreground_Layer3.png")),
 		    new Collidable_background(gm, gm.am.getAsset("./img/Collision_Layer3.png"))
 	);
-	map03.addEntity(new MapTeleportEvent(gm, 400, 400, 50, 50, 1, 800, 800));
-	map03.addEntity(new MapTeleportEvent(gm, 700, 700, 50, 50, 1, 500, 500));
+	map03.addEntity(new MapTeleportEvent(gm, 128, 256, 50, 50, 1, 800, 800));
 	
 	map03.addEntity(new Green(gm, 64, 64));
     map03.addEntity(new Shark(gm, 64, 128));
