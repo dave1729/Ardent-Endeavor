@@ -164,12 +164,11 @@ GameManager.prototype.closeGameMenu = function () {
 
 /* Opens the game menu, switching canvas focus and keybinds */
 GameManager.prototype.openBattleMenu = function (x, y) {
-	x ? x : 200;
-	y ? y : 200;
+	//console.log(gm.im.currentgroup);
 	this.gamePaused = false;
 	this.showUI = true;
 	this.im.changeCurrentGroupTo("ui");
-	this.startInput(this.ctxUI);
+	this.startInput();
 	this.ui.battleMenu.moveMenu(x, y);
 	this.ui.showBattleMenu = true;
 	// need to disable previous keys (maybe).
@@ -179,7 +178,7 @@ GameManager.prototype.openBattleMenu = function (x, y) {
 GameManager.prototype.closeBattleMenu = function () {
 	this.gamePaused = false;
 	this.showUI = false;
-	this.im.changeCurrentGroupTo("Dungeon");
+	this.im.changeCurrentGroupTo("battle");
 	this.startInput();
 	this.ui.showBattleMenu = false;
 	document.getElementById("uiLayer").style.zIndex = "-1";
