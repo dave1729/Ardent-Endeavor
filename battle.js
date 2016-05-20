@@ -286,16 +286,23 @@ Battle.prototype.setupPhase = function () {
 Battle.prototype.resolveFight = function () {
     let attacker = gm.bm.cursor.selected;
     let defender = gm.bm.cursor.target;
-    if (defender.selected === undefined)
+    console.log(defender.health)
+    defender.health = defender.health - attacker.damage;
+
+    console.log(attacker.damage)
+    if (defender.health <= 0)
     {
-        this.enemyUnits.splice(this.enemyUnits.indexOf(defender), 1);
-    }
-    else
-    {
-        this.playerUnits.splice(this.playerUnits.indexOf(defender), 1);
+        if (defender.AIPackage)
+        {
+            this.enemyUnits.splice(this.enemyUnits.indexOf(defender), 1);
+        }
+        else
+        {
+            this.playerUnits.splice(this.playerUnits.indexOf(defender), 1);
+        }
+        gm.bm.cursor.target.removeFromWorld = true;
     }
     attacker.attacked = true;
-    gm.bm.cursor.target.removeFromWorld = true;
     gm.bm.cursor.target = undefined;
 }
 
@@ -353,10 +360,11 @@ Battle.prototype.enemyPhaseTest = function (enemyMoves)
         move.enemy.y = dest.y;
         if(move.isAttacking)
         {
-            let unit = this.playerUnits.splice(this.playerUnits.indexOf(move.target), 1)[0];
-            if (unit)
+            move.target.health = move.target.health - move.enemy.damage;
+            if (move.target.health <= 0)
             {
-                unit.removeFromWorld = true;
+                this.playerUnits.splice(this.playerUnits.indexOf(move.target), 1);
+                move.target.removeFromWorld = true;
             }
         }
     })
@@ -385,7 +393,7 @@ Battle.prototype.resetPUnitActions = function () {
 }
 
 Battle.prototype.spawnPlayer = function (params) {
-    let spawn = new PlayerUnit({x: gm.bm.cursor.x, y :gm.bm.cursor.y});
+    let spawn = new PlayerUnit({x: gm.bm.cursor.x, y :gm.bm.cursor.y, health: 100, damage: 10});
     gm.em.addEntity(spawn);
     this.availableUnits.push(spawn);
     this.playerUnits.push(spawn);
@@ -413,9 +421,11 @@ Battle.prototype.disableInput = function () {
 
 Battle.prototype.spawnEnemies = function () {
     var loc = positionMaker(1, 6);
-    this.spawnEnemy(loc);
-    this.spawnEnemy(loc);
-    this.spawnEnemy(loc);
+    var h = positionMaker(0, 30)
+    var d = positionMaker(0, 20)
+    this.spawnEnemy(loc, h, d);
+    this.spawnEnemy(loc, h, d);
+    this.spawnEnemy(loc, h, d);
             
 }
 function* positionMaker(min, max)
@@ -430,12 +440,12 @@ function* idMaker(min, max)
     yield Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-Battle.prototype.spawnEnemy = function (loc) {
+Battle.prototype.spawnEnemy = function (loc, h, d) {
     let point = {x: loc.next().value, y: loc.next().value}
     
     if(!gm.bm.cursor.isCellOccupied(point))
     {
-        let spawn = new EnemyUnit({x: point.x, y: point.y, overworld: this.enemyType});
+        let spawn = new EnemyUnit({x: point.x, y: point.y, overworld: this.enemyType, health: h.next().value, damage: d.next().value});
         gm.em.addEntity(spawn);
         this.enemyUnits.push(spawn);
     }
