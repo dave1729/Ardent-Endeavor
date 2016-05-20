@@ -191,6 +191,7 @@ Cursor.prototype.getClick = function () {
     let p = gm.im.getClick()
     if(p)
     {
+        gm.im.currentgroup.click = undefined;
         return this.screenToTile(p)
     }
     return p;
@@ -200,6 +201,7 @@ Cursor.prototype.getRClick = function () {
     let p = gm.im.getRClick()
     if(p)
     {
+        
         return this.screenToTile(p)
     }
     return p;
@@ -262,19 +264,15 @@ Battle.prototype.update = function ()
 
 Battle.prototype.setupPhase = function () {
     gm.bm.cursor.good = true;
-    if(gm.im.getClick())
+    let click = gm.bm.cursor.getClick();
+    if(click)
     {
         if(!gm.bm.cursor.isCellOccupied())
         {
-            if (this.validPlacement(gm.bm.cursor.x, gm.bm.cursor.y))
+            if (this.validPlacement(click.x, click.y))
             {
                 this.spawnPlayer();
-                gm.im.currentgroup.click = null;
             }
-        }
-        else
-        {
-            gm.im.currentgroup.click = null;
         }
     }
     if(this.maxPlayers === 0)

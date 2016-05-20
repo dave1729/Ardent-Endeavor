@@ -228,6 +228,7 @@ GameMenu.prototype.getBattleMenuButtons = function () {
 			this.BUTTON_HEIGHT,
 			openItems = function () {
 				console.log("Run Attack");
+				gm.bm.cursor.selected.selectedAction.attack = true;
 				//gm.ui.battleMenu.moveMenu(300, 300);
 			}));
 	buttons.push(new Button(this, this.ctx, "Move",
@@ -237,6 +238,8 @@ GameMenu.prototype.getBattleMenuButtons = function () {
 			this.BUTTON_HEIGHT,
 			openMagic = function () {
 				console.log("Run Move");
+				
+				gm.bm.cursor.selected.selectedAction.move = true;
 			}));
 	buttons.push(new Button(this, this.ctx, "Tech",
 			this.x + this.VERT_PADDING,

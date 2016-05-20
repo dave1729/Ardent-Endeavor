@@ -174,11 +174,136 @@ PlayerUnit.prototype.isAvailable = function ()
     return false;
 }
 
-PlayerUnit.prototype.playerPhase = function ()
+PlayerUnit.prototype.moveSelected = function ()
+{
+    if (gm.showUI)
+    {
+        this.possibleMoves = this.calculateActionRadius({
+            actionRange: this.moveRange,
+            offset: 0
+        });
+        gm.closeBattleMenu();
+        this.cursor.visible = true;
+    }
+    let click = this.cursor.getClick();
+    if (click)
+    {
+        if (this.validAction(this.possibleMoves, {x: click.x, y: click.y}))               
+        {
+            if (!gm.bm.cursor.isCellOccupied())
+            {
+                this.x = click.x;
+                this.y = click.y;
+                this.moved = true;
+                this.selectedAction.move = false;
+            }
+            else
+            {
+                this.selected = false;
+                this.cursor.selected = undefined;
+                this.selectedAction.move = false;
+            }
+        }
+        else
+        {
+            this.selected = false;
+            this.cursor.selected = undefined;
+            this.selectedAction.move = false;
+        }
+        this.possibleMoves = [];
+        gm.im.currentgroup.click = null;
+    }
+}
+
+PlayerUnit.prototype.attackSelected = function () 
+{
+    let click = this.cursor.getClick();
+    this.possibleAttacks = this.calculateActionRadius({
+        actionRange: this.attackRange,
+        offset: 0
+    });
+    if(click)
+    {
+        let point = {x: this.cursor.x, y: this.cursor.y};
+
+        if(this.validAction(this.possibleAttacks, point))
+        {
+            let object = this.cursor.isCellOccupied();
+            
+            if(object && object.ai)
+            {
+                this.cursor.target = object;
+            }
+            else
+            {
+                this.selected = false;
+                this.cursor.selected = undefined;
+            }
+        }
+        else
+        {
+            this.selected = false;
+            this.cursor.selected = undefined;
+            gm.im.currentgroup.click = undefined;
+        }
+    }
+}
+
+PlayerUnit.prototype.playerPhase = function () {     
+    if (this.selected)
+    {
+        if (this.selectedAction.move || this.selectedAction.attack)
+        {
+            if (!this.moved)
+            {
+                if (this.selectedAction.move)
+                {
+                    this.moveSelected();
+                }
+            }
+            if (!this.attacked)
+            {
+                if (this.selectedAction.attack)
+                {
+                    this.attackSelected();
+                }
+            }
+        }
+        else if (!gm.showUI)
+        {
+            gm.openBattleMenu(0, 0);
+            this.cursor.visible = false;
+        }       
+    }
+    else if (!this.cursor.selected)
+    {
+        let click = this.cursor.getClick();
+        if(click)
+        {
+            console.log("here123")
+            if (!this.attacked || !this.moved)
+            {
+                if (click.x === this.x && click.y === this.y)
+                {
+                    console.log("your selected")
+                    this.selected = true;
+                    this.cursor.selected = this;
+                    gm.im.currentgroup.click = null;
+                }
+            }
+        }
+    }
+}
+
+PlayerUnit.prototype.playerPhaseOLD = function ()
 {
     if (this.selected)
     {
-        // gm.openBattleMenu();
+       if (!gm.showUI)
+       {
+            gm.openBattleMenu(0, 0);
+       }
+       
        if(!this.moved)
        {
             this.possibleMoves = this.calculateActionRadius({
