@@ -53,16 +53,17 @@ Camera.prototype.update = function() {
 		if(this.currentEntity.spriteSquareSize === null) alert("Camera Follow Entity doesn't have field spriteSquareSize!");
 		
 		//dungeon/8 = half a visible screen, 0.5 = character scale ratio
-		var newX = Math.floor(this.currentEntity.x - Math.floor(dungeonWidth/8  - (this.currentEntity.spriteSquareSize / 2)));
-		var newY = Math.floor(this.currentEntity.y - Math.floor(dungeonHeight/8 - (this.currentEntity.spriteSquareSize / 2)));
+		var newX = Math.floor(this.currentEntity.x - Math.floor(gm.canvas.width/2  - (this.currentEntity.spriteSquareSize / 2)));
+		var newY = Math.floor(this.currentEntity.y - Math.floor(gm.canvas.height/2 - (this.currentEntity.spriteSquareSize / 2)));
 		//alert(dungeonHeight + " " + this.currentEntity.spriteSquareSize / 2)));
+		
 		//dungeonWidth/4 one visible screen width
-		if(newX >= 0 && newX <= (dungeonWidth - dungeonWidth/4)) {
+		if(newX >= 0 && newX <= (dungeonWidth - gm.canvas.width)) {
 			this.leftX = Math.floor(newX);
 			this.rightX = Math.floor(newX + this.width);
 		}
 		
-		if(newY >= 0 && newY <= (dungeonHeight - dungeonHeight/4) ) {
+		if(newY >= 0 && newY <= (dungeonHeight - gm.canvas.height) ) {
 			this.topY = Math.floor(newY);
 			this.bottomY = Math.floor(newY + this.height);
 		}
