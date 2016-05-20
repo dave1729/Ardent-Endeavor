@@ -5,39 +5,55 @@ function Player(spritesheet) {
 	this.scale = 1;
 	//Animation: spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale
 	this.animation = new Animation(spritesheet, this.spriteSquareSize, this.spriteSquareSize, 9, 0.1, 32, true, this.scale);
-	this.x = 235;
-	this.y = 215;
 	this.regSpeed = 325;
 	this.speedX = 0;
 	this.speedY = 0;
-	this.im = gm.im;
-	this.layer = 4;
+	this.layer = 5;
 	this.entityID = 1;
 	this.ctx = gm.ctx;
 	this.controls();
-	this.interactRange = 2;
+	this.interactRange = 5;
+	
 	// When changing the hitbox, also change x and y shift in draw collision box
 	this.hitBox = new CollisionBox(this, 18, 34, this.spriteSquareSize-36, this.spriteSquareSize-36);
+	this.controls();
+	Entity.call(this, 235, 215);
 }
+
+// Player.prototype = Object.create(Entity.prototype);
+// Player.prototype.constructor = Player;
 
 Player.prototype.controls = function () {
 	//starting controls
-	this.im.addInput(new Input("up", 'w'));
-    this.im.addInput(new Input("down", 's'));
-    this.im.addInput(new Input("left", 'a'));
-    this.im.addInput(new Input("right", 'd'));
-    this.im.addInput(new Input("menu", 'i'));
-
-    //turns player follow on and off with 't'
-	this.im.addInput(new Input("screentest", 't'));
+	gm.im.addInput(new Input("up", 'w'));
+    gm.im.addInput(new Input("down", 's'));
+    gm.im.addInput(new Input("left", 'a'));
+    gm.im.addInput(new Input("right", 'd'));
+    gm.im.addInput(new Input("menu", 'i'));
+    gm.im.addInput(new Input("interact", 'e'));
 	
-    this.im.addInput(new Input("interact", 'e'));
+    //turns player follow on and off with 't'
+	gm.im.addInput(new Input("screentest", 't'));
+	
+    gm.im.addInput(new Input("interact", 'e'));
     
     //start with camera following Player
     gm.cam.follow(this);
 }
 
 Player.prototype.entityCollisionCheck = function (startX, startY) {
+	var rectMain = {x: this.hitBox.getX(), y: this.hitBox.getY(), width: this.hitBox.width, height: this.hitBox.height}
+	
+	gm.checkMapCollision({x: this.hitBox.getScreenX(), y: this.hitBox.getScreenY(), width: this.hitBox.width, height: this.hitBox.height}, checkCollisionData);
+	
+	function checkCollisionData(wasCollision, pixelPoint, imageData) {
+		if (wasCollision) {
+			// NOTE: Collision needs to be refined so diagonal movement can be done.
+			gm.player.x = startX;
+			gm.player.y = startY;
+		}
+	}
+	
 	var rectMain = {x: this.hitBox.getX(), y: this.hitBox.getY(), width: this.hitBox.width, height: this.hitBox.height}
 	//console.log(rectMain);
 	var i;
@@ -83,8 +99,8 @@ Player.prototype.interactFind = function () {
 	}
 }
 
-Player.prototype.draw = function () {
-	this.animation.drawPlayer(gm.clockTick, this.ctx, this.x, this.y, this);
+Player.prototype.draw = function (ctx) {
+	this.animation.drawPlayer(gm.clockTick, ctx, this.x, this.y, this);
 }
 
 Player.prototype.update = function () {
@@ -92,45 +108,44 @@ Player.prototype.update = function () {
 		var currentAdjust = gm.clockTick * this.speed;
 		var startX = this.x;
 		var startY = this.y;
-
-		if (this.im.checkInput("menu")) {
+		if (gm.im.checkInput("menu")) {
 			gm.openGameMenu();
 			gm.im.currentgroup.input_list[4].isPressed = false;
 		}
-		else if (this.im.checkInput("interact")) {
+		else if (gm.im.checkInput("interact")) {
 			this.interactFind();
 		}
-		else if(this.im.checkInput("up") && this.im.checkInput("left")) {
+		else if(gm.im.checkInput("up") && gm.im.checkInput("left")) {
 			this.speedY = -1 * this.regSpeed * sqrtOneHalf;
 			this.speedX = -1 * this.regSpeed * sqrtOneHalf;
 		}
-		else if(this.im.checkInput("up") && this.im.checkInput("right")) {
+		else if(gm.im.checkInput("up") && gm.im.checkInput("right")) {
 			this.speedY = -1 * this.regSpeed * sqrtOneHalf;
 			this.speedX = this.regSpeed * sqrtOneHalf;
 		}
-		else if(this.im.checkInput("down") && this.im.checkInput("left")) {
+		else if(gm.im.checkInput("down") && gm.im.checkInput("left")) {
 			this.speedY = this.regSpeed * sqrtOneHalf;
 			this.speedX = -1 * this.regSpeed * sqrtOneHalf;
 		}
-		else if(this.im.checkInput("down") && this.im.checkInput("right")) {
+		else if(gm.im.checkInput("down") && gm.im.checkInput("right")) {
 			this.speedY = this.regSpeed * sqrtOneHalf;
 			this.speedX = this.regSpeed * sqrtOneHalf;
 		}
-		if(this.im.checkInput("up")) {
+		else if(gm.im.checkInput("up")) {
 			this.speedY = -1 * this.regSpeed;
 		}
-		else if(this.im.checkInput("down")) {
+		else if(gm.im.checkInput("down")) {
 			this.speedY = this.regSpeed;
 		}
-		else if(this.im.checkInput("left")) {
+		else if(gm.im.checkInput("left")) {
 			this.speedX = -1 * this.regSpeed;
 		}
-		else if(this.im.checkInput("right")) {
+		else if(gm.im.checkInput("right")) {
 			this.speedX = this.regSpeed;
 		}
 		
 		//screen test allows to switch between following player and not with 't'
-		if(this.im.checkInput("screentest") && gm.cam.currentEntity === this) {
+		if(gm.im.checkInput("screentest") && gm.cam.currentEntity === this) {
 			gm.im.setFalse("screentest");
 			gm.cam.stopFollow();
 			var sx = prompt("Where should the screen X go?", "0");
@@ -138,7 +153,7 @@ Player.prototype.update = function () {
 			gm.cam.jumpToByCorner(sx, sy);
 		}
 		//if he's not being followed ask the user where to put the screen
-		else if(this.im.checkInput("screentest")) {
+		else if(gm.im.checkInput("screentest")) {
 			gm.im.setFalse("screentest");
 			gm.cam.follow(this);
 		}
@@ -148,13 +163,12 @@ Player.prototype.update = function () {
 //			this.speedX = 0;
 //			this.speedY = 0;
 //		}
-		if(!(this.im.checkInput("up") || this.im.checkInput("down"))) {
+		if(!(gm.im.checkInput("up") || gm.im.checkInput("down"))) {
 				this.speedY = 0;
 		}
-		if(!(this.im.checkInput("left") || this.im.checkInput("right"))) {
+		if(!(gm.im.checkInput("left") || gm.im.checkInput("right"))) {
 				this.speedX = 0;
 		}
-
 		var newX = this.x + gm.clockTick * this.speedX;
 		var newY = this.y + gm.clockTick * this.speedY;
 
@@ -169,5 +183,5 @@ Player.prototype.update = function () {
 		// COLLISION
 		this.entityCollisionCheck(startX, startY);
 	}
-	Entity.prototype.update.call(this);
+	// Entity.prototype.update.call(this);
 }

@@ -8,6 +8,7 @@ function Enemy(game, x, y) {
 	this.game = game;
 	this.x = x;
 	this.y = y;
+	this.overWorldSpeed = 1;
 }
 
 Enemy.prototype = new Event();
@@ -16,6 +17,14 @@ Enemy.prototype.constructor = Enemy;
 Enemy.prototype.update = function () {
 //	this.screenX = this.x - gm.em.backgroundEntity.x;
 //	this.screenY = this.y - gm.em.backgroundEntity.y;
+	var deltaX = gm.player.hitBox.getScreenX() - this.hitBox.getScreenX();
+	var deltaY = gm.player.hitBox.getScreenY() - this.hitBox.getScreenY();
+	if (Math.abs(deltaX) < 4*TILE_SIZE && Math.abs(deltaY) < 4*TILE_SIZE) {
+		var angle = Math.atan2(deltaY, deltaX);
+		this.x += this.overWorldSpeed * Math.cos(angle);
+		this.y += this.overWorldSpeed * Math.sin(angle);
+	}
+	
 	Event.prototype.update.call(this);
 }
 
@@ -32,7 +41,8 @@ Enemy.prototype.draw = function () {
 Enemy.prototype.collisionTrigger = function (player) {
 	console.log("Enemy Collision: " + this.constructor.name);
 	// Put logic here for transition to battle scene.
-	//gm.startBattle(this);
+	this.removeFromWorld = true;
+	gm.startBattle(this);
 }
 
 

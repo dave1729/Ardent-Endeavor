@@ -12,7 +12,7 @@ function InputManager(firstGroupName) {
 //Adds a new group and switches to it right stat now
 //addGroup(String)
 InputManager.prototype.addGroup = function(newGroupName, ctx) {
-	this.currentgroup = new InputGroup(newGroupName);
+	this.currentgroup = new InputGroup(newGroupName, ctx);
 	this.inputgroup_list.push(this.currentgroup);
 }
 
@@ -135,10 +135,6 @@ InputManager.prototype.start = function () {
     var getXandY = function (e) {
         var x = e.clientX - gm.ctx.canvas.getBoundingClientRect().left;
         var y = e.clientY - gm.ctx.canvas.getBoundingClientRect().top;
-        if (x < 2048) {
-            x = Math.floor(x / TILE_SIZE);
-            y = Math.floor(y / TILE_SIZE);
-        }
         return { x: x, y: y };
     }
 
@@ -149,8 +145,7 @@ InputManager.prototype.start = function () {
 			that.currentgroup.click = getXandY(e);
 		}
     }, false);
-    
-
+	
     this.currentgroup.ctx.canvas.addEventListener("contextmenu", function (e) {
         if(that.currentgroup.isUsingMouse) {
 			that.currentgroup.rClick = getXandY(e);
@@ -159,6 +154,7 @@ InputManager.prototype.start = function () {
         // console.log("Right Click Event - X,Y " + e.clientX + ", " + e.clientY);
         e.preventDefault();
     }, false);
+	
     this.currentgroup.ctx.canvas.addEventListener("mousemove", function (e) {
         //console.log(e);
         if(that.currentgroup.isUsingMouse) {
@@ -186,6 +182,7 @@ InputManager.prototype.start = function () {
         // console.log("Key Pressed Event - Char " + e.charCode + " Code " + e.keyCode);
     // }, false);
 // 
+// this could be problematic....
     this.currentgroup.ctx.canvas.addEventListener("keyup", function (e) {
 		for(var i = 0; i < that.currentgroup.input_list.length; i++) {
 			if(that.currentgroup.input_list[i].charCode === e.which) {
@@ -204,9 +201,9 @@ function InputGroup(theName, ctx) {
 	this.ctx = ctx;
     this.input_list = [];
     this.isUsingMouse = false;
-    this.click = null;
-    this.rclick = null;
-    this.mouse = null;
+    this.click = undefined;
+    this.rclick = undefined;
+    this.mouse = undefined;
 }
 
 //adds a new input to the input group
