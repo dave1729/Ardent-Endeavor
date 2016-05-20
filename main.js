@@ -159,37 +159,14 @@ Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
 	var centerX = Math.floor(gm.canvas.width/2  - (64 / 2));
 	var centerY = Math.floor(gm.canvas.height/2 - (64 / 2));
 
-	
-	//If he's not being followed by the camera, just draw him like everyone else is drawn.
-	if(gm.cam.currentEntity !== entity) {
-		var screenPoint = gm.cam.getMyScreenXandY(entity.x, entity.y);
-		tempX = screenPoint.x;
-		tempY = screenPoint.y;
-	}
-	else {//draw him all special and junk
-		if (x > centerX && x < (screenToMapRatioX * dungeonWidth) + centerX) {
-			tempX = centerX;
-		}
-		else if (x >= (screenToMapRatioX * dungeonWidth) + centerX) {
-			tempX = x - (screenToMapRatioX * dungeonWidth);
-		}
-	
-		if(y > centerY && y < (screenToMapRatioY * dungeonHeight) + centerY) {
-			tempY = centerY;
-		}
-		else if (y >= (screenToMapRatioY * dungeonHeight) + centerY) {
-			tempY = y - (screenToMapRatioY * dungeonHeight);
-		}
-	}
+	var screenPoint = gm.cam.getMyScreenXandY(entity.x, entity.y);
 	
 	ctx.drawImage(this.spriteSheet,
 			xindex * this.frameWidth, yindex * this.frameHeight,  // source from sheet
 			this.frameWidth, this.frameHeight,
-			tempX, tempY,
+			screenPoint.x, screenPoint.y,
 			this.frameWidth * this.scale,
 			this.frameHeight * this.scale);
-
-	//this.animation.drawPlayer(this.game.clockTick, this.ctx, this.x, this.y, this);
 
 	// Collision Box
 	if (gm.hitBoxVisible) {
@@ -197,52 +174,7 @@ Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
 	    ctx.strokeRect(0 + entity.hitBox.getScreenX() , 0 + entity.hitBox.getScreenY(),
 	    				entity.hitBox.width, entity.hitBox.height);
 	}
-	
-	//ctx.strokeStyle = "yellow";
-	//ctx.strokeRect(tempX, tempY, 64, 64);
 }
-
-
-
-
-
-// function initGame(ctx, AM){
-
-// }
-
-// AM.downloadAll(function () {
-
-// 	var ctx = canvas.getContext("2d");
-// 	let gm = Object.create(GameManager.prototype);
-// 	gm.update();
-// 	// var gameEngine = new GameEngine();
-// 	// gameEngine.init(ctx, AM, gameEngine);
-// 	// gameEngine.start();
-	
-// 	// gameEngine.sm.startBattle();
-
-// 	// gameEngine.sm.initialize(new Player(gameEngine, AM.getAsset("./img/player.png")),
-// 	// 		1, 900, 900);
-
-// //	var background = new Background(gameEngine, AM.getAsset("./img/GrassOnlyBackground.png"));
-// //	var cursor = new Cursor(gameEngine);
-// //	gameEngine.addEntity(background);
-// //	gameEngine.addEntity(new Battle(gameEngine, cursor))
-// //	gameEngine.addEntity(new Grid(gameEngine, background))
-// //	gameEngine.addEntity(cursor)
-
-// //	gameEngine.addEntity(new Player(gameEngine, AM.getAsset("./img/player.png")));
-// //	gameEngine.addEntity(new Collidable_background(gameEngine, AM.getAsset("./img/collidable_background.png")));
-// //	gameEngine.addEntity(new Werewolf(gameEngine, AM.getAsset("./img/werewolf.png")));
-
-// //	gameEngine.addEntity(new MapTeleportEvent(gameEngine, 1, 400, 400, 50, 50, 1, 800, 800));
-// //	gameEngine.addEntity(new MapTeleportEvent(gameEngine, 1, 400, 100, 50, 50, 1, 100, 100));
-// //	gameEngine.addEntity(new Enemy(gameEngine, 1, 64, 64, 64, 64, AM.getAsset("./img/greenrage.png")));
-// //	gameEngine.addEntity(new Enemy2(gameEngine, 1, 64, 128, 64, 64, AM.getAsset("./img/shark.png")));
-// //	gameEngine.addEntity(new Enemy3(gameEngine, 1, 64, 256, 64, 64, AM.getAsset("./img/alienfirebird.png")));
-
-// 	console.log("All Done!");
-// });
 var gm = gm || {};
 window.addEventListener('load', () => {
 	var canvas = document.getElementById("gameWorld");
