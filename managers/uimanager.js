@@ -111,11 +111,15 @@ GameMenu.prototype.update = function () {
 	}
 	
 	if (this.adaptiveMenu) {
-		if (gm.im.checkMouse() && gm.im.getClick() != null) {
-	    	if (gm.im.getMouse().x < this.x && 
-					gm.im.currentgroup.mouse.y < this.y &&
-					gm.im.currentgroup.mouse.x > this.x + this.MENU_WIDTH &&
-					gm.im.currentgroup.mouse.y > this.y + (this.BUTTON_HEIGHT * this.buttons.length + this.TOP_BOT_PADDING*2)) {
+		let click = gm.im.getClick();
+		if (gm.im.checkMouse() && click) {
+	    	if (!(click.x > this.x && 
+				click.y > this.y &&
+				click.x < this.x + this.MENU_WIDTH &&
+				click.y < this.y + (this.BUTTON_HEIGHT * this.buttons.length + this.TOP_BOT_PADDING*2)))
+			{
+				gm.im.currentgroup.click = undefined;
+				gm.bm.cursor.deselect();
 	    		gm.closeBattleMenu();
 	    	}
 	    }
@@ -227,8 +231,14 @@ GameMenu.prototype.getBattleMenuButtons = function () {
 			this.MENU_WIDTH - this.VERT_PADDING*2,
 			this.BUTTON_HEIGHT,
 			openItems = function () {
+				let selected = gm.bm.cursor.selected;
+				if(!selected.attacked)
+				{
 				console.log("Run Attack");
-				gm.bm.cursor.selected.selectedAction.attack = true;
+				
+				selected.selectedAction.attack = true;
+				}
+
 				//gm.ui.battleMenu.moveMenu(300, 300);
 			}));
 	buttons.push(new Button(this, this.ctx, "Move",
@@ -237,9 +247,12 @@ GameMenu.prototype.getBattleMenuButtons = function () {
 			this.MENU_WIDTH - this.VERT_PADDING*2,
 			this.BUTTON_HEIGHT,
 			openMagic = function () {
-				console.log("Run Move");
-				
-				gm.bm.cursor.selected.selectedAction.move = true;
+				let selected = gm.bm.cursor.selected;
+				if(!selected.moved)
+				{
+					console.log("Run Move");
+					selected.selectedAction.move = true;
+				}
 			}));
 	buttons.push(new Button(this, this.ctx, "Tech",
 			this.x + this.VERT_PADDING,

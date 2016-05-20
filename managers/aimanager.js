@@ -103,7 +103,6 @@ AIManager.prototype.runEnemyPhase = function (callback) {
 		
 		//this.tileMap[this.enemyList[e].y][this.enemyList[e].x] = 0;
 	}
-	console.log(moveList)
 	callback(moveList);
 }
 

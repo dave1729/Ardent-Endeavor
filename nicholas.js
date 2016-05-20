@@ -217,33 +217,41 @@ PlayerUnit.prototype.moveSelected = function ()
 
 PlayerUnit.prototype.attackSelected = function () 
 {
+    if (gm.showUI)
+    {
+        this.possibleAttacks = this.calculateActionRadius({
+            actionRange: this.attackRange,
+            offset: 0
+        });
+        gm.closeBattleMenu();
+        this.cursor.visible = true;
+    }
     let click = this.cursor.getClick();
-    this.possibleAttacks = this.calculateActionRadius({
-        actionRange: this.attackRange,
-        offset: 0
-    });
     if(click)
     {
-        let point = {x: this.cursor.x, y: this.cursor.y};
+        let point = {x: click.x, y: click.y};
 
         if(this.validAction(this.possibleAttacks, point))
         {
             let object = this.cursor.isCellOccupied();
-            
-            if(object && object.ai)
+            console.log(object)
+            if(object && object.AIPackage)
             {
                 this.cursor.target = object;
+                this.selectedAction.attack = false;
             }
             else
             {
                 this.selected = false;
                 this.cursor.selected = undefined;
+                this.selectedAction.attack = false;
             }
         }
         else
         {
             this.selected = false;
             this.cursor.selected = undefined;
+            this.selectedAction.attack = false;
             gm.im.currentgroup.click = undefined;
         }
     }
@@ -271,7 +279,7 @@ PlayerUnit.prototype.playerPhase = function () {
         }
         else if (!gm.showUI)
         {
-            gm.openBattleMenu(0, 0);
+            gm.openBattleMenu(50, 50);
             this.cursor.visible = false;
         }       
     }
@@ -280,7 +288,6 @@ PlayerUnit.prototype.playerPhase = function () {
         let click = this.cursor.getClick();
         if(click)
         {
-            console.log("here123")
             if (!this.attacked || !this.moved)
             {
                 if (click.x === this.x && click.y === this.y)

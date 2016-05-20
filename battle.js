@@ -47,12 +47,12 @@ BattleOverlay.prototype.draw = function (ctx)
 {
     if (this.highlightUnit)
     {
-        if (!this.highlightUnit.moved)
+        if (this.highlightUnit.selectedAction.move)
         {
             //console.log("Highlighting Move")
             this.highlightPossibleMoves(ctx);
         }
-        else if (!this.highlightUnit.attacked)
+        if (this.highlightUnit.selectedAction.attack)
         {
             // console.log("Highlighting Attack")
             this.highlightPossibleAttacks(ctx);
@@ -75,12 +75,12 @@ BattleOverlay.prototype.update = function ()
             if (gm.bm.cursor.selected)
             {
                 this.highlightUnit = gm.bm.cursor.selected;
-                if (!this.highlightUnit.moved)
+                if (this.highlightUnit.selectedAction.move)
                 {
                     this.possibleMoves = this.highlightUnit.possibleMoves;
                     // console.log(this.possibleMoves)
                 }
-                else if (!this.highlightUnit.attacked)
+                if (this.highlightUnit.selectedAction.attack)
                 {
                     this.possibleAttacks = this.highlightUnit.possibleAttacks;
                 }

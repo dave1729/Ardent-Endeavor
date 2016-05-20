@@ -33,8 +33,8 @@ GameManager.prototype.start = function() {
     this.init();
 	this.queueAssets();
     this.am.downloadAll(() => {
-		this.startBattle(new Fire(gm, 64, 256));
-	 	// this.initialize(new Player(this.am.getAsset("./img/player.png")), 1, 900, 900);
+		// this.startBattle(new Fire(gm, 64, 256));
+	 	this.initialize(new Player(this.am.getAsset("./img/player.png")), 1, 900, 900);
         this.loop();
     })
 }
@@ -178,7 +178,7 @@ GameManager.prototype.openBattleMenu = function (x, y) {
 GameManager.prototype.closeBattleMenu = function () {
 	this.gamePaused = false;
 	this.showUI = false;
-	this.im.changeCurrentGroupTo("Battle");
+	this.im.changeCurrentGroupTo("battle");
 	this.startInput();
 	this.ui.showBattleMenu = false;
 	document.getElementById("uiLayer").style.zIndex = "-1";
