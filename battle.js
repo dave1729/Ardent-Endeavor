@@ -191,7 +191,6 @@ Cursor.prototype.getClick = function () {
     let p = gm.im.getClick()
     if(p)
     {
-        gm.im.currentgroup.click = undefined;
         return this.screenToTile(p)
     }
     return p;
@@ -274,6 +273,7 @@ Battle.prototype.setupPhase = function () {
                 this.spawnPlayer();
             }
         }
+        gm.im.currentgroup.click = undefined;
     }
     if(this.maxPlayers === 0)
     {
