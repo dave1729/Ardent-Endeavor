@@ -2,51 +2,55 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <title>Game Project Shell</title>
-    <script type="text/javascript" src="./lodash.js"></script>
-    <!-- MANAGERS -->
-    <script type="text/javascript" src="./managers/manager.js"></script>
-    <script type="text/javascript" src="./managers/playermanager.js"></script>
-    <script type="text/javascript" src="./managers/assetmanager.js"></script>
-    <script type="text/javascript" src="./managers/inputmanager.js"></script>
-    <script type="text/javascript" src="./managers/camera.js"></script>
-    <script type="text/javascript" src="./managers/gamemanager.js"></script>
-    <script type="text/javascript" src="./managers/entitymanager.js"></script>
-    <script type="text/javascript" src="./managers/mapmanager.js"></script>
-    <script type="text/javascript" src="./managers/uimanager.js"></script>
-    <script type="text/javascript" src="./managers/aimanager.js"></script>
-    <script type="text/javascript" src="./managers/battlemanager.js"></script>
-    <!-- END MANAGERS -->
-    <script type="text/javascript" src="./gameengine.js"></script>
-    <script type="text/javascript" src="./nicholas.js"></script>
-    <script type="text/javascript" src="./main.js"></script>
-    <script type="text/javascript" src="./events.js"></script>
+<meta charset="utf-8">
+<title>Game Project Shell</title>
+<script type="text/javascript" src="./lodash.js"></script>
+<!-- MANAGERS -->
+<script type="text/javascript" src="./managers/manager.js"></script>
+<script type="text/javascript" src="./managers/playermanager.js"></script>
+<script type="text/javascript" src="./managers/assetmanager.js"></script>
+<script type="text/javascript" src="./managers/inputmanager.js"></script>
+<script type="text/javascript" src="./managers/camera.js"></script>
+<script type="text/javascript" src="./managers/gamemanager.js"></script>
+<script type="text/javascript" src="./managers/entitymanager.js"></script>
+<script type="text/javascript" src="./managers/mapmanager.js"></script>
+<script type="text/javascript" src="./managers/uimanager.js"></script>
+<script type="text/javascript" src="./managers/aimanager.js"></script>
+<script type="text/javascript" src="./managers/battlemanager.js"></script>
+<!-- END MANAGERS -->
+<script type="text/javascript" src="./gameengine.js"></script>
+<script type="text/javascript" src="./nicholas.js"></script>
+<script type="text/javascript" src="./main.js"></script>
+<script type="text/javascript" src="./events.js"></script>
 
-    <script type="text/javascript" src="./maps.js"></script>
-    <script type="text/javascript" src="./battle.js"></script>
-    <script type="text/javascript" src="./enemies.js"></script>
-    <script type="text/javascript" src="./npcs.js"></script>
-    <script type="text/javascript" src="./gadgets.js"></script>
+<script type="text/javascript" src="./maps.js"></script>
+<script type="text/javascript" src="./battle.js"></script>
+<script type="text/javascript" src="./enemies.js"></script>
+<script type="text/javascript" src="./npcs.js"></script>
+<script type="text/javascript" src="./gadgets.js"></script>
 </head>
-<body>
-    <canvas id="collisionMask" width="1280" height="768" style="border: 1px solid brown; position: absolute; background: transparent; z-index: -3;"></canvas>
-    <canvas id="gameWorld" tabindex="1" width="1280" height="768" style="border: 1px solid brown; position: absolute; background: darkgreen; z-index: 1;"></canvas>
-    <canvas id="uiLayer" tabindex="1" width="1280" height="768" style="border: 1px solid brown; position: absolute; background: transparent; z-index: 2;"></canvas>
-    <p>
-    INSTRUCTIONS</br>
-    NOTE: RELOAD TO PLAY AGAIN</br>
-    Press B to start battle sequence</br>
-    
-    Click green spaces to place players</br>
-    Click them again to select a player, it should be highlighted green</br>
-    Click a square to only move once your player there.</br>
-    click an enemy to attack it</br>
-    each player can move one time and attack one time.</br>
-    Deselect the player with right click</br>
-    RELOAD TO PLAY AGAIN</br>
-    
-    
-    </p>
-</body>
+<div style="position: relative">
+	<body>
+		<canvas id="collisionMask" width="640" height="640"
+			style="border: 1px solid brown; position: absolute; background: transparent; z-index: -3;"></canvas>
+		<canvas id="gameWorld" tabindex="1" width="640" height="640"
+			style="border: 1px solid brown; position: absolute; background: darkgreen; z-index: 1;"></canvas>
+		<canvas id="uiLayer" tabindex="1" width="640" height="640"
+			style="border: 1px solid brown; position: absolute; background: transparent; z-index: 2;"></canvas>
+	</body>
+</div>
+<div style="position: relative; top:640px">
+	<p>
+		<br><u><b>CONTROLS</b></u>
+		<br>Movement: W A S D
+		<br><img src="http://labs.minutelabs.io/Relativistic-Space-Sheep/library-build/images/wasd.png" alt="wasd" style="width:77px;height:50px;">
+		<br>
+		<br>Interact: &nbsp;E
+		<br>Menu: &nbsp;&nbsp;&nbsp;&nbsp;I
+		<br>
+		<br>GUI and Battles:
+		<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="https://image.freepik.com/free-icon/right-clicking-computer-mouse_318-38591.png" alt="mouse" style="width:50px;height:50px;">&nbsp;&nbsp;Mouse
+		
+	</p>
+</div>
 </html>
