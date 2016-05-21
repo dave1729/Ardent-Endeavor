@@ -12,6 +12,7 @@
 function MapManager(game) {
 	this.game = game;
 	this.maps = [];
+	this.battleMaps = [];
 }
 
 /* Adds a map to the list of maps. Checks to make sure MapID is unique. */
@@ -27,6 +28,10 @@ MapManager.prototype.getMap = function (mapid) {
 	return this.maps[mapid];
 }
 
+function BattleMap(spec) {
+	this.bgLayer = spec.backgroundLayer;
+	this.blockedTiles = spec.blockedTiles;
+}
 
 
 /**

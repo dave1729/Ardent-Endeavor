@@ -277,7 +277,7 @@ PlayerUnit.prototype.playerPhase = function () {
         }
         else if (!gm.showUI)
         {
-            gm.openBattleMenu(50, 50);
+            gm.openBattleMenu(520, 450);
             this.cursor.visible = false;
         }       
     }
@@ -290,7 +290,7 @@ PlayerUnit.prototype.playerPhase = function () {
             {
                 if (click.x === this.x && click.y === this.y)
                 {
-                    console.log("your selected")
+                    // console.log("your selected")
                     this.selected = true;
                     this.cursor.selected = this;
                     gm.im.currentgroup.click = null;
