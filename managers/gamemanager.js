@@ -34,7 +34,7 @@ GameManager.prototype.start = function() {
 	this.queueAssets();
     this.am.downloadAll(() => {
 		// this.startBattle(new Fire(gm, 64, 256));
-	 	this.initialize(new Player(this.am.getAsset("./img/player3.png")),1, 64*0, 64*18);
+	 	this.initialize(new Player(this.am.getAsset("./img/player.png")),1, 64*0, 64*18);
         this.loop();
     })
 }
@@ -43,6 +43,7 @@ GameManager.prototype.queueAssets = function () {
 	this.am.queueDownload("./img/player3.png");
 		this.am.queueDownload("./img/player2.png");
 			this.am.queueDownload("./img/player1.png");
+						this.am.queueDownload("./img/player.png");
     this.am.queueDownload("./img/GrassOnlyBackground.png");
     this.am.queueDownload("./img/collidable_background.png");
     this.am.queueDownload("./img/Background_Layer.png");

@@ -12,6 +12,7 @@ function Animation(spriteSheet, frameWidth, frameHeight, sheetWidth, frameDurati
 	this.frameHeight = frameHeight;
 	this.sheetWidth = sheetWidth;
 	this.frames = frames;
+	this.yindex = 0;
 	this.totalTime = frameDuration * frames;
 	this.elapsedTime = 0;
 	this.loop = loop;
@@ -36,7 +37,7 @@ Animation.prototype.drawEntity = function (tick, ctx, x, y) {
 		}
 		var frame = this.currentFrame();
 		var xindex = 0;
-		var yindex = 0;
+		var yindex = this.yindex;
 		xindex = frame % this.sheetWidth;
 		yindex = Math.floor(frame / this.sheetWidth);
 

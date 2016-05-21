@@ -98,6 +98,7 @@ function PlayerUnit(spec)
     this.moved = false;
     this.selected = false;
     this.selectedAction = {move: false, attack: false}
+    this.yindex = 10;
     this.cursor = gm.bm.cursor;
     this.health = spec.health;
     this.damage = spec.damage;
@@ -120,8 +121,8 @@ PlayerUnit.prototype.draw = function (ctx)
         ctx.closePath();
         ctx.fill();
     }
-    // this.animation.drawEntity(gm.clockTick, ctx, this.x * TILE_SIZE, this.y * TILE_SIZE);
-    this.animation.drawPlayer(gm.clockTick, gm.ctx, this.x * TILE_SIZE, this.y * TILE_SIZE, this.overworld);
+    this.animation.drawEntity(gm.clockTick, ctx, this.x * TILE_SIZE, this.y * TILE_SIZE);
+    // this.animation.drawPlayer(gm.clockTick, gm.ctx, this.x * TILE_SIZE, this.y * TILE_SIZE, this.overworld);
 }
 
 PlayerUnit.prototype.kill = function () 
