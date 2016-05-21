@@ -58,6 +58,8 @@ GameManager.prototype.queueAssets = function () {
     this.am.queueDownload("./img/alienfirebird.png");
     this.am.queueDownload("./img/temple.jpg");
     this.am.queueDownload("./img/chest.png");
+	this.am.queueDownload("./img/LevelOneBattleGrassAndTree.png")
+	this.am.queueDownload("./img/LevelOneBattleGrass.png")
 }
 
 /* loads the starting map and character's starting position. */
@@ -126,9 +128,6 @@ GameManager.prototype.startBattle = function (enemy) {
 	
 	this.em.cacheEntities();
 	this.em.removeAllEntities();
-	
-	// gm.em.addEntity(map.bgLayer);
-	// gm.em.addEntity(map.cLayer);
 	this.im.setAllFalse("Dungeon");
 	this.bm.startBattle({enemyType: enemy});
 	

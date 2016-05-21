@@ -12,7 +12,12 @@ MapManager.prototype.initialize = function () {
 	this.addMap(map01);
 	*/
 	
+	/* Battle Maps */
+	var bmap01 = new BattleMap({blockedTiles: [{x: 4, y: 1}, {x: 4, y: 3}, {x: 4, y: 5}], backgroundLayer: new Background(gm, gm.am.getAsset("./img/LevelOneBattleGrassAndTree.png"))})
 	
+	var bmap02 = new BattleMap({blockedTiles: [], backgroundLayer: new Background(gm, gm.am.getAsset("./img/LevelOneBattleGrass.png"))})
+	this.battleMaps.push(bmap01);
+	this.battleMaps.push(bmap02);
 	
 	/* Map 1 - grasslands */
 	var map01 = new Map(gm, 1,

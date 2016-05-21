@@ -248,9 +248,12 @@ Battle.prototype.getOccupiedCells = function () {
     let points = [];
     let units = [this.playerUnits, this.enemyUnits, this.immovableTiles]
     units.forEach((array) => {
-        array.forEach((object) => {
-            points.push(object)
-        })
+        if(array)
+        {
+            array.forEach((object) => {
+                points.push(object)
+            })
+        }
     })
     return points;
 }
@@ -278,7 +281,7 @@ Battle.prototype.setupPhase = function () {
     if(this.maxPlayers === 0)
     {
         gm.bm.cursor.good = false;
-        gm.ai.newBattle(7, 7, this.playerUnits, this.enemyUnits, this.immovableTiles);
+        gm.ai.newBattle(10, 10, this.playerUnits, this.enemyUnits, this.immovableTiles);
         this.currentPhase = this.playerPhase;
     }
 }
@@ -420,18 +423,16 @@ Battle.prototype.disableInput = function () {
 }
 
 Battle.prototype.spawnEnemies = function () {
-    var loc = positionMaker(1, 6);
-    var h = positionMaker(0, 30)
-    var d = positionMaker(0, 20)
-    this.spawnEnemy(loc, h, d);
-    this.spawnEnemy(loc, h, d);
-    this.spawnEnemy(loc, h, d);
-            
+
+    this.spawnEnemy();
+    this.spawnEnemy();
+    this.spawnEnemy();
+    this.spawnEnemy();
+        this.spawnEnemy();
 }
-function* positionMaker(min, max)
+function valueBetween(min, max)
 {
-  while(true)
-    yield Math.floor(Math.random() * (max - min + 1)) + min;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function* idMaker(min, max)
@@ -440,12 +441,14 @@ function* idMaker(min, max)
     yield Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-Battle.prototype.spawnEnemy = function (loc, h, d) {
-    let point = {x: loc.next().value, y: loc.next().value}
-    
+Battle.prototype.spawnEnemy = function () {
+    let point = {x: valueBetween(1, 9), y: valueBetween(1, 9)}
+    let health1 = valueBetween(0, 30);
+    let damage1 = valueBetween(0, 20);
+    console.log("here")
     if(!gm.bm.cursor.isCellOccupied(point))
     {
-        let spawn = new EnemyUnit({x: point.x, y: point.y, overworld: this.enemyType, health: h.next().value, damage: d.next().value});
+        let spawn = new EnemyUnit({x: point.x, y: point.y, overworld: this.enemyType, health: health1, damage: damage1});
         gm.em.addEntity(spawn);
         this.enemyUnits.push(spawn);
     }
