@@ -424,8 +424,12 @@ Battle.prototype.spawnPlayer = function (params)
 {
     console.log("./img/player" + this.maxPlayers + ".png")
     let over = new Player(gm.am.getAsset("./img/player" + this.maxPlayers + ".png"));
+    
     over.x = gm.bm.cursor.x * TILE_SIZE;
     over.y = gm.bm.cursor.y * TILE_SIZE;
+    over.animation.sheetWidth = 4;
+    over.animation.frames = 12;
+    over.animation.frameDuration = 0.4;
     let spawn = new PlayerUnit({overworld: over, x: gm.bm.cursor.x, y :gm.bm.cursor.y, health: 100, damage: 10});
     gm.em.addEntity(spawn);
     this.availableUnits.push(spawn);

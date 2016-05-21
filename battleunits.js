@@ -98,7 +98,6 @@ function PlayerUnit(spec)
     this.moved = false;
     this.selected = false;
     this.selectedAction = {move: false, attack: false}
-    this.yindex = 10;
     this.cursor = gm.bm.cursor;
     this.health = spec.health;
     this.damage = spec.damage;
