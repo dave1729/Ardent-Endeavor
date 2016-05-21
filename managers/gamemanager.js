@@ -52,6 +52,28 @@ GameManager.prototype.queueAssets = function () {
     this.am.queueDownload("./img/alienfirebird.png");
     this.am.queueDownload("./img/temple.jpg");
     this.am.queueDownload("./img/chest.png");
+    this.am.queueDownload("./img/doors.png");
+    this.am.queueDownload("./img/enemies/bandit.png");
+    this.am.queueDownload("./img/enemies/bird_monster.png");
+    this.am.queueDownload("./img/enemies/bug_flying.png");
+    this.am.queueDownload("./img/enemies/devil.png");
+    this.am.queueDownload("./img/enemies/dog_3headed.png");
+    this.am.queueDownload("./img/enemies/goblin.png");
+    this.am.queueDownload("./img/enemies/kraken.png");
+    this.am.queueDownload("./img/enemies/lizard_man.png");
+    this.am.queueDownload("./img/enemies/mercenary.png");
+    this.am.queueDownload("./img/enemies/naga.png");
+    this.am.queueDownload("./img/enemies/ogre.png");
+    this.am.queueDownload("./img/enemies/slime_monster.png");
+    this.am.queueDownload("./img/enemies/snake03.png");
+    this.am.queueDownload("./img/enemies/snake04.png");
+    this.am.queueDownload("./img/enemies/stone_monster.png");
+    this.am.queueDownload("./img/enemies/tree_monster.png");
+    this.am.queueDownload("./img/enemies/undead_creeper.png");
+    this.am.queueDownload("./img/enemies/undead_jacket.png");
+    this.am.queueDownload("./img/enemies/undead02.png");
+    this.am.queueDownload("./img/enemies/undead03.png");
+    this.am.queueDownload("./img/enemies/undead04.png");
 }
 
 /* loads the starting map and character's starting position. */
@@ -243,7 +265,6 @@ GameManager.prototype.loop = function () {
 	{
 		this.bm.update();
 	}
-    
     requestAnimationFrame(this.loop.bind(this), this.ctx.canvas);
    //this.update();
 }

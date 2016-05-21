@@ -5,7 +5,7 @@ const dungeonHeight = 1920;
 const screenToMapRatioX= 0.75;
 const screenToMapRatioY= 0.75;
 
-function Animation(spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale) {
+function Animation(spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale, row) {
 	this.spriteSheet = spriteSheet;
 	this.frameWidth = frameWidth;
 	this.frameDuration = frameDuration;
@@ -16,6 +16,7 @@ function Animation(spriteSheet, frameWidth, frameHeight, sheetWidth, frameDurati
 	this.elapsedTime = 0;
 	this.loop = loop;
 	this.scale = scale;
+	this.row = row;
 }
 
 Animation.prototype.currentFrame = function () {

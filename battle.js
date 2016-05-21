@@ -347,9 +347,37 @@ Battle.prototype.enemyPhase = function () {
     }
 }
 
+//Battle.prototype.animateMove = function (move) {
+//	var tickSpeed = 0.02;
+//	move.enemy.x = move.path[0].x;
+//	move.enemy.y = move.path[0].y;
+//	for (var i = 1; i < move.path.length; i++) {
+//		var isMoving = true;
+//		var tick = 0;
+//		
+//		
+//		while (isMoving) {
+//			tick += tickSpeed;
+//			
+//			
+//			if (tick >= TILE_SIZE) {
+//				console.log("Step done " + i);
+//				isMoving = false;
+//				move.enemy.x = move.path[i].x;
+//				move.enemy.y = move.path[i].y;
+//			}
+//			gm.clockTick = gm.timer.tick();
+//			gm.em.update();
+//			gm.em.draw();
+//			
+//		}
+//	}
+//}
+
 Battle.prototype.enemyPhaseTest = function (enemyMoves) 
 {
     enemyMoves.forEach((move) => {
+//    	this.animateMove(move);
         let dest = move.endPoint();
         move.enemy.x = dest.x;
         move.enemy.y = dest.y;
