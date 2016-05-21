@@ -77,6 +77,7 @@ MapTeleportEvent.prototype.collisionTrigger = function (player) {
 	//console.error("Map to teleport to: " + this.destMapid);
 	gm.loadMap(this.destMapid, this.destx, this.desty);
 	gm.em.backgroundEntity.update();
+	gm.cam.update();
 }
 
 

@@ -1,0 +1,16 @@
+Collision Locations for Battle Maps
+-----------------------------------
+Maps Index from top left, first row and column is 0.
+
+x = all values
+
+
+LevelOneBattleGrassAndTree
+(4,1), (4,3), (6, 2), (5, 5), (2, 7), (7, 7)
+
+LevelOneBattleGrass
+None
+
+LevelOneBattleBoat
+
+(x, 0), (0, x), (x, 1), (x, 8), (x, 9)
