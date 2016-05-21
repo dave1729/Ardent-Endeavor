@@ -1,28 +1,3 @@
-// function Blue(x, y, cursor, battle) {
-//     this.battle = battle;
-//     this.moved = false;
-//     this.attacked = false;
-//     this.x = x;
-//     this.y = y;
-//     this.selected = false;
-//     this.cursor = gm.battle.cursor;
-// }
-
-// function Red(x, y, cursor, battle, enemyType)
-// {
-// }
-// Red.prototype.update = function () {
-//     if(this.cursor.attack)
-//     {
-//         if((this.cursor.attack.x === this.x) && (this.cursor.attack.y === this.y))
-//         {
-//             this.cursor.goodAttack = true;
-//             this.battle.enemyUnits.splice(this.battle.enemyUnits.indexOf(this), 1);
-//             this.removeFromWorld = true;
-//         }
-//     }
-// }
-
 function Unit(spec)
 {
     this.overworld = spec.overworld;
@@ -110,7 +85,6 @@ EnemyUnit.prototype.constructor = EnemyUnit;
 
 function PlayerUnit(spec)
 {
-    spec.overworld = new Shark(gm, spec.x, spec.y);
     this.moved = false;
     this.selected = false;
     this.selectedAction = {move: false, attack: false}
@@ -132,11 +106,12 @@ PlayerUnit.prototype.draw = function (ctx)
         ctx.beginPath();
         ctx.fillStyle = "rgba(0, 255, 0, 1)";
         ctx.strokeStyle = "rgba(0, 0, 255, 1)"; 
-        ctx.arc(this.x * 64 + 32,this.y * 64 + 32, 32, 0, 2*Math.PI);
+        ctx.arc(this.x * TILE_SIZE + 32,this.y * TILE_SIZE + 32, 32, 0, 2*Math.PI);
         ctx.closePath();
         ctx.fill();
-    }   
-    Unit.prototype.draw.call(this, ctx);
+    }
+    // this.animation.drawEntity(gm.clockTick, ctx, this.x * TILE_SIZE, this.y * TILE_SIZE);
+    this.animation.drawPlayer(gm.clockTick, gm.ctx, this.x * TILE_SIZE, this.y * TILE_SIZE, this.overworld);
 }
 
 PlayerUnit.prototype.kill = function () 
@@ -191,7 +166,9 @@ PlayerUnit.prototype.moveSelected = function ()
             if (!gm.bm.cursor.isCellOccupied())
             {
                 this.x = click.x;
+                this.overworld.x = click.x;
                 this.y = click.y;
+                this.overworld.x = click.y;
                 this.moved = true;
                 this.selectedAction.move = false;
             }
@@ -299,184 +276,3 @@ PlayerUnit.prototype.playerPhase = function () {
         }
     }
 }
-
-// PlayerUnit.prototype.playerPhaseOLD = function ()
-// {
-//     if (this.selected)
-//     {
-//        if (!gm.showUI)
-//        {
-//             gm.openBattleMenu(0, 0);
-//        }
-       
-//        if(!this.moved)
-//        {
-//             this.possibleMoves = this.calculateActionRadius({
-//                 actionRange: this.moveRange,
-//                 offset: 0
-//             });
-//             if (gm.bm.cursor.getClick())
-//             {
-//                 if (this.validAction(this.possibleMoves, {x: this.cursor.x, y: this.cursor.y}))               
-//                 {
-//                     if (!gm.bm.cursor.isCellOccupied())
-//                     {
-//                         this.x = this.cursor.x;
-//                         this.y = this.cursor.y;
-//                         this.selected = true;
-//                         this.cursor.selected = this;
-//                         this.moved = true;
-//                     }
-//                     else
-//                     {
-//                         this.selected = false;
-//                         this.cursor.selected = undefined;
-//                     }
-//                     gm.im.currentgroup.click = null;
-//                 }
-//                 else
-//                 {
-//                     this.selected = false;
-//                     this.cursor.selected = undefined;
-//                     gm.im.currentgroup.click = null;
-//                 }
-//             }
-//         }
-//         if (!this.attacked && this.moved)
-//         {
-//             this.possibleAttacks = this.calculateActionRadius({
-//                     actionRange: this.attackRange,
-//                     offset: 0
-//             });
-//             if(gm.bm.cursor.getClick())
-//             {
-//                 let point = {x: this.cursor.x, y: this.cursor.y};
-                
-//                 if(this.validAction(this.possibleAttacks, point))
-//                 {
-//                     let object = this.cursor.isCellOccupied();
-                    
-//                     if(object && object.health)
-//                     {
-//                         this.cursor.target = object;
-//                     }
-//                     else
-//                     {
-//                         this.selected = false;
-//                         this.cursor.selected = undefined;
-                        
-//                     }
-//                 }
-//                 else
-//                 {
-//                     this.selected = false;
-//                     this.cursor.selected = undefined;
-//                     gm.im.currentgroup.click = undefined;
-//                 }
-//             }
-//         }
-//     }
-//     else if(gm.bm.cursor.getClick())
-//     {
-//         //  console.log("we are on top")
-//         if (!this.attacked || !this.moved)
-//         {
-//             if (this.cursor.getClick().x === this.x && this.cursor.getClick().y === this.y)
-//             {
-//                 // console.log("I clicked you")
-//                 if (!this.cursor.selected)
-//                 {
-//                     // console.log("your selected")
-//                     this.selected = true;
-//                     this.cursor.selected = this;
-//                 }
-//                 gm.im.currentgroup.click = null;
-//             }
-//         }
-//     }
-// }
-
-// Blue.prototype.update = function () 
-// {
-//     if (this.battle.currentPhase === this.battle.playerPhase)
-//     {
-        
-//             if (!this.attacked && this.moved)
-//             {
-//                 if(gm.im.getClick())
-//                 {
-//                     if(((this.x + 1) === this.cursor.x && this.y === this.cursor.y) ||
-//                         ((this.x - 1) === this.cursor.x && this.y === this.cursor.y) ||
-//                         (this.x === this.cursor.x && (this.y + 1) === this.cursor.y) ||
-//                         (this.x === this.cursor.x && (this.y - 1) === this.cursor.y))
-//                         {
-//                             // this.cursor.target = gm.battle.currentBattle.
-//                             // // this.attack = true;
-//                             // this.cursor.attack = {x: this.cursor.point.x, y: this.cursor.point.y};
-//                         }
-//                         else
-//                         {
-//                             this.selected = false;
-//                             this.cursor.selected = undefined;
-//                         }
-//                 }
-//            }
-//         //    if(this.cursor.goodAttack)
-//         //    {
-//         //        this.attacked = true;
-//         //        this.selected = false;
-//         //        this.cursor.selected = false;
-//         //        this.cursor.goodAttack = false;
-//         //        gm.im.currentgroup.click = null;
-//         //    }
-//             // if (gm.im.getRClick())
-//             // {
-                
-//             //     console.log("I removed you")
-//             //     this.selected = false;
-//             //     this.cursor.selected = false;
-//             //     gm.im.currentgroup.rclick = null;
-//             // }
-//         }
-//         else if(gm.im.getClick())
-//         {
-//             // console.log("we are on top")
-            
-//             if (this.cursor.x === this.x && this.cursor.y === this.y)
-//             {
-//                 // console.log("I clicked you")
-//                 if (!this.cursor.selected)
-//                 {
-//                     // console.log("your selected")
-//                     this.selected = true;
-//                     this.cursor.selected = this;
-//                 }
-//                 gm.im.currentgroup.click = null;
-//             }
-//         }
-//     }
-    
-   
-// }
-
-
-// PlayerUnit.prototype.draw = function (ctx) {
-    
-//     // console.log("help");
-//     ctx.beginPath();
-//     if (this.selected)
-//     {
-//         ctx.fillStyle = "rgba(0, 255, 0, 1)";
-//         ctx.strokeStyle = "rgba(0, 0, 255, 1)";  
-//     }
-//     else
-//     {
-//         ctx.fillStyle = "rgba(0, 0, 255, 1)";
-//         ctx.strokeStyle = "rgba(0, 0, 255, 1)";    
-//     }     
-//     ctx.arc(this.x * 64 + 32,this.y * 64 + 32, 32, 0, 2*Math.PI);
-//     ctx.closePath();
-//     ctx.fill();
-// }
-
-

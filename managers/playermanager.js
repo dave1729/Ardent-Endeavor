@@ -16,12 +16,15 @@ function Player(spritesheet) {
 	
 	// When changing the hitbox, also change x and y shift in draw collision box
 	this.hitBox = new CollisionBox(this, 18, 34, this.spriteSquareSize-36, this.spriteSquareSize-36);
-	this.controls();
 	Entity.call(this, 235, 215);
 }
 
 // Player.prototype = Object.create(Entity.prototype);
 // Player.prototype.constructor = Player;
+
+Player.prototype.init = function () {
+	this.controls();
+}
 
 Player.prototype.controls = function () {
 	//starting controls
