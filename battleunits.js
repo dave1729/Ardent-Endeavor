@@ -4,6 +4,11 @@ function Unit(spec)
     this.animation = this.overworld.animation;
     this.attackRange = 1;
     this.moveRange = 3;
+    
+    // Used for animating during battle;
+    this.xOffset = 0;
+    this.yOffset = 0;
+    
     Entity.call(this, spec.x, spec.y);
 }
 
@@ -11,7 +16,12 @@ Unit.prototype = Object.create(Entity.prototype);
 Unit.prototype.constructor = Unit;
 
 Unit.prototype.draw = function (ctx) {
-    this.animation.drawEntity(gm.clockTick, ctx, this.x * TILE_SIZE, this.y * TILE_SIZE);
+	var location = {x: this.x * TILE_SIZE,
+					y: this.y * TILE_SIZE,
+					xOffset: this.xOffset,
+					yOffset: this.yOffset };
+	this.overworld.draw(ctx, location);
+    //this.animation.drawEntity(gm.clockTick, ctx, this.x * TILE_SIZE, this.y * TILE_SIZE);
 }
 
 Unit.prototype.update = function () {

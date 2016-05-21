@@ -63,7 +63,7 @@ function Chest(game, x, y, chestType, item) {
 	// 1 - Closed; 2 - Opening; 3 - Open
 	this.hitBox = new CollisionBox(this, 2, 22, TILE_SIZE-36, TILE_SIZE-42);
 }
-Chest.prototype = new NPC();
+Chest.prototype = new Gadget();
 Chest.prototype.constructor = Chest;
 
 Chest.prototype.draw = function () {
@@ -124,6 +124,65 @@ Animation.prototype.drawChest = function (tick, ctx, x, y, column, state) {
 					this.frameHeight * this.scale);
 			break;
 		}
+	}
+}
+
+
+/* +------------------------------------------+ */
+/* |              ===  Door  ===              | */
+/* +------------------------------------------+ */
+function Door(game, x, y, doorType, isNewMap, destMapid, destx, desty) {
+	this.game = game;
+	this.isNewMap = isNewMap;
+	this.destMapid = destMapid;
+	this.destx = destx;
+	this.desty = desty;
+	//Animation(spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale)
+	this.animation = new Animation(gm.am.getAsset("./img/doors.png"), 
+					 		32, 64, 1, 0.1, 4, false, 1);
+	this.doorType = doorType; // 0, 1, or 2
+	this.x = x;
+	this.y = y;
+	this.screenX = this.x;
+	this.screenY = this.y;
+	this.state = 1;
+	// 1 - Closed; 2 - Opening; 3 - Open
+	this.hitBox = new CollisionBox(this, 0, 0, 32, 64);
+}
+Door.prototype = new Gadget();
+Door.prototype.constructor = Door;
+
+Door.prototype.draw = function () {
+	this.animation.drawChest(gm.clockTick, gm.ctx, this.screenX, this.screenY,
+					this.doorType, this.state);
+	Gadget.prototype.draw.call(this);
+}
+Door.prototype.update = function () {
+	if (this.state === 2 && this.animation.isDone()) {
+		// Teleport
+		if (this.isNewMap) {
+			gm.loadMap(this.destMapid, this.destx, this.desty);
+		} else {
+			gm.player.x = this.destx;
+			gm.player.y = this.desty;
+			this.state = 1;
+		}
+		gm.em.backgroundEntity.update();
+		this.state = 1;
+		this.animation.elapsedTime = 0;
+	}
+	Gadget.prototype.update.call(this);
+}
+
+Door.prototype.collisionTrigger = function (player, startX, startY) {
+	Gadget.prototype.collisionTrigger.call(this, player, startX, startY);
+}
+
+Door.prototype.interactTrigger = function () {
+	if (this.state === 1) {
+		this.state = 2;
+	} else if (this.state === 3) {
+		
 	}
 }
 
