@@ -219,7 +219,6 @@ PlayerUnit.prototype.attackSelected = function ()
         if(this.validAction(this.possibleAttacks, point))
         {
             let object = this.cursor.isCellOccupied();
-            console.log(object)
             if(object && object.AIPackage)
             {
                 this.cursor.target = object;

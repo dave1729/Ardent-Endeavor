@@ -289,10 +289,7 @@ Battle.prototype.setupPhase = function () {
 Battle.prototype.resolveFight = function () {
     let attacker = gm.bm.cursor.selected;
     let defender = gm.bm.cursor.target;
-    console.log(defender.health)
     defender.health = defender.health - attacker.damage;
-
-    console.log(attacker.damage)
     if (defender.health <= 0)
     {
         if (defender.AIPackage)
@@ -478,10 +475,10 @@ Battle.prototype.spawnEnemy = function () {
     let point = {x: valueBetween(1, 9), y: valueBetween(1, 9)}
     let health1 = valueBetween(0, 30);
     let damage1 = valueBetween(0, 20);
-    console.log("here")
+    let clone = _.cloneDeep(this.enemyType)
     if(!gm.bm.cursor.isCellOccupied(point))
     {
-        let spawn = new EnemyUnit({x: point.x, y: point.y, overworld: this.enemyType, health: health1, damage: damage1});
+        let spawn = new EnemyUnit({x: point.x, y: point.y, overworld: clone, health: health1, damage: damage1});
         gm.em.addEntity(spawn);
         this.enemyUnits.push(spawn);
     }
