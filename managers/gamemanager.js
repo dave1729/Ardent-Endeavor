@@ -34,29 +34,63 @@ GameManager.prototype.start = function() {
 	this.queueAssets();
     this.am.downloadAll(() => {
 		// this.startBattle(new Fire(gm, 64, 256));
-	 	this.initialize(new Player(this.am.getAsset("./img/player.png")), 1, 64*7, 64*9);
+	 	this.initialize(new Player(this.am.getAsset("./img/player.png")),1, 64*0, 64*18);
         this.loop();
     })
 }
 
 GameManager.prototype.queueAssets = function () {
-	this.am.queueDownload("./img/player.png");
+	this.am.queueDownload("./img/player3.png");
+		this.am.queueDownload("./img/player2.png");
+			this.am.queueDownload("./img/player1.png");
+						this.am.queueDownload("./img/player.png");
     this.am.queueDownload("./img/GrassOnlyBackground.png");
     this.am.queueDownload("./img/collidable_background.png");
     this.am.queueDownload("./img/Background_Layer.png");
     this.am.queueDownload("./img/Collision_Layer.png");
     this.am.queueDownload("./img/Foreground_Layer.png");
+    this.am.queueDownload("./img/Background_Layer2.png");
+    this.am.queueDownload("./img/Collision_Layer2.png");
+    this.am.queueDownload("./img/Foreground_Layer2.png");
+    this.am.queueDownload("./img/Background_Layer3.png");
+    this.am.queueDownload("./img/Collision_Layer3.png");
+    this.am.queueDownload("./img/Foreground_Layer3.png");
     this.am.queueDownload("./img/werewolf.png");
     this.am.queueDownload("./img/greenrage.png");
     this.am.queueDownload("./img/shark.png");
     this.am.queueDownload("./img/alienfirebird.png");
     this.am.queueDownload("./img/temple.jpg");
     this.am.queueDownload("./img/chest.png");
+    this.am.queueDownload("./img/doors.png");
+    this.am.queueDownload("./img/enemies/bandit.png");
+    this.am.queueDownload("./img/enemies/bird_monster.png");
+    this.am.queueDownload("./img/enemies/bug_flying.png");
+    this.am.queueDownload("./img/enemies/devil.png");
+    this.am.queueDownload("./img/enemies/dog_3headed.png");
+    this.am.queueDownload("./img/enemies/goblin.png");
+    this.am.queueDownload("./img/enemies/kraken.png");
+    this.am.queueDownload("./img/enemies/lizard_man.png");
+    this.am.queueDownload("./img/enemies/mercenary.png");
+    this.am.queueDownload("./img/enemies/naga.png");
+    this.am.queueDownload("./img/enemies/ogre.png");
+    this.am.queueDownload("./img/enemies/slime_monster.png");
+    this.am.queueDownload("./img/enemies/snake03.png");
+    this.am.queueDownload("./img/enemies/snake04.png");
+    this.am.queueDownload("./img/enemies/stone_monster.png");
+    this.am.queueDownload("./img/enemies/tree_monster.png");
+    this.am.queueDownload("./img/enemies/undead_creeper.png");
+    this.am.queueDownload("./img/enemies/undead_jacket.png");
+    this.am.queueDownload("./img/enemies/undead02.png");
+    this.am.queueDownload("./img/enemies/undead03.png");
+    this.am.queueDownload("./img/enemies/undead04.png");
+    this.am.queueDownload("./img/LevelOneBattleGrassAndTree.png");
+    this.am.queueDownload("./img/LevelOneBattleGrass.png");
 }
 
 /* loads the starting map and character's starting position. */
 GameManager.prototype.initialize = function (player, mapid, destx, desty) {
 	this.player = player;
+	this.player.init();
 	this.mm.initialize();
 	this.loadMap(mapid, destx, desty);
 	this.gamePaused = false;
@@ -120,9 +154,6 @@ GameManager.prototype.startBattle = function (enemy) {
 	
 	this.em.cacheEntities();
 	this.em.removeAllEntities();
-	
-	// gm.em.addEntity(map.bgLayer);
-	// gm.em.addEntity(map.cLayer);
 	this.im.setAllFalse("Dungeon");
 	this.bm.startBattle({enemyType: enemy});
 	
@@ -242,7 +273,6 @@ GameManager.prototype.loop = function () {
 	{
 		this.bm.update();
 	}
-    
     requestAnimationFrame(this.loop.bind(this), this.ctx.canvas);
    //this.update();
 }

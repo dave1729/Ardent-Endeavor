@@ -16,12 +16,15 @@ function Player(spritesheet) {
 	
 	// When changing the hitbox, also change x and y shift in draw collision box
 	this.hitBox = new CollisionBox(this, 18, 34, this.spriteSquareSize-36, this.spriteSquareSize-36);
-	this.controls();
 	Entity.call(this, 235, 215);
 }
 
 // Player.prototype = Object.create(Entity.prototype);
 // Player.prototype.constructor = Player;
+
+Player.prototype.init = function () {
+	this.controls();
+}
 
 Player.prototype.controls = function () {
 	//starting controls
@@ -145,17 +148,9 @@ Player.prototype.update = function () {
 		}
 		
 		//screen test allows to switch between following player and not with 't'
-		if(gm.im.checkInput("screentest") && gm.cam.currentEntity === this) {
+		if(gm.im.checkInput("screentest")) {
 			gm.im.setFalse("screentest");
-			gm.cam.stopFollow();
-			var sx = prompt("Where should the screen X go?", "0");
-			var sy = prompt("Where should the screen Y go?", "0");
-			gm.cam.jumpToByCorner(sx, sy);
-		}
-		//if he's not being followed ask the user where to put the screen
-		else if(gm.im.checkInput("screentest")) {
-			gm.im.setFalse("screentest");
-			gm.cam.follow(this);
+			alert("X: " + this.x + ", Y: " + this.y);
 		}
 		
 //		if(!(this.im.checkInput("up") || this.im.checkInput("down") ||
