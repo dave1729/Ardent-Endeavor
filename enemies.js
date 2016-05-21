@@ -88,6 +88,7 @@ Enemy.prototype.draw = function () {
 Enemy.prototype.collisionTrigger = function (player) {
 	console.log("Enemy Collision: " + this.constructor.name);
 	// Put logic here for transition to battle scene.
+	this.angle = this.direction.DOWN;
 	this.removeFromWorld = true;
 	gm.startBattle(this);
 }
