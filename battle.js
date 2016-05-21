@@ -429,7 +429,7 @@ Battle.prototype.spawnPlayer = function (params)
     over.y = gm.bm.cursor.y * TILE_SIZE;
     over.animation.sheetWidth = 4;
     over.animation.frames = 12;
-    over.animation.frameDuration = 0.4;
+    over.animation.frameDuration = 0.2;
     let spawn = new PlayerUnit({overworld: over, x: gm.bm.cursor.x, y :gm.bm.cursor.y, health: 100, damage: 10});
     gm.em.addEntity(spawn);
     this.availableUnits.push(spawn);
