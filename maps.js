@@ -49,7 +49,7 @@ MapManager.prototype.initialize = function () {
 		    new Background(gm, gm.am.getAsset("./img/Foreground_Layer2.png")),
 		    new Collidable_background(gm, gm.am.getAsset("./img/Collision_Layer2.png"))
 	);
-	map02.addEntity(new MapTeleportEvent(gm, 1641, 390, 50, 50, 3, 896, 1600));
+	map02.addEntity(new MapTeleportEvent(gm, 1641, 390, 50, 50, 3, 960, 1536));
 	
 	//map02.addEntity(new Green(gm, 64, 64));
     //map02.addEntity(new Shark(gm, 64, 128));
