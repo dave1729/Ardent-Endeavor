@@ -11,6 +11,8 @@ function UIManager() {
 	this.gameMenu.addButtonPackage(this.gameMenu.getGameMenuButtons());
 	this.dialogueBox = new DialogueBox(this, this.ctx);
 	this.optionsMenu = new OptionsMenu(this, this.ctx, this.screenWidth / 4 + 15, 10);
+	this.statusBox = new StatusBox(this, this.ctx);
+	
 	this.showDialogue = false;
 	this.showGameMenu = false;
 	this.showBattleMenu = false;
@@ -37,6 +39,7 @@ UIManager.prototype.update = function() {
 	}
 	if (this.showBattleMenu) {
 		this.battleMenu.update();
+		this.statusBox.update();
 	}
 	if (this.showDialogue) {
 		this.dialogueBox.update();
@@ -61,6 +64,7 @@ UIManager.prototype.draw = function() {
 	}
 	if (this.showBattleMenu) {
 		this.battleMenu.draw();
+		this.statusBox.draw();
 	}
 }
 
@@ -87,7 +91,7 @@ UIManager.prototype.controls = function () {
 function GameMenu(uimanager, ctx, x, y) {
 	this.ui = uimanager;
 	this.VERT_PADDING = this.ui.screenWidth / 50;
-	this.BUTTON_HEIGHT = this.ui.screenHeight / 16;
+	this.BUTTON_HEIGHT = this.ui.screenHeight / 20;
 	this.MENU_WIDTH = this.ui.screenWidth / 4;
 	this.TOP_BOT_PADDING = this.ui.screenHeight / 48;
 	
@@ -500,7 +504,7 @@ function DialogueBox(uimanager, ctx) {
 	this.MENU_WIDTH = this.ui.screenWidth - (this.BORDER_PADDING * 2);
 	this.TOP_BOT_PADDING = this.ui.screenHeight / 42;
 	this.PAGE_SIZE = 4; // lines per page.
-	this.LINE_SIZE = 50; // characters per line.
+	this.LINE_SIZE = 75; // characters per line.
 	
 	// Text values
 	this.targetName = "";
@@ -600,6 +604,65 @@ DialogueBox.prototype.newDialogue = function (name, string) {
 	gm.im.setAllFalse();
 	this.ui.showDialogue = true;
 }
+
+
+
+/* +------------------------------------------+ */
+/* |           ===  Status Box  ===          | */
+/* +------------------------------------------+ */
+function StatusBox(uimanager, ctx) {
+	this.ui = uimanager;
+	this.VERT_PADDING = this.ui.screenWidth / 50;
+	this.LINE_HEIGHT = this.ui.screenHeight / 20;
+	this.MENU_WIDTH = this.ui.screenWidth / 4;
+	this.TOP_BOT_PADDING = this.ui.screenHeight / 48;
+	
+	this.x = 10;
+	this.y = this.ui.screenHeight - (this.VERT_PADDING*2) - (this.LINE_HEIGHT*2) - 10;
+	this.ctx = ctx;
+	
+	this.name = "Demo";
+	this.currentHP = 000;
+	this.maxHP = 999;
+}
+
+StatusBox.prototype.newInfo = function (name, currentHP, maxHP) {
+	this.name = name;
+	this.currentHP = currentHP;
+	this.maxHP = maxHP;
+}
+StatusBox.prototype.move = function (x, y) {
+	this.x = x;
+	this.y = y;
+}
+StatusBox.prototype.update = function () {
+	
+}
+StatusBox.prototype.draw = function () {
+	// Draw the backdrop and border
+	this.ctx.strokeStyle = "rgb(255, 255, 255)";
+	this.ctx.fillStyle = "rgba(0, 98, 130, 0.7)";
+	roundRect(this.ctx, this.x, this.y, this.MENU_WIDTH, (this.LINE_HEIGHT * 2 + this.TOP_BOT_PADDING*2), 10, true, true);
+	
+	// Font options
+	var fontSize = 20;
+	this.ctx.fillStyle = "rgb(255, 255, 255)";
+	this.ctx.font = fontSize + "px sans-serif";
+	
+	// Text position
+	//var textSize = this.ctx.measureText(this.text);
+	var textX = this.x + this.VERT_PADDING;
+	var textY = this.y + this.TOP_BOT_PADDING + (this.LINE_HEIGHT*0) + (fontSize);
+	
+	// Draw text
+	this.ctx.fillText(this.name, textX, textY);
+	
+	textY += this.LINE_HEIGHT;
+	this.ctx.fillText("HP   " + this.currentHP + " / " + this.maxHP, textX, textY);
+}
+
+
+
 
 
 

@@ -263,6 +263,7 @@ PlayerUnit.prototype.playerPhase = function () {
         }
         else if (!gm.showUI)
         {
+        	gm.ui.statusBox.newInfo("Name Here", this.health, 999);
             gm.openBattleMenu(520, 450);
             this.cursor.visible = false;
         }       
