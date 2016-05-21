@@ -65,9 +65,9 @@ MapManager.prototype.initialize = function () {
 	);
 	map03.addEntity(new MapTeleportEvent(gm, 128, 256, 50, 50, 1, 800, 800));
 	
-	map03.addEntity(new Green(gm, 64, 64));
-    map03.addEntity(new Shark(gm, 64, 128));
-    map03.addEntity(new Fire(gm, 64, 256));
+	//map03.addEntity(new Green(gm, 64, 64));
+    //map03.addEntity(new Shark(gm, 64, 128));
+    //map03.addEntity(new Fire(gm, 64, 256));
     this.addMap(map03);
 	
 	return true;
