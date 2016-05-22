@@ -1,10 +1,14 @@
 function Unit(spec)
 {
+    this.cursor = gm.bm.cursor;
     this.overworld = spec.overworld;
     this.animation = this.overworld.animation;
+    this.selected = false;
+    this.moved = false;
+    this.attacked = false;
     this.attackRange = 1;
     this.moveRange = 3;
-    
+    this.possibleMoves = [];
     // Used for animating during battle;
     this.xOffset = 0;
     this.yOffset = 0;
@@ -45,7 +49,27 @@ Unit.prototype.update = function () {
             this.setupPhase();
     }
     }
+}
 
+Unit.prototype.playerPhase = function ()
+{
+    if (!this.cursor.selected)
+    {
+        let click = this.cursor.getClick();
+        if(click)
+        {
+            if (!this.attacked || !this.moved)
+            {
+                if (click.x === this.x && click.y === this.y)
+                {
+                    // console.log("your selected")
+                    this.selected = true;
+                    this.cursor.selected = this;
+                    gm.im.currentgroup.click = null;
+                }
+            }
+        }
+    }
 }
 
 Unit.prototype.calculateActionRadius = function (spec)
@@ -93,15 +117,42 @@ function EnemyUnit(spec)
 EnemyUnit.prototype = Object.create(Unit.prototype);
 EnemyUnit.prototype.constructor = EnemyUnit;
 
+EnemyUnit.prototype.draw = function (ctx) {
+    if (this.selected)
+    {   
+        ctx.beginPath();
+        ctx.fillStyle = "rgba(0, 255, 0, 1)";
+        ctx.strokeStyle = "rgba(0, 0, 255, 1)"; 
+        ctx.arc(this.x * TILE_SIZE + 32,this.y * TILE_SIZE + 32, 32, 0, 2*Math.PI);
+        ctx.closePath();
+        ctx.fill();
+    }
+    Unit.prototype.draw.call(this);
+}
+
+EnemyUnit.prototype.playerPhase = function () {
+    if(this.selected)
+    {
+        this.possibleMoves = this.calculateActionRadius({
+            actionRange: this.moveRange,
+            offset: 0
+        });
+        let click = this.cursor.getClick();
+        if(click)
+        {
+            this.selected = false;
+            this.cursor.selected = undefined;
+            gm.im.currentgroup.click = null;
+        }
+    }
+    Unit.prototype.playerPhase.call(this);
+}
+
 function PlayerUnit(spec)
 {
-    this.moved = false;
-    this.selected = false;
     this.selectedAction = {move: false, attack: false}
-    this.cursor = gm.bm.cursor;
     this.health = spec.health;
     this.damage = spec.damage;
-    this.possibleMoves = [];
     this.possibleAttacks = [];
     Unit.call(this, spec);
 }
@@ -268,21 +319,5 @@ PlayerUnit.prototype.playerPhase = function () {
             this.cursor.visible = false;
         }       
     }
-    else if (!this.cursor.selected)
-    {
-        let click = this.cursor.getClick();
-        if(click)
-        {
-            if (!this.attacked || !this.moved)
-            {
-                if (click.x === this.x && click.y === this.y)
-                {
-                    // console.log("your selected")
-                    this.selected = true;
-                    this.cursor.selected = this;
-                    gm.im.currentgroup.click = null;
-                }
-            }
-        }
-    }
+    Unit.prototype.playerPhase.call(this);
 }
