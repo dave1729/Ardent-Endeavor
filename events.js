@@ -80,6 +80,7 @@ MapTeleportEvent.prototype.collisionTrigger = function (player) {
 	gm.em.backgroundEntity.update();
 	//gm.cam.follow(gm.player);
 	gm.cam.jumpToByMid(this.destx, this.desty);
+	gm.cam.follow(gm.player);
 }
 
 
