@@ -13,6 +13,7 @@ function UIManager() {
 	this.optionsMenu = new OptionsMenu(this, this.ctx, this.screenWidth / 4 + 15, 10);
 	this.statusBox = new StatusBox(this, this.ctx);
 	
+	this.showStatusBox = false;
 	this.showDialogue = false;
 	this.showGameMenu = false;
 	this.showBattleMenu = false;
@@ -41,6 +42,9 @@ UIManager.prototype.update = function() {
 		this.battleMenu.update();
 		this.statusBox.update();
 	}
+	if (this.showStatusBox) {
+		this.statusBox.update();
+	}
 	if (this.showDialogue) {
 		this.dialogueBox.update();
 	}
@@ -64,6 +68,9 @@ UIManager.prototype.draw = function() {
 	}
 	if (this.showBattleMenu) {
 		this.battleMenu.draw();
+		this.statusBox.draw();
+	}
+	if (this.showStatusBox) {
 		this.statusBox.draw();
 	}
 }
@@ -636,7 +643,20 @@ StatusBox.prototype.move = function (x, y) {
 	this.y = y;
 }
 StatusBox.prototype.update = function () {
-	
+	if (this.showStatusBox) {
+		let click = gm.im.getClick();
+		if (gm.im.checkMouse() && click) {
+	    	if (!(click.x > this.x && 
+				click.y > this.y &&
+				click.x < this.x + this.MENU_WIDTH &&
+				click.y < this.y + (this.BUTTON_HEIGHT * this.buttons.length + this.TOP_BOT_PADDING*2)))
+			{
+				gm.im.currentgroup.click = undefined;
+				gm.bm.cursor.deselect();
+	    		gm.closeStatusBox();
+	    	}
+	    }
+	}
 }
 StatusBox.prototype.draw = function () {
 	// Draw the backdrop and border

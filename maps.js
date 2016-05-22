@@ -56,7 +56,7 @@ MapManager.prototype.initialize = function () {
     map02.addEntity(new UndeadJacket(gm, 10*TILE_SIZE, 25*TILE_SIZE));
     map02.addEntity(new UndeadJacket(gm, 25*TILE_SIZE, 22*TILE_SIZE));
     map02.addEntity(new Skeleton(gm, 25*TILE_SIZE, 7*TILE_SIZE));
-    map02.addEntity(new MapTeleportEvent(gm, 3*TILE_SIZE, 0*TILE_SIZE, 50, 50, 1, 1984, 1740));
+    map02.addEntity(new MapTeleportEvent(gm, 3*TILE_SIZE, 0*TILE_SIZE, 50, 50, 1, 1944, 1740));
 	map02.addEntity(new MapTeleportEvent(gm, 1641, 390, 50, 50, 3, 15*TILE_SIZE+TILE_SIZE/2, 28*TILE_SIZE));
 	
 	//map02.addEntity(new Green(gm, 64, 64));
@@ -75,6 +75,8 @@ MapManager.prototype.initialize = function () {
 	map03.addEntity(new UndeadCreeper(gm, 3*TILE_SIZE, 22*TILE_SIZE));
 	map03.addEntity(new YouWinEvent(gm, 9*TILE_SIZE, 0*TILE_SIZE, 2*TILE_SIZE, 1.3*TILE_SIZE));
 	map03.addEntity(new Lich(gm, 6*TILE_SIZE, 5*TILE_SIZE));
+	
+	map03.addEntity(new MapTeleportEvent(gm, 15*TILE_SIZE, 29*TILE_SIZE+TILE_SIZE-20, TILE_SIZE*2, 20, 2, 1641, 470));
 	
 	//map03.addEntity(new Green(gm, 64, 64));
     //map03.addEntity(new Shark(gm, 64, 128));

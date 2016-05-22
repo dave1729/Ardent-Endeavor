@@ -160,6 +160,8 @@ Door.prototype.draw = function () {
 Door.prototype.update = function () {
 	if (this.state === 2 && this.animation.isDone()) {
 		// Teleport
+		this.state = 1;
+		this.animation.elapsedTime = 0;
 		if (this.isNewMap) {
 			gm.loadMap(this.destMapid, this.destx, this.desty);
 		} else {
@@ -168,8 +170,9 @@ Door.prototype.update = function () {
 			this.state = 1;
 		}
 		gm.em.backgroundEntity.update();
-		this.state = 1;
-		this.animation.elapsedTime = 0;
+		gm.cam.jumpToByMid(this.destx, this.desty);
+		gm.cam.follow(gm.player);
+		
 	}
 	Gadget.prototype.update.call(this);
 }

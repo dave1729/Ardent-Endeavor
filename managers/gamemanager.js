@@ -215,6 +215,28 @@ GameManager.prototype.closeBattleMenu = function () {
 	document.getElementById("uiLayer").style.zIndex = "-1";
 }
 
+/* Opens the game menu, switching canvas focus and keybinds */
+GameManager.prototype.openStatusBox = function (name, hp, maxhp) {
+	//console.log(gm.im.currentgroup);
+	this.gamePaused = false;
+	this.showUI = true;
+	this.im.changeCurrentGroupTo("ui");
+	this.startInput();
+	this.ui.statusBox.newInfo(name, hp, maxhp);
+	this.ui.showStatusBox = true;
+	// need to disable previous keys (maybe).
+	document.getElementById("uiLayer").style.zIndex = "3";
+}
+/* Closes the game mneu, switching canvas focus back to the game. */
+GameManager.prototype.closeStatusBox = function () {
+	this.gamePaused = false;
+	this.showUI = false;
+	this.im.changeCurrentGroupTo("battle");
+	this.startInput();
+	this.ui.showStatusBox = false;
+	document.getElementById("uiLayer").style.zIndex = "-1";
+}
+
 GameManager.prototype.openDialogueBox = function (name, string) {
 	this.gamePaused = true;
 	this.showUI = true;

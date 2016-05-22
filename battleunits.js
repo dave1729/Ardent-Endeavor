@@ -140,15 +140,17 @@ EnemyUnit.prototype.playerPhase = function () {
         });
         if (!gm.showUI)
         {
-        	gm.ui.statusBox.newInfo("Enemy", this.health, this.maxhealth);
-        }       
+        	gm.openStatusBox("Enemy", this.health, this.maxhealth);
+        }
         let click = this.cursor.getClick();
         if(click)
         {
+            console.log("here")
             this.selected = false;
             this.cursor.selected = undefined;
             gm.im.currentgroup.click = null;
-        }
+            gm.closeStatusBox();
+        }     
     }
     Unit.prototype.playerPhase.call(this);
 }
