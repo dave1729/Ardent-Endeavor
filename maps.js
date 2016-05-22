@@ -52,6 +52,10 @@ MapManager.prototype.initialize = function () {
 		    new Background(gm, gm.am.getAsset("./img/Foreground_Layer2.png")),
 		    new Collidable_background(gm, gm.am.getAsset("./img/Collision_Layer2.png"))
 	);
+    map02.addEntity(new UndeadJacket(gm, 11*TILE_SIZE, 3*TILE_SIZE));
+    map02.addEntity(new UndeadJacket(gm, 10*TILE_SIZE, 25*TILE_SIZE));
+    map02.addEntity(new UndeadJacket(gm, 25*TILE_SIZE, 22*TILE_SIZE));
+    map02.addEntity(new Skeleton(gm, 25*TILE_SIZE, 7*TILE_SIZE));
     map02.addEntity(new MapTeleportEvent(gm, 3*TILE_SIZE, 0*TILE_SIZE, 50, 50, 1, 1984, 1740));
 	map02.addEntity(new MapTeleportEvent(gm, 1641, 390, 50, 50, 3, 15*TILE_SIZE+TILE_SIZE/2, 28*TILE_SIZE));
 	
@@ -67,8 +71,8 @@ MapManager.prototype.initialize = function () {
 		    new Background(gm, gm.am.getAsset("./img/Foreground_Layer3.png")),
 		    new Collidable_background(gm, gm.am.getAsset("./img/Collision_Layer3.png"))
 	);
-	map03.addEntity(new MapTeleportEvent(gm, 128, 256, 50, 50, 1, 800, 800));
-	
+	//map03.addEntity(new MapTeleportEvent(gm, 128, 256, 50, 50, 1, 800, 800));
+	map03.addEntity(new UndeadCreeper(gm, 3*TILE_SIZE, 22*TILE_SIZE));
 	map03.addEntity(new YouWinEvent(gm, 9*TILE_SIZE, 0*TILE_SIZE, 2*TILE_SIZE, 1.3*TILE_SIZE));
 	map03.addEntity(new Lich(gm, 6*TILE_SIZE, 5*TILE_SIZE));
 	
