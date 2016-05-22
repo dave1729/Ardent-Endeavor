@@ -73,7 +73,6 @@ UIManager.prototype.draw = function() {
 	if (this.showStatusBox) {
 		this.statusBox.draw();
 	}
-	if (this)
 }
 
 UIManager.prototype.controls = function () {
