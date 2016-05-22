@@ -643,18 +643,20 @@ StatusBox.prototype.move = function (x, y) {
 	this.y = y;
 }
 StatusBox.prototype.update = function () {
-	let click = gm.im.getClick();
-	if (gm.im.checkMouse() && click) {
-    	if (!(click.x > this.x && 
-			click.y > this.y &&
-			click.x < this.x + this.MENU_WIDTH &&
-			click.y < this.y + (this.BUTTON_HEIGHT * this.buttons.length + this.TOP_BOT_PADDING*2)))
-		{
-			gm.im.currentgroup.click = undefined;
-			gm.bm.cursor.deselect();
-    		gm.closeStatusBox();
-    	}
-    }
+	if (this.showStatusBox) {
+		let click = gm.im.getClick();
+		if (gm.im.checkMouse() && click) {
+	    	if (!(click.x > this.x && 
+				click.y > this.y &&
+				click.x < this.x + this.MENU_WIDTH &&
+				click.y < this.y + (this.BUTTON_HEIGHT * this.buttons.length + this.TOP_BOT_PADDING*2)))
+			{
+				gm.im.currentgroup.click = undefined;
+				gm.bm.cursor.deselect();
+	    		gm.closeStatusBox();
+	    	}
+	    }
+	}
 }
 StatusBox.prototype.draw = function () {
 	// Draw the backdrop and border
