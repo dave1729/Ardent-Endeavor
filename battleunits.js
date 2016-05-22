@@ -28,7 +28,20 @@ Unit.prototype.draw = function (ctx) {
 					xOffset: this.xOffset,
 					yOffset: this.yOffset };
 	this.overworld.draw(ctx, location);
+	this.drawHealthBar(ctx);
     //this.animation.drawEntity(gm.clockTick, ctx, this.x * TILE_SIZE, this.y * TILE_SIZE);
+}
+Unit.prototype.drawHealthBar = function (ctx) {
+	gm.ctx.fillStyle = "rgb(184, 0, 72)";
+	gm.ctx.lineWidth = 1;
+	gm.ctx.fillRect(this.x * TILE_SIZE + 5, this.y * TILE_SIZE + (TILE_SIZE-9), TILE_SIZE-10, 8);
+	
+	gm.ctx.fillStyle = "rgb(0, 222, 0)";
+	var healthBarWidth = (TILE_SIZE-10)*(this.health/this.maxhealth);
+	gm.ctx.fillRect(this.x * TILE_SIZE + 5, this.y * TILE_SIZE + (TILE_SIZE-9), healthBarWidth, 8);
+	
+	gm.ctx.strokeStyle = "rgb(0, 0, 0)";
+	gm.ctx.strokeRect(this.x * TILE_SIZE + 5, this.y * TILE_SIZE + (TILE_SIZE-9), TILE_SIZE-10, 8);
 }
 
 Unit.prototype.update = function () {
@@ -177,6 +190,7 @@ PlayerUnit.prototype.draw = function (ctx)
         ctx.fill();
     }
     this.animation.drawEntity(gm.clockTick, ctx, this.x * TILE_SIZE, this.y * TILE_SIZE);
+    this.drawHealthBar(ctx);
     // this.animation.drawPlayer(gm.clockTick, gm.ctx, this.x * TILE_SIZE, this.y * TILE_SIZE, this.overworld);
 }
 
