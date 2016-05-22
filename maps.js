@@ -12,6 +12,9 @@ MapManager.prototype.initialize = function () {
 	this.addMap(map01);
 	*/
 	
+	
+	// function MapTeleportEvent(game, x, y, w, h, destMapid, destx, desty)
+	
 	/* Battle Maps */
 	var bmap01 = new BattleMap({blockedTiles: [{x: 4, y: 1}, {x: 4, y: 3}, {x: 4, y: 5}], backgroundLayer: new Background(gm, gm.am.getAsset("./img/LevelOneBattleGrassAndTree.png"))})
 	
@@ -33,7 +36,7 @@ MapManager.prototype.initialize = function () {
     //map01.addEntity(new Fire(gm, 64, 256));
     map01.addEntity(new Bandit(gm, 8*TILE_SIZE, 4*TILE_SIZE));
     map01.addEntity(new Goblin(gm, 14*TILE_SIZE, 4*TILE_SIZE));
-	map01.addEntity(new MapTeleportEvent(gm, 1984, 1728, 50, 50, 2, 512, 448));
+	map01.addEntity(new MapTeleportEvent(gm, 2024, 1730, 20, 50, 2, 3*TILE_SIZE, 1*TILE_SIZE+TILE_SIZE/2));
 	
     map01.addEntity(new Billy(gm, 64, 256+64));
     map01.addEntity(new Chest(gm, 5*TILE_SIZE, 2*TILE_SIZE, 1, "Peanut"));
@@ -49,7 +52,8 @@ MapManager.prototype.initialize = function () {
 		    new Background(gm, gm.am.getAsset("./img/Foreground_Layer2.png")),
 		    new Collidable_background(gm, gm.am.getAsset("./img/Collision_Layer2.png"))
 	);
-	map02.addEntity(new MapTeleportEvent(gm, 1641, 390, 50, 50, 3, 896, 1600));
+    map02.addEntity(new MapTeleportEvent(gm, 3*TILE_SIZE, 0*TILE_SIZE, 50, 50, 1, 1984, 1740));
+	map02.addEntity(new MapTeleportEvent(gm, 1641, 390, 50, 50, 3, 15*TILE_SIZE+TILE_SIZE/2, 28*TILE_SIZE));
 	
 	//map02.addEntity(new Green(gm, 64, 64));
     //map02.addEntity(new Shark(gm, 64, 128));
@@ -64,6 +68,9 @@ MapManager.prototype.initialize = function () {
 		    new Collidable_background(gm, gm.am.getAsset("./img/Collision_Layer3.png"))
 	);
 	map03.addEntity(new MapTeleportEvent(gm, 128, 256, 50, 50, 1, 800, 800));
+	
+	map03.addEntity(new YouWinEvent(gm, 9*TILE_SIZE, 0*TILE_SIZE, 2*TILE_SIZE, 1.3*TILE_SIZE));
+	map03.addEntity(new Lich(gm, 6*TILE_SIZE, 5*TILE_SIZE));
 	
 	//map03.addEntity(new Green(gm, 64, 64));
     //map03.addEntity(new Shark(gm, 64, 128));
