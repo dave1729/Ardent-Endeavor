@@ -653,7 +653,7 @@ StatusBox.prototype.update = function () {
 		{
 			gm.im.currentgroup.click = undefined;
 			gm.bm.cursor.deselect();
-    		gm.closeBattleMenu();
+    		gm.closeStatusBox();
     	}
     }
 }
