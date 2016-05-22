@@ -47,16 +47,24 @@ BattleOverlay.prototype.draw = function (ctx)
 {
     if (this.highlightUnit)
     {
-        if (this.highlightUnit.selectedAction.move)
+        if(this.highlightUnit.selectedAction)
         {
-            //console.log("Highlighting Move")
+            if (this.highlightUnit.selectedAction.move)
+            {
+                //console.log("Highlighting Move")
+                this.highlightPossibleMoves(ctx);
+            }
+            if (this.highlightUnit.selectedAction.attack)
+            {
+                // console.log("Highlighting Attack")
+                this.highlightPossibleAttacks(ctx);
+            }
+        }
+        else
+        {
             this.highlightPossibleMoves(ctx);
         }
-        if (this.highlightUnit.selectedAction.attack)
-        {
-            // console.log("Highlighting Attack")
-            this.highlightPossibleAttacks(ctx);
-        }
+
     }
     if (gm.bm.currentBattle)
     {
@@ -75,15 +83,23 @@ BattleOverlay.prototype.update = function ()
             if (gm.bm.cursor.selected)
             {
                 this.highlightUnit = gm.bm.cursor.selected;
-                if (this.highlightUnit.selectedAction.move)
+                if (this.highlightUnit.selectedAction)
+                {
+                    if (this.highlightUnit.selectedAction.move)
+                    {
+                        this.possibleMoves = this.highlightUnit.possibleMoves;
+                        // console.log(this.possibleMoves)
+                    }
+                    if (this.highlightUnit.selectedAction.attack)
+                    {
+                        this.possibleAttacks = this.highlightUnit.possibleAttacks;
+                    }  
+                }
+                else
                 {
                     this.possibleMoves = this.highlightUnit.possibleMoves;
-                    // console.log(this.possibleMoves)
                 }
-                if (this.highlightUnit.selectedAction.attack)
-                {
-                    this.possibleAttacks = this.highlightUnit.possibleAttacks;
-                }
+
             }
             else
             {
