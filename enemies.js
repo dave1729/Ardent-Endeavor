@@ -1095,7 +1095,7 @@ Zombie.prototype.collisionTrigger = function (player) {
 
 
 /* +------------------------------------------+ */
-/* |            ===  Skeleton  ===              | */
+/* |            ===  Skeleton  ===            | */
 /* +------------------------------------------+ */
 function Skeleton(game, x, y) {
 	this.game = game;
@@ -1139,14 +1139,14 @@ Skeleton.prototype.collisionTrigger = function (player) {
 
 
 /* +------------------------------------------+ */
-/* |            ===  Lich  ===              | */
+/* |              ===  Lich  ===              | */
 /* +------------------------------------------+ */
 function Lich(game, x, y) {
 	this.game = game;
 	this.runAnimationSpeed = 0.2;
 	this.walkAnimationSpeed = 0.4;
 	this.isWalking = true;
-	this.overWorldSpeed = 1.0;
+	this.overWorldSpeed = 2.0;
 	//Animation(spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale) {
 	this.downAnimation = new Animation(gm.am.getAsset("./img/enemies/undead04.png"),
 			80, 96, 3, this.walkAnimationSpeed, 3, true, 2/3, 0);
@@ -1178,6 +1178,8 @@ Lich.prototype.update = function () {
 	Enemy.prototype.update.call(this);
 }
 Lich.prototype.collisionTrigger = function (player) {
+//	gm.openDialogueBox("Scary Lich Boss",
+//		"I am the boss! rawwrrrrr.");
 	Enemy.prototype.collisionTrigger.call(this, player);
 }
 
