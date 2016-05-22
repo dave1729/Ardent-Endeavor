@@ -3,7 +3,10 @@ function Unit(spec)
     this.cursor = gm.bm.cursor;
     this.overworld = spec.overworld;
     this.animation = this.overworld.animation;
+    this.health = spec.health;
+    this.maxhealth = spec.health;
     this.selected = false;
+        this.damage = spec.damage;
     this.moved = false;
     this.attacked = false;
     this.attackRange = 1;
@@ -109,8 +112,6 @@ Unit.prototype.calculateActionRadius = function (spec)
 function EnemyUnit(spec)
 {
     this.AIPackage = gm.ai.AIPackages.Berserker;
-    this.health = spec.health;
-    this.damage = spec.damage;
     Unit.call(this, spec);
 }
 
@@ -137,6 +138,10 @@ EnemyUnit.prototype.playerPhase = function () {
             actionRange: this.moveRange,
             offset: 0
         });
+        if (!gm.showUI)
+        {
+        	gm.ui.statusBox.newInfo("Enemy", this.health, this.maxhealth);
+        }       
         let click = this.cursor.getClick();
         if(click)
         {
@@ -151,8 +156,6 @@ EnemyUnit.prototype.playerPhase = function () {
 function PlayerUnit(spec)
 {
     this.selectedAction = {move: false, attack: false}
-    this.health = spec.health;
-    this.damage = spec.damage;
     this.possibleAttacks = [];
     Unit.call(this, spec);
 }
@@ -314,7 +317,7 @@ PlayerUnit.prototype.playerPhase = function () {
         }
         else if (!gm.showUI)
         {
-        	gm.ui.statusBox.newInfo("Player", this.health, 100);
+        	gm.ui.statusBox.newInfo("Player", this.health, this.maxhealth);
             gm.openBattleMenu(520, 450);
             this.cursor.visible = false;
         }       
