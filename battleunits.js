@@ -190,6 +190,7 @@ PlayerUnit.prototype.draw = function (ctx)
         ctx.fill();
     }
     this.animation.drawEntity(gm.clockTick, ctx, this.x * TILE_SIZE, this.y * TILE_SIZE);
+    this.drawHealthBar(ctx);
     // this.animation.drawPlayer(gm.clockTick, gm.ctx, this.x * TILE_SIZE, this.y * TILE_SIZE, this.overworld);
 }
 
