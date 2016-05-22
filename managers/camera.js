@@ -84,16 +84,42 @@ Camera.prototype.stopFollow = function() {
 
 //Jumps to Camera position where the top left CORNER is passed
 Camera.prototype.jumpToByCorner = function(x, y) {
-	this.leftX = Math.floor(x);
-	this.rightX = Math.floor(x + this.width);
-	this.topY = Math.floor(y);
-	this.bottomY = Math.floor(y + this.height);
+	//dungeonWidth, dungeonHeight
+	var newLeftX = Math.floor(x);
+	var newRightX = Math.floor(x + this.width);
+	var newTopY = Math.floor(y);
+	var newBottomY = Math.floor(y + this.height);
+	
+	if(newLeftX < 0) {
+		newLeftX = 0;
+		newRightX = Math.floor(this.width);
+	}
+	else if (newRightX > dungeonWidth) {
+		newLeftX = Math.floor(dungeonWidth - this.width);
+		newRightX = Math.floor(dungeonWidth);
+	}
+
+	if(newTopY < 0) {
+		newTopY = 0;
+		newBottomY = Math.floor(this.height);
+	}
+	else if (newBottomY > dungeonHeight) {
+		newTopY = Math.floor(dungeonHeight - this.height);
+		newBottomY = Math.floor(dungeonHeight);
+	}
+
+	//If we are jumping somewhere, we shouldn't follow anyone as well.
+	this.stopFollow();
+	
+	this.leftX = newLeftX;
+	this.rightX = newRightX;
+	this.topY = newTopY;
+	this.bottomY = newBottomY;
 }
 
 //Jumps to Camera position where the MIDDLE of the screen is passed
 Camera.prototype.jumpToByMid = function(x, y) {
-	this.leftX = Math.floor(x - this.width/2);
-	this.rightX = Math.floor(x + this.width/2);
-	this.topY = Math.floor(y - this.height/2);
-	this.bottomY = Math.floor(y + this.height/2);
+	var newLeftX = Math.floor(x - this.width/2);
+	var newTopY = Math.floor(y - this.height/2);
+	this.jumpToByCorner(newLeftX, newTopY)
 }

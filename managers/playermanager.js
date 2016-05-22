@@ -19,9 +19,6 @@ function Player(spritesheet) {
 	Entity.call(this, 235, 215);
 }
 
-// Player.prototype = Object.create(Entity.prototype);
-// Player.prototype.constructor = Player;
-
 Player.prototype.init = function () {
 	this.controls();
 }
@@ -149,15 +146,9 @@ Player.prototype.update = function () {
 		
 		//screen test allows to switch between following player and not with 't'
 		if(gm.im.checkInput("screentest")) {
-			gm.im.setFalse("screentest");
-			alert("X: " + this.x + ", Y: " + this.y);
+			//Still Works If you need to Test Something by pressing 'T'
 		}
 		
-//		if(!(this.im.checkInput("up") || this.im.checkInput("down") ||
-//		     this.im.checkInput("left") || this.im.checkInput("right"))) {
-//			this.speedX = 0;
-//			this.speedY = 0;
-//		}
 		if(!(gm.im.checkInput("up") || gm.im.checkInput("down"))) {
 				this.speedY = 0;
 		}
@@ -178,5 +169,4 @@ Player.prototype.update = function () {
 		// COLLISION
 		this.entityCollisionCheck(startX, startY);
 	}
-	// Entity.prototype.update.call(this);
 }
