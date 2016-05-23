@@ -16,7 +16,7 @@ MapManager.prototype.initialize = function () {
 	// function MapTeleportEvent(game, x, y, w, h, destMapid, destx, desty)
 	
 	/* Battle Maps */
-	var bmap01 = new BattleMap({blockedTiles: [{x: 4, y: 1}, {x: 4, y: 3}, {x: 4, y: 5}], backgroundLayer: new Background(gm, gm.am.getAsset("./img/LevelOneBattleGrassAndTree.png"))})
+	var bmap01 = new BattleMap({blockedTiles: [{x: 2, y: 7}, {x: 4, y: 1}, {x: 4, y: 3}, {x: 5, y: 5}, {x: 6, y: 2}, {x: 6, y: 7}], backgroundLayer: new Background(gm, gm.am.getAsset("./img/LevelOneBattleGrassAndTree.png"))})
 	
 	var bmap02 = new BattleMap({blockedTiles: [], backgroundLayer: new Background(gm, gm.am.getAsset("./img/LevelOneBattleGrass.png"))})
 	this.battleMaps.push(bmap01);
