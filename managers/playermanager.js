@@ -11,7 +11,6 @@ function Player(spritesheet) {
 	this.layer = 5;
 	this.entityID = 1;
 	this.ctx = gm.ctx;
-	this.controls();
 	this.interactRange = 5;
 	
 	// When changing the hitbox, also change x and y shift in draw collision box
