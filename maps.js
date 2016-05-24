@@ -85,6 +85,12 @@ MapManager.prototype.initialize = function () {
     map02.addEntity(new MapTeleportEvent(gm, 3*TILE_SIZE, 0*TILE_SIZE, 50, 50, 1, 1944, 1740));
 	map02.addEntity(new MapTeleportEvent(gm, 1641, 390, 50, 50, 3, 15*TILE_SIZE+TILE_SIZE/2, 28*TILE_SIZE));
 	
+	map02.addEntity(new Chest(gm, 1*TILE_SIZE, 1*TILE_SIZE, 2, "Emerald"));
+	map02.addEntity(new Chest(gm, 1*TILE_SIZE, 23*TILE_SIZE, 2, "Emerald"));
+	map02.addEntity(new Chest(gm, 14*TILE_SIZE, 16*TILE_SIZE, 2, "Emerald"));
+	map02.addEntity(new Chest(gm, 15*TILE_SIZE, 1*TILE_SIZE, 2, "Emerald"));
+	map02.addEntity(new Chest(gm, 25*TILE_SIZE, 15*TILE_SIZE, 2, "Emerald"));
+	
 	//map02.addEntity(new Green(gm, 64, 64));
     //map02.addEntity(new Shark(gm, 64, 128));
     //map02.addEntity(new Fire(gm, 64, 256));
