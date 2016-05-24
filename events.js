@@ -14,6 +14,7 @@ function Event(game, x, y, w, h) {
 	this.h = h;
 	this.x = x;
 	this.y = y;
+	this.layer = 1;
 	this.hitBox = new CollisionBox(this, 0, 0, w, h);
 	Entity.call(this, game, x, y);
 }
@@ -74,8 +75,54 @@ MapTeleportEvent.prototype.draw = function () {
  */
 MapTeleportEvent.prototype.collisionTrigger = function (player) {
 	//console.error("Map to teleport to: " + this.destMapid);
+	//gm.cam.stopFollow();
 	gm.loadMap(this.destMapid, this.destx, this.desty);
 	gm.em.backgroundEntity.update();
+	//gm.cam.follow(gm.player);
+	gm.cam.jumpToByMid(this.destx, this.desty);
+	gm.cam.follow(gm.player);
+}
+
+
+/* +------------------------------------------+ */
+/* |             ===  You Win ===             | */
+/* +------------------------------------------+ */
+/**
+ * 
+ */
+function YouWinEvent(game, x, y, w, h) {
+	this.game = game;
+	this.x = x;
+	this.y = y;
+	this.w = w;
+	this.h = h;
+	this.hitBox = new CollisionBox(this, 0, 0, w, h);
+}
+
+YouWinEvent.prototype = new Event();
+YouWinEvent.prototype.constructor = YouWinEvent;
+
+YouWinEvent.prototype.update = function () {
+	//this.screenX = this.x - gm.cam.leftX;
+	//this.screenY = this.y - gm.cam.topY;
+	Event.prototype.update.call(this);
+}
+
+YouWinEvent.prototype.draw = function () {
+	Event.prototype.draw.call(this);
+}
+
+/**
+ * A mapteleport event will teleport the playable character to
+ * the given mapid and coordinates.
+ */
+YouWinEvent.prototype.collisionTrigger = function (player) {
+	gm.openDialogueBox(null,
+		"You win, congratulations!!!");
+}
+Event.prototype.interactTrigger = function (player) {
+	gm.openDialogueBox(null,
+		"You win, congratulations!!!");
 }
 
 

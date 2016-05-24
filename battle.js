@@ -47,16 +47,24 @@ BattleOverlay.prototype.draw = function (ctx)
 {
     if (this.highlightUnit)
     {
-        if (this.highlightUnit.selectedAction.move)
+        if(this.highlightUnit.selectedAction)
         {
-            //console.log("Highlighting Move")
+            if (this.highlightUnit.selectedAction.move)
+            {
+                //console.log("Highlighting Move")
+                this.highlightPossibleMoves(ctx);
+            }
+            if (this.highlightUnit.selectedAction.attack)
+            {
+                // console.log("Highlighting Attack")
+                this.highlightPossibleAttacks(ctx);
+            }
+        }
+        else
+        {
             this.highlightPossibleMoves(ctx);
         }
-        if (this.highlightUnit.selectedAction.attack)
-        {
-            // console.log("Highlighting Attack")
-            this.highlightPossibleAttacks(ctx);
-        }
+
     }
     if (gm.bm.currentBattle)
     {
@@ -75,15 +83,23 @@ BattleOverlay.prototype.update = function ()
             if (gm.bm.cursor.selected)
             {
                 this.highlightUnit = gm.bm.cursor.selected;
-                if (this.highlightUnit.selectedAction.move)
+                if (this.highlightUnit.selectedAction)
+                {
+                    if (this.highlightUnit.selectedAction.move)
+                    {
+                        this.possibleMoves = this.highlightUnit.possibleMoves;
+                        // console.log(this.possibleMoves)
+                    }
+                    if (this.highlightUnit.selectedAction.attack)
+                    {
+                        this.possibleAttacks = this.highlightUnit.possibleAttacks;
+                    }  
+                }
+                else
                 {
                     this.possibleMoves = this.highlightUnit.possibleMoves;
-                    // console.log(this.possibleMoves)
                 }
-                if (this.highlightUnit.selectedAction.attack)
-                {
-                    this.possibleAttacks = this.highlightUnit.possibleAttacks;
-                }
+
             }
             else
             {
@@ -248,9 +264,12 @@ Battle.prototype.getOccupiedCells = function () {
     let points = [];
     let units = [this.playerUnits, this.enemyUnits, this.immovableTiles]
     units.forEach((array) => {
-        array.forEach((object) => {
-            points.push(object)
-        })
+        if(array)
+        {
+            array.forEach((object) => {
+                points.push(object)
+            })
+        }
     })
     return points;
 }
@@ -278,7 +297,7 @@ Battle.prototype.setupPhase = function () {
     if(this.maxPlayers === 0)
     {
         gm.bm.cursor.good = false;
-        gm.ai.newBattle(7, 7, this.playerUnits, this.enemyUnits, this.immovableTiles);
+        gm.ai.newBattle(10, 10, this.playerUnits, this.enemyUnits, this.immovableTiles);
         this.currentPhase = this.playerPhase;
     }
 }
@@ -286,10 +305,7 @@ Battle.prototype.setupPhase = function () {
 Battle.prototype.resolveFight = function () {
     let attacker = gm.bm.cursor.selected;
     let defender = gm.bm.cursor.target;
-    console.log(defender.health)
     defender.health = defender.health - attacker.damage;
-
-    console.log(attacker.damage)
     if (defender.health <= 0)
     {
         if (defender.AIPackage)
@@ -352,9 +368,37 @@ Battle.prototype.enemyPhase = function () {
     }
 }
 
+//Battle.prototype.animateMove = function (move) {
+//	var tickSpeed = 0.02;
+//	move.enemy.x = move.path[0].x;
+//	move.enemy.y = move.path[0].y;
+//	for (var i = 1; i < move.path.length; i++) {
+//		var isMoving = true;
+//		var tick = 0;
+//		
+//		
+//		while (isMoving) {
+//			tick += tickSpeed;
+//			
+//			
+//			if (tick >= TILE_SIZE) {
+//				console.log("Step done " + i);
+//				isMoving = false;
+//				move.enemy.x = move.path[i].x;
+//				move.enemy.y = move.path[i].y;
+//			}
+//			gm.clockTick = gm.timer.tick();
+//			gm.em.update();
+//			gm.em.draw();
+//			
+//		}
+//	}
+//}
+
 Battle.prototype.enemyPhaseTest = function (enemyMoves) 
 {
     enemyMoves.forEach((move) => {
+//    	this.animateMove(move);
         let dest = move.endPoint();
         move.enemy.x = dest.x;
         move.enemy.y = dest.y;
@@ -392,8 +436,17 @@ Battle.prototype.resetPUnitActions = function () {
     })
 }
 
-Battle.prototype.spawnPlayer = function (params) {
-    let spawn = new PlayerUnit({x: gm.bm.cursor.x, y :gm.bm.cursor.y, health: 100, damage: 10});
+Battle.prototype.spawnPlayer = function (params) 
+{
+    console.log("./img/player" + this.maxPlayers + ".png")
+    let over = new Player(gm.am.getAsset("./img/player" + this.maxPlayers + ".png"));
+    
+    over.x = gm.bm.cursor.x * TILE_SIZE;
+    over.y = gm.bm.cursor.y * TILE_SIZE;
+    over.animation.sheetWidth = 4;
+    over.animation.frames = 12;
+    over.animation.frameDuration = 0.2;
+    let spawn = new PlayerUnit({overworld: over, x: gm.bm.cursor.x, y :gm.bm.cursor.y, health: 100, damage: 10});
     gm.em.addEntity(spawn);
     this.availableUnits.push(spawn);
     this.playerUnits.push(spawn);
@@ -420,18 +473,16 @@ Battle.prototype.disableInput = function () {
 }
 
 Battle.prototype.spawnEnemies = function () {
-    var loc = positionMaker(1, 6);
-    var h = positionMaker(0, 30)
-    var d = positionMaker(0, 20)
-    this.spawnEnemy(loc, h, d);
-    this.spawnEnemy(loc, h, d);
-    this.spawnEnemy(loc, h, d);
-            
+
+    this.spawnEnemy();
+    this.spawnEnemy();
+    this.spawnEnemy();
+    this.spawnEnemy();
+        this.spawnEnemy();
 }
-function* positionMaker(min, max)
+function valueBetween(min, max)
 {
-  while(true)
-    yield Math.floor(Math.random() * (max - min + 1)) + min;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function* idMaker(min, max)
@@ -440,18 +491,20 @@ function* idMaker(min, max)
     yield Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-Battle.prototype.spawnEnemy = function (loc, h, d) {
-    let point = {x: loc.next().value, y: loc.next().value}
-    
+Battle.prototype.spawnEnemy = function () {
+    let point = {x: valueBetween(1, 9), y: valueBetween(1, 9)}
+    let health1 = valueBetween(0, 30);
+    let damage1 = valueBetween(0, 20);
+    let clone = _.cloneDeep(this.enemyType)
     if(!gm.bm.cursor.isCellOccupied(point))
     {
-        let spawn = new EnemyUnit({x: point.x, y: point.y, overworld: this.enemyType, health: h.next().value, damage: d.next().value});
+        let spawn = new EnemyUnit({x: point.x, y: point.y, overworld: clone, health: health1, damage: damage1});
         gm.em.addEntity(spawn);
         this.enemyUnits.push(spawn);
     }
     else
     {
-        this.spawnEnemy(loc);
+        this.spawnEnemy();
     }
 }
 

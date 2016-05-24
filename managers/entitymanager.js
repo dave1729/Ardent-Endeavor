@@ -113,8 +113,8 @@ EntityManager.prototype.draw = function () {
     		this.entities[i].draw(gm.ctx);
     		//console.log(this.entities[i].constructor.name + " is being drawn.");
     	}
-    	
     }
+    
     gm.ctx.restore();
 }
 

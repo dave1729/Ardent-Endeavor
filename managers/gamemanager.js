@@ -34,13 +34,16 @@ GameManager.prototype.start = function() {
 	this.queueAssets();
     this.am.downloadAll(() => {
 		// this.startBattle(new Fire(gm, 64, 256));
-	 	this.initialize(new Player(this.am.getAsset("./img/player.png")), 1, 64*7, 64*9);
+	 	this.initialize(new Player(this.am.getAsset("./img/player.png")),1, 64*0, 64*18);
         this.loop();
     })
 }
 
 GameManager.prototype.queueAssets = function () {
-	this.am.queueDownload("./img/player.png");
+	this.am.queueDownload("./img/player3.png");
+		this.am.queueDownload("./img/player2.png");
+			this.am.queueDownload("./img/player1.png");
+						this.am.queueDownload("./img/player.png");
     this.am.queueDownload("./img/GrassOnlyBackground.png");
     this.am.queueDownload("./img/collidable_background.png");
     this.am.queueDownload("./img/Background_Layer.png");
@@ -58,11 +61,36 @@ GameManager.prototype.queueAssets = function () {
     this.am.queueDownload("./img/alienfirebird.png");
     this.am.queueDownload("./img/temple.jpg");
     this.am.queueDownload("./img/chest.png");
+    this.am.queueDownload("./img/doors.png");
+    this.am.queueDownload("./img/enemies/bandit.png");
+    this.am.queueDownload("./img/enemies/bird_monster.png");
+    this.am.queueDownload("./img/enemies/bug_flying.png");
+    this.am.queueDownload("./img/enemies/devil.png");
+    this.am.queueDownload("./img/enemies/dog_3headed.png");
+    this.am.queueDownload("./img/enemies/goblin.png");
+    this.am.queueDownload("./img/enemies/kraken.png");
+    this.am.queueDownload("./img/enemies/lizard_man.png");
+    this.am.queueDownload("./img/enemies/mercenary.png");
+    this.am.queueDownload("./img/enemies/naga.png");
+    this.am.queueDownload("./img/enemies/ogre.png");
+    this.am.queueDownload("./img/enemies/slime_monster.png");
+    this.am.queueDownload("./img/enemies/snake03.png");
+    this.am.queueDownload("./img/enemies/snake04.png");
+    this.am.queueDownload("./img/enemies/stone_monster.png");
+    this.am.queueDownload("./img/enemies/tree_monster.png");
+    this.am.queueDownload("./img/enemies/undead_creeper.png");
+    this.am.queueDownload("./img/enemies/undead_jacket.png");
+    this.am.queueDownload("./img/enemies/undead02.png");
+    this.am.queueDownload("./img/enemies/undead03.png");
+    this.am.queueDownload("./img/enemies/undead04.png");
+    this.am.queueDownload("./img/LevelOneBattleGrassAndTree.png");
+    this.am.queueDownload("./img/LevelOneBattleGrass.png");
 }
 
 /* loads the starting map and character's starting position. */
 GameManager.prototype.initialize = function (player, mapid, destx, desty) {
 	this.player = player;
+	this.player.init();
 	this.mm.initialize();
 	this.loadMap(mapid, destx, desty);
 	this.gamePaused = false;
@@ -126,9 +154,6 @@ GameManager.prototype.startBattle = function (enemy) {
 	
 	this.em.cacheEntities();
 	this.em.removeAllEntities();
-	
-	// gm.em.addEntity(map.bgLayer);
-	// gm.em.addEntity(map.cLayer);
 	this.im.setAllFalse("Dungeon");
 	this.bm.startBattle({enemyType: enemy});
 	
@@ -190,6 +215,28 @@ GameManager.prototype.closeBattleMenu = function () {
 	document.getElementById("uiLayer").style.zIndex = "-1";
 }
 
+/* Opens the game menu, switching canvas focus and keybinds */
+GameManager.prototype.openStatusBox = function (name, hp, maxhp) {
+	//console.log(gm.im.currentgroup);
+	this.gamePaused = false;
+	this.showUI = true;
+	this.im.changeCurrentGroupTo("ui");
+	this.startInput();
+	this.ui.statusBox.newInfo(name, hp, maxhp);
+	this.ui.showStatusBox = true;
+	// need to disable previous keys (maybe).
+	document.getElementById("uiLayer").style.zIndex = "3";
+}
+/* Closes the game mneu, switching canvas focus back to the game. */
+GameManager.prototype.closeStatusBox = function () {
+	this.gamePaused = false;
+	this.showUI = false;
+	this.im.changeCurrentGroupTo("battle");
+	this.startInput();
+	this.ui.showStatusBox = false;
+	document.getElementById("uiLayer").style.zIndex = "-1";
+}
+
 GameManager.prototype.openDialogueBox = function (name, string) {
 	this.gamePaused = true;
 	this.showUI = true;
@@ -248,7 +295,6 @@ GameManager.prototype.loop = function () {
 	{
 		this.bm.update();
 	}
-    
     requestAnimationFrame(this.loop.bind(this), this.ctx.canvas);
    //this.update();
 }

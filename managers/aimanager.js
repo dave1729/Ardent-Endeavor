@@ -58,8 +58,11 @@ AIManager.prototype.newBattle = function (gridWidth, gridHeight, players, enemie
 	for (var e = 0; e < this.enemyList.length; e++) {
 		this.tileMap[this.enemyList[e].y][this.enemyList[e].x] = 2;
 	}
-	for (var c = 0; c < this.collidableTiles.length; c++) {
-		this.tileMap[this.collidableTiles[c].y][this.collidableTiles[c].x] = 3;
+	if (this.collidableTiles)
+	{
+		for (var c = 0; c < this.collidableTiles.length; c++) {
+			this.tileMap[this.collidableTiles[c].y][this.collidableTiles[c].x] = 3;
+		}
 	}
 }
 

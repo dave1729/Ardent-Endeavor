@@ -6,6 +6,8 @@ function BattleManager() {
 
 BattleManager.prototype.createBattle = function (spec) {
     //do some things to create cool battles
+    let map = gm.mm.battleMaps[Math.round(Math.random())];
+	gm.em.addEntity(map.bgLayer);
     var spec = {
         validLocations: [
             {x: 0,
@@ -19,7 +21,7 @@ BattleManager.prototype.createBattle = function (spec) {
         playerUnits: [],
         enemyUnits: [],
         enemyType: spec.enemyType,
-        immovableTiles: [{x: 0, y: 5}]
+        immovableTiles: map.blockedTiles
     }
     this.currentBattle = new Battle(spec);
     this.currentBattle.init();

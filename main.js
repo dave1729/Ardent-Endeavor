@@ -5,17 +5,19 @@ const dungeonHeight = 1920;
 const screenToMapRatioX= 0.75;
 const screenToMapRatioY= 0.75;
 
-function Animation(spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale) {
+function Animation(spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale, row) {
 	this.spriteSheet = spriteSheet;
 	this.frameWidth = frameWidth;
 	this.frameDuration = frameDuration;
 	this.frameHeight = frameHeight;
 	this.sheetWidth = sheetWidth;
 	this.frames = frames;
+	this.yindex = 0;
 	this.totalTime = frameDuration * frames;
 	this.elapsedTime = 0;
 	this.loop = loop;
 	this.scale = scale;
+	this.row = row;
 }
 
 Animation.prototype.currentFrame = function () {
@@ -35,7 +37,7 @@ Animation.prototype.drawEntity = function (tick, ctx, x, y) {
 		}
 		var frame = this.currentFrame();
 		var xindex = 0;
-		var yindex = 0;
+		var yindex = this.yindex;
 		xindex = frame % this.sheetWidth;
 		yindex = Math.floor(frame / this.sheetWidth);
 
@@ -47,18 +49,11 @@ Animation.prototype.drawEntity = function (tick, ctx, x, y) {
 				screenPoint.x, screenPoint.y,
 				this.frameWidth * this.scale,
 				this.frameHeight * this.scale);		
-//		ctx.drawImage(this.spriteSheet,
-//				xindex * this.frameWidth, yindex * this.frameHeight,  // source from sheet
-//				this.frameWidth, this.frameHeight,
-//				x - gm.cam.leftX, y - gm.cam.topY,
-//				this.frameWidth * this.scale,
-//				this.frameHeight * this.scale);
 	}
 }
 
 Animation.prototype.updateEntity = function (entity) {
 	if(entity.game.controlEntity.x !== null) {
-		//dungeon/8 = half a visible screen, 0.5 = character scale ratio
 		entity.screenX = entity.x - gm.cam.leftX;
 		entity.screenY = entity.y - gm.cam.topY;
 	}
@@ -153,11 +148,6 @@ Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
 		xindex = 0;
 		yindex = 6;
 	}
-
-	var tempX = x;
-	var tempY = y;
-	var centerX = Math.floor(gm.canvas.width/2  - (64 / 2));
-	var centerY = Math.floor(gm.canvas.height/2 - (64 / 2));
 
 	var screenPoint = gm.cam.getMyScreenXandY(entity.x, entity.y);
 	
