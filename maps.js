@@ -34,15 +34,31 @@ MapManager.prototype.initialize = function () {
 	//map01.addEntity(new Green(gm, 64, 64));
     //map01.addEntity(new Shark(gm, 64, 128));
     //map01.addEntity(new Fire(gm, 64, 256));
-    map01.addEntity(new Bandit(gm, 8*TILE_SIZE, 4*TILE_SIZE));
-    map01.addEntity(new Goblin(gm, 14*TILE_SIZE, 4*TILE_SIZE));
+    map01.addEntity(new Bandit(gm, 18*TILE_SIZE, 21*TILE_SIZE));
+    map01.addEntity(new Goblin(gm, 19*TILE_SIZE, 22*TILE_SIZE));
+    
+    //Newly Added Enemies
+    map01.addEntity(new TreeMonster(gm, 15*TILE_SIZE, 4*TILE_SIZE));
+    map01.addEntity(new TreeMonster(gm, 9*TILE_SIZE, 1*TILE_SIZE));
+    map01.addEntity(new TreeMonster(gm, 19*TILE_SIZE, 6*TILE_SIZE));
+    map01.addEntity(new Naga(gm, 14*TILE_SIZE, 27*TILE_SIZE));
+    map01.addEntity(new Snake03(gm, 4*TILE_SIZE, 26*TILE_SIZE));
+    map01.addEntity(new Kraken(gm, 21*TILE_SIZE, 25*TILE_SIZE));
+    map01.addEntity(new Goblin(gm, 29*TILE_SIZE, 22*TILE_SIZE));
+    map01.addEntity(new Bandit(gm, 17*TILE_SIZE, 23*TILE_SIZE));
+    map01.addEntity(new BirdMonster(gm, 27*TILE_SIZE, 4*TILE_SIZE));
+    map01.addEntity(new FlyingBug(gm, 23*TILE_SIZE, 7*TILE_SIZE));
+    map01.addEntity(new BirdMonster(gm, 11*TILE_SIZE, 4*TILE_SIZE));
+    map01.addEntity(new FlyingBug(gm, 29*TILE_SIZE, 2*TILE_SIZE));
+    //End New Enemies
+    		
 	map01.addEntity(new MapTeleportEvent(gm, 2024, 1730, 20, 50, 2, 3*TILE_SIZE, 1*TILE_SIZE+TILE_SIZE/2));
 	
-    map01.addEntity(new Billy(gm, 64, 256+64));
-    map01.addEntity(new Chest(gm, 5*TILE_SIZE, 2*TILE_SIZE, 1, "Peanut"));
-    map01.addEntity(new Chest(gm, 6*TILE_SIZE, 2*TILE_SIZE, 0, "Pinecone"));
+    //map01.addEntity(new Billy(gm, 64, 256+64));
+    //map01.addEntity(new Chest(gm, 5*TILE_SIZE, 2*TILE_SIZE, 1, "Peanut"));
+    //map01.addEntity(new Chest(gm, 6*TILE_SIZE, 2*TILE_SIZE, 0, "Pinecone"));
     map01.addEntity(new Chest(gm, 7*TILE_SIZE, 2*TILE_SIZE, 2, "Excalibur"));
-    map01.addEntity(new Door(gm, 3*TILE_SIZE, 3*TILE_SIZE, 0, false, null, 10*TILE_SIZE, 10*TILE_SIZE));
+    //map01.addEntity(new Door(gm, 3*TILE_SIZE, 3*TILE_SIZE, 0, false, null, 10*TILE_SIZE, 10*TILE_SIZE));
     this.addMap(map01);
     
     
@@ -52,12 +68,28 @@ MapManager.prototype.initialize = function () {
 		    new Background(gm, gm.am.getAsset("./img/Foreground_Layer2.png")),
 		    new Collidable_background(gm, gm.am.getAsset("./img/Collision_Layer2.png"))
 	);
+    //New Enemies
+    map02.addEntity(new StoneMonster(gm, 15*TILE_SIZE, 4*TILE_SIZE));
+    map02.addEntity(new UndeadCreeper(gm, 19*TILE_SIZE, 6*TILE_SIZE));
+    map02.addEntity(new UndeadCreeper(gm, 4*TILE_SIZE, 26*TILE_SIZE));
+    map02.addEntity(new Zombie(gm, 29*TILE_SIZE, 22*TILE_SIZE));
+    map02.addEntity(new UndeadJacket(gm, 17*TILE_SIZE, 23*TILE_SIZE));
+    map02.addEntity(new UndeadJacket(gm, 27*TILE_SIZE, 4*TILE_SIZE));
+    map02.addEntity(new Zombie(gm, 2*TILE_SIZE, 5*TILE_SIZE));
+    //End New Enemies
+    
     map02.addEntity(new UndeadJacket(gm, 11*TILE_SIZE, 3*TILE_SIZE));
     map02.addEntity(new UndeadJacket(gm, 10*TILE_SIZE, 25*TILE_SIZE));
     map02.addEntity(new UndeadJacket(gm, 25*TILE_SIZE, 22*TILE_SIZE));
     map02.addEntity(new Skeleton(gm, 25*TILE_SIZE, 7*TILE_SIZE));
     map02.addEntity(new MapTeleportEvent(gm, 3*TILE_SIZE, 0*TILE_SIZE, 50, 50, 1, 1944, 1740));
 	map02.addEntity(new MapTeleportEvent(gm, 1641, 390, 50, 50, 3, 15*TILE_SIZE+TILE_SIZE/2, 28*TILE_SIZE));
+	
+	map02.addEntity(new Chest(gm, 1*TILE_SIZE, 1*TILE_SIZE, 2, "Emerald"));
+	map02.addEntity(new Chest(gm, 1*TILE_SIZE, 23*TILE_SIZE, 2, "Emerald"));
+	map02.addEntity(new Chest(gm, 14*TILE_SIZE, 16*TILE_SIZE, 2, "Emerald"));
+	map02.addEntity(new Chest(gm, 15*TILE_SIZE, 1*TILE_SIZE, 2, "Emerald"));
+	map02.addEntity(new Chest(gm, 25*TILE_SIZE, 15*TILE_SIZE, 2, "Emerald"));
 	
 	//map02.addEntity(new Green(gm, 64, 64));
     //map02.addEntity(new Shark(gm, 64, 128));
@@ -72,6 +104,10 @@ MapManager.prototype.initialize = function () {
 		    new Collidable_background(gm, gm.am.getAsset("./img/Collision_Layer3.png"))
 	);
 	//map03.addEntity(new MapTeleportEvent(gm, 128, 256, 50, 50, 1, 800, 800));
+    map03.addEntity(new ThreeHeadedDog(gm, 23*TILE_SIZE, 23*TILE_SIZE));
+    map03.addEntity(new ThreeHeadedDog(gm, 23*TILE_SIZE, 13*TILE_SIZE));
+    map03.addEntity(new Ogre(gm, 4*TILE_SIZE, 6*TILE_SIZE));
+    map03.addEntity(new Ogre(gm, 8*TILE_SIZE, 6*TILE_SIZE));
 	map03.addEntity(new UndeadCreeper(gm, 3*TILE_SIZE, 22*TILE_SIZE));
 	map03.addEntity(new YouWinEvent(gm, 9*TILE_SIZE, 0*TILE_SIZE, 2*TILE_SIZE, 1.3*TILE_SIZE));
 	map03.addEntity(new Lich(gm, 6*TILE_SIZE, 5*TILE_SIZE));
