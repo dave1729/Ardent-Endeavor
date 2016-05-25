@@ -145,7 +145,42 @@ Player.prototype.update = function () {
 		
 		//screen test allows to switch between following player and not with 't'
 		if(gm.im.checkInput("screentest")) {
-			//Still Works If you need to Test Something by pressing 'T'
+			gm.im.addGroup("cameracontrol");
+			gm.im.addInput(new Input("upc", 'w'));
+		    gm.im.addInput(new Input("downc", 's'));
+		    gm.im.addInput(new Input("leftc", 'a'));
+		    gm.im.addInput(new Input("rightc", 'd'));
+		    gm.im.addInput(new Input("screentestoff", 't'));
+		}
+		else if (gm.im.checkInput("screentestoff")) {
+			gm.im.addGroup("Dungeon");
+			this.controls();
+		}
+		
+		var cameraSpeed = 2;
+		if(gm.im.checkInput("upc") && gm.im.checkInput("leftc")) {
+			gm.cam.jumpToByCorner(gm.cam.leftX - cameraSpeed, gm.cam.topY - cameraSpeed);
+		}
+		else if(gm.im.checkInput("upc") && gm.im.checkInput("rightc")) {
+			gm.cam.jumpToByCorner(gm.cam.leftX + cameraSpeed, gm.cam.topY - cameraSpeed);
+		}
+		else if(gm.im.checkInput("downc") && gm.im.checkInput("leftc")) {
+			gm.cam.jumpToByCorner(gm.cam.leftX - cameraSpeed, gm.cam.topY + cameraSpeed);
+		}
+		else if(gm.im.checkInput("downc") && gm.im.checkInput("rightc")) {
+			gm.cam.jumpToByCorner(gm.cam.leftX + cameraSpeed, gm.cam.topY + cameraSpeed);
+		}
+		else if(gm.im.checkInput("upc")) {
+			gm.cam.jumpToByCorner(gm.cam.leftX, gm.cam.topY - cameraSpeed);
+		}
+		else if(gm.im.checkInput("downc")) {
+			gm.cam.jumpToByCorner(gm.cam.leftX, gm.cam.topY + cameraSpeed);
+		}
+		else if(gm.im.checkInput("leftc")) {
+			gm.cam.jumpToByCorner(gm.cam.leftX - cameraSpeed, gm.cam.topY);
+		}
+		else if(gm.im.checkInput("rightc")) {
+			gm.cam.jumpToByCorner(gm.cam.leftX + cameraSpeed, gm.cam.topY);
 		}
 		
 		if(!(gm.im.checkInput("up") || gm.im.checkInput("down"))) {
