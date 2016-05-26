@@ -51,13 +51,17 @@ MapManager.prototype.initialize = function () {
     map01.addEntity(new BirdMonster(gm, 11*TILE_SIZE, 4*TILE_SIZE));
     map01.addEntity(new FlyingBug(gm, 29*TILE_SIZE, 2*TILE_SIZE));
     //End New Enemies
-    		
+    map01.addEntity(new MapTeleportEvent(gm, 640, 640, 50, 50, 3, 15*TILE_SIZE+TILE_SIZE/2, 28*TILE_SIZE));		
 	map01.addEntity(new MapTeleportEvent(gm, 2024, 1730, 20, 50, 2, 3*TILE_SIZE, 1*TILE_SIZE+TILE_SIZE/2));
 	
     //map01.addEntity(new Billy(gm, 64, 256+64));
     //map01.addEntity(new Chest(gm, 5*TILE_SIZE, 2*TILE_SIZE, 1, "Peanut"));
     //map01.addEntity(new Chest(gm, 6*TILE_SIZE, 2*TILE_SIZE, 0, "Pinecone"));
-    map01.addEntity(new Chest(gm, 7*TILE_SIZE, 2*TILE_SIZE, 2, "Excalibur"));
+    map01.addEntity(new Chest(gm, 19*TILE_SIZE, 19*TILE_SIZE, 2, "Emerald"));
+    map01.addEntity(new Chest(gm, 12*TILE_SIZE, 27*TILE_SIZE, 1, "Treasure"));
+    map01.addEntity(new Chest(gm, 1*TILE_SIZE, 6*TILE_SIZE, 2, "Emerald"));
+    map01.addEntity(new Chest(gm, 30*TILE_SIZE, 1*TILE_SIZE, 1, "Treasure"));
+    map01.addEntity(new Chest(gm, 24*TILE_SIZE, 28*TILE_SIZE, 2, "Emerald"));
     //map01.addEntity(new Door(gm, 3*TILE_SIZE, 3*TILE_SIZE, 0, false, null, 10*TILE_SIZE, 10*TILE_SIZE));
     this.addMap(map01);
     
@@ -86,9 +90,9 @@ MapManager.prototype.initialize = function () {
 	map02.addEntity(new MapTeleportEvent(gm, 1641, 390, 50, 50, 3, 15*TILE_SIZE+TILE_SIZE/2, 28*TILE_SIZE));
 	
 	map02.addEntity(new Chest(gm, 1*TILE_SIZE, 1*TILE_SIZE, 2, "Emerald"));
-	map02.addEntity(new Chest(gm, 1*TILE_SIZE, 23*TILE_SIZE, 2, "Emerald"));
+	map02.addEntity(new Chest(gm, 1*TILE_SIZE, 23*TILE_SIZE, 1, "Treasure"));
 	map02.addEntity(new Chest(gm, 14*TILE_SIZE, 16*TILE_SIZE, 2, "Emerald"));
-	map02.addEntity(new Chest(gm, 15*TILE_SIZE, 1*TILE_SIZE, 2, "Emerald"));
+	map02.addEntity(new Chest(gm, 15*TILE_SIZE, 1*TILE_SIZE, 1, "Treasure"));
 	map02.addEntity(new Chest(gm, 25*TILE_SIZE, 15*TILE_SIZE, 2, "Emerald"));
 	
 	//map02.addEntity(new Green(gm, 64, 64));
@@ -111,6 +115,12 @@ MapManager.prototype.initialize = function () {
 	map03.addEntity(new UndeadCreeper(gm, 3*TILE_SIZE, 22*TILE_SIZE));
 	map03.addEntity(new YouWinEvent(gm, 9*TILE_SIZE, 0*TILE_SIZE, 2*TILE_SIZE, 1.3*TILE_SIZE));
 	map03.addEntity(new Lich(gm, 6*TILE_SIZE, 5*TILE_SIZE));
+	
+    map03.addEntity(new Chest(gm, 2*TILE_SIZE, 22*TILE_SIZE, 2, "Emerald"));
+    map03.addEntity(new Chest(gm, 29*TILE_SIZE, 21*TILE_SIZE, 1, "Treasure"));
+    map03.addEntity(new Chest(gm, 25*TILE_SIZE, 9*TILE_SIZE, 2, "Emerald"));
+    map03.addEntity(new Chest(gm, 3*TILE_SIZE, 12*TILE_SIZE, 1, "Treasure"));
+    map03.addEntity(new Chest(gm, 2*TILE_SIZE, 2*TILE_SIZE, 2, "Emerald"));
 	
 	map03.addEntity(new MapTeleportEvent(gm, 15*TILE_SIZE, 29*TILE_SIZE+TILE_SIZE-20, TILE_SIZE*2, 20, 2, 1641, 470));
 	
