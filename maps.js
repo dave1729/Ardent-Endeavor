@@ -39,15 +39,15 @@ MapManager.prototype.initialize = function () {
     
     //Newly Added Enemies
     map01.addEntity(new TreeMonster(gm, 15*TILE_SIZE, 4*TILE_SIZE));
-    map01.addEntity(new TreeMonster(gm, 9*TILE_SIZE, 1*TILE_SIZE));
-    map01.addEntity(new TreeMonster(gm, 19*TILE_SIZE, 6*TILE_SIZE));
+    // map01.addEntity(new TreeMonster(gm, 9*TILE_SIZE, 1*TILE_SIZE));
+    // map01.addEntity(new TreeMonster(gm, 19*TILE_SIZE, 6*TILE_SIZE));
     map01.addEntity(new Naga(gm, 14*TILE_SIZE, 27*TILE_SIZE));
     map01.addEntity(new Snake03(gm, 4*TILE_SIZE, 26*TILE_SIZE));
     map01.addEntity(new Kraken(gm, 21*TILE_SIZE, 25*TILE_SIZE));
     map01.addEntity(new Goblin(gm, 29*TILE_SIZE, 22*TILE_SIZE));
     map01.addEntity(new Bandit(gm, 17*TILE_SIZE, 23*TILE_SIZE));
-    map01.addEntity(new BirdMonster(gm, 27*TILE_SIZE, 4*TILE_SIZE));
-    map01.addEntity(new FlyingBug(gm, 23*TILE_SIZE, 7*TILE_SIZE));
+    // map01.addEntity(new BirdMonster(gm, 27*TILE_SIZE, 4*TILE_SIZE));
+    // map01.addEntity(new FlyingBug(gm, 23*TILE_SIZE, 7*TILE_SIZE));
     map01.addEntity(new BirdMonster(gm, 11*TILE_SIZE, 4*TILE_SIZE));
     map01.addEntity(new FlyingBug(gm, 29*TILE_SIZE, 2*TILE_SIZE));
     //End New Enemies
@@ -78,7 +78,6 @@ MapManager.prototype.initialize = function () {
     map02.addEntity(new UndeadCreeper(gm, 4*TILE_SIZE, 26*TILE_SIZE));
     map02.addEntity(new Zombie(gm, 29*TILE_SIZE, 22*TILE_SIZE));
     map02.addEntity(new UndeadJacket(gm, 17*TILE_SIZE, 23*TILE_SIZE));
-    map02.addEntity(new UndeadJacket(gm, 27*TILE_SIZE, 4*TILE_SIZE));
     map02.addEntity(new Zombie(gm, 2*TILE_SIZE, 5*TILE_SIZE));
     //End New Enemies
     

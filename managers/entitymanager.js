@@ -137,11 +137,13 @@ EntityManager.prototype.cacheEntities = function () {
             
         }
     }
+    this.tempEntities = undefined;
 	this.tempEntities = _.cloneDeep(this.entities);
 }
 
 /* Restores the entities from cache */
 EntityManager.prototype.restoreEntities = function () {
+    this.entities = undefined;
 	this.entities = _.cloneDeep(this.tempEntities);
     //reset the references other places
     this.entities.forEach((entity) =>
