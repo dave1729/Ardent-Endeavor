@@ -120,11 +120,7 @@ EntityManager.prototype.draw = function () {
 
 /* Removes all active entities (including map and player) from the game */
 EntityManager.prototype.removeAllEntities = function () {
-    this.entities.forEach((entity) => {
-        entity.removeFromWorld = true;
-    })
-    // console.log(this.tempEntities)
-    this.update();
+    this.entities.length = 0;
 }
 
 /* Creates a shallow copy of entities[] from game engine and stores in temp */
@@ -132,19 +128,22 @@ EntityManager.prototype.cacheEntities = function () {
     //Remove things marked for removable before caching
     for (var i = this.entities.length - 1; i >= 0; --i) {
         if (this.entities[i].removeFromWorld) {
-        	this.entities[i].removeFromWorld = false;
+        	// this.entities[i].removeFromWorld = false;
             this.entities.splice(i, 1);
             
         }
     }
-    this.tempEntities = undefined;
-	this.tempEntities = _.cloneDeep(this.entities);
+    this.tempEntities.length = 0;
+    this.tempEntities = this.entities.slice(0)
+	// this.tempEntities = _.clone(this.entities);
 }
 
 /* Restores the entities from cache */
 EntityManager.prototype.restoreEntities = function () {
-    this.entities = undefined;
-	this.entities = _.cloneDeep(this.tempEntities);
+    // this.entities = undefined;
+    this.entities.length = 0;
+    this.entities = this.tempEntities.slice(0)
+	// this.entities = _.clone(this.tempEntities);
     //reset the references other places
     this.entities.forEach((entity) =>
     {
