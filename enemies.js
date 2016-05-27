@@ -30,9 +30,8 @@
  * enemy, it will delete that event from the current map and transfer
  * the player to the battle scene.
  */
-function Enemy(game, x, y) {
+function Enemy(x, y) {
 	//this.animation = new Animation(spritesheet, 64, 64, 8, 0.07, 60, true, 1.0);
-	this.game = game;
 	this.x = x;
 	this.y = y;
 	this.overWorldSpeed = 1;
@@ -77,7 +76,7 @@ Enemy.prototype.update = function () {
 
 Enemy.prototype.draw = function () {
 	// Visual Debugging of Event Locations
-	//this.animation.drawEntity(this.game.clockTick, this.game.ctx, this.screenX, this.screenY);
+	//this.animation.drawEntity(this..clockTick, this..ctx, this.screenX, this.screenY);
 	if (gm.hitBoxVisible) {
 		gm.ctx.strokeStyle = "cyan";
 	    gm.ctx.strokeRect(this.hitBox.getScreenX(), this.hitBox.getScreenY(),
@@ -163,8 +162,8 @@ Animation.prototype.drawEnemyType01 = function (tick, ctx, x, y) {
 ///* +------------------------------------------+ */
 ///* |           ===  Werewolf  ===             | */
 ///* +------------------------------------------+ */
-//function Werewolf(game, x, y) {
-//	this.game = game;
+//function Werewolf(x, y) {
+//	
 //	this.animation = new Animation(gm.am.getAsset("./img/werewolf.png"), 
 //					 		TILE_SIZE, TILE_SIZE, 4, 0.20, 16, true, 1);
 //	this.x = x;
@@ -192,8 +191,8 @@ Animation.prototype.drawEnemyType01 = function (tick, ctx, x, y) {
 ///* +------------------------------------------+ */
 ///* |             ===  Green  ===              | */
 ///* +------------------------------------------+ */
-//function Green(game, x, y) {
-//	this.game = game;
+//function Green(x, y) {
+//	
 //	this.animation = new Animation(gm.am.getAsset("./img/greenrage.png"),
 //							TILE_SIZE, TILE_SIZE, 8, 0.07, 60, true, 1.0);
 //	this.x = x;
@@ -221,8 +220,8 @@ Animation.prototype.drawEnemyType01 = function (tick, ctx, x, y) {
 ///* +------------------------------------------+ */
 ///* |             ===  Shark  ===              | */
 ///* +------------------------------------------+ */
-//function Shark(game, x, y) {
-//	this.game = game;
+//function Shark(x, y) {
+//	
 //	this.animation = new Animation(gm.am.getAsset("./img/shark.png"),
 //							TILE_SIZE, TILE_SIZE, 4, 0.1, 16, true, 1.0);
 //	this.x = x;
@@ -249,8 +248,8 @@ Animation.prototype.drawEnemyType01 = function (tick, ctx, x, y) {
 ///* +------------------------------------------+ */
 ///* |              ===  Fire  ===              | */
 ///* +------------------------------------------+ */
-//function Fire(game, x, y, spritesheet) {
-//	this.game = game;
+//function Fire(x, y, spritesheet) {
+//	
 //	this.animation = new Animation(gm.am.getAsset("./img/alienfirebird.png"),
 //							TILE_SIZE, TILE_SIZE, 2, 0.15, 4, true, 1.0);
 //	this.x = x;
@@ -275,8 +274,7 @@ Animation.prototype.drawEnemyType01 = function (tick, ctx, x, y) {
 /* +------------------------------------------+ */
 /* |            ===  Bandit  ===              | */
 /* +------------------------------------------+ */
-function Bandit(game, x, y) {
-	this.game = game;
+function Bandit(x, y) {
 	this.runAnimationSpeed = 0.2;
 	this.walkAnimationSpeed = 0.4;
 	this.isWalking = true;
@@ -318,8 +316,7 @@ Bandit.prototype.collisionTrigger = function (player) {
 /* +------------------------------------------+ */
 /* |         ===  UndeadJacket  ===          | */
 /* +------------------------------------------+ */
-function UndeadJacket(game, x, y) {
-	this.game = game;
+function UndeadJacket(x, y) {
 	this.runAnimationSpeed = 0.2;
 	this.walkAnimationSpeed = 0.4;
 	this.isWalking = true;
@@ -361,8 +358,8 @@ UndeadJacket.prototype.collisionTrigger = function (player) {
 /* +------------------------------------------+ */
 /* |          ===  BirdMonster  ===          | */
 /* +------------------------------------------+ */
-function BirdMonster(game, x, y) {
-	this.game = game;
+function BirdMonster(x, y) {
+	
 	this.runAnimationSpeed = 0.1;
 	this.walkAnimationSpeed = 0.2;
 	this.isWalking = true;
@@ -404,8 +401,8 @@ BirdMonster.prototype.collisionTrigger = function (player) {
 /* +------------------------------------------+ */
 /* |           ===  FlyingBug  ===            | */
 /* +------------------------------------------+ */
-function FlyingBug(game, x, y) {
-	this.game = game;
+function FlyingBug(x, y) {
+	
 	this.runAnimationSpeed = 0.2;
 	this.walkAnimationSpeed = 0.3;
 	this.isWalking = true;
@@ -447,8 +444,8 @@ FlyingBug.prototype.collisionTrigger = function (player) {
 /* +------------------------------------------+ */
 /* |             ===  Devil  ===              | */
 /* +------------------------------------------+ */
-function Devil(game, x, y) {
-	this.game = game;
+function Devil(x, y) {
+	
 	this.runAnimationSpeed = 0.2;
 	this.walkAnimationSpeed = 0.3;
 	this.isWalking = true;
@@ -490,8 +487,8 @@ Devil.prototype.collisionTrigger = function (player) {
 /* +------------------------------------------+ */
 /* |        ===  ThreeHeadedDog  ===          | */
 /* +------------------------------------------+ */
-function ThreeHeadedDog(game, x, y) {
-	this.game = game;
+function ThreeHeadedDog(x, y) {
+	
 	this.runAnimationSpeed = 0.2;
 	this.walkAnimationSpeed = 0.3;
 	this.isWalking = true;
@@ -533,8 +530,8 @@ ThreeHeadedDog.prototype.collisionTrigger = function (player) {
 /* +------------------------------------------+ */
 /* |            ===  Kraken  ===              | */
 /* +------------------------------------------+ */
-function Kraken(game, x, y) {
-	this.game = game;
+function Kraken(x, y) {
+	
 	this.runAnimationSpeed = 0.2;
 	this.walkAnimationSpeed = 0.3;
 	this.isWalking = true;
@@ -577,8 +574,8 @@ Kraken.prototype.collisionTrigger = function (player) {
 /* +------------------------------------------+ */
 /* |          ===  LizardMan  ===             | */
 /* +------------------------------------------+ */
-function LizardMan(game, x, y) {
-	this.game = game;
+function LizardMan(x, y) {
+	
 	this.runAnimationSpeed = 0.15;
 	this.walkAnimationSpeed = 0.3;
 	this.isWalking = true;
@@ -620,8 +617,8 @@ LizardMan.prototype.collisionTrigger = function (player) {
 /* +------------------------------------------+ */
 /* |          ===  Goblin  ===             | */
 /* +------------------------------------------+ */
-function Goblin(game, x, y) {
-	this.game = game;
+function Goblin(x, y) {
+	
 	this.runAnimationSpeed = 0.15;
 	this.walkAnimationSpeed = 0.3;
 	this.isWalking = true;
@@ -663,8 +660,8 @@ Goblin.prototype.collisionTrigger = function (player) {
 /* +------------------------------------------+ */
 /* |          ===  Mercenary  ===             | */
 /* +------------------------------------------+ */
-function Mercenary(game, x, y) {
-	this.game = game;
+function Mercenary(x, y) {
+	
 	this.runAnimationSpeed = 0.15;
 	this.walkAnimationSpeed = 0.3;
 	this.isWalking = true;
@@ -706,8 +703,8 @@ Mercenary.prototype.collisionTrigger = function (player) {
 /* +------------------------------------------+ */
 /* |             ===  Naga  ===               | */
 /* +------------------------------------------+ */
-function Naga(game, x, y) {
-	this.game = game;
+function Naga(x, y) {
+	
 	this.runAnimationSpeed = 0.15;
 	this.walkAnimationSpeed = 0.3;
 	this.isWalking = true;
@@ -749,8 +746,8 @@ Naga.prototype.collisionTrigger = function (player) {
 /* +------------------------------------------+ */
 /* |             ===  Ogre  ===               | */
 /* +------------------------------------------+ */
-function Ogre(game, x, y) {
-	this.game = game;
+function Ogre(x, y) {
+	
 	this.runAnimationSpeed = 0.2;
 	this.walkAnimationSpeed = 0.4;
 	this.isWalking = true;
@@ -792,8 +789,8 @@ Ogre.prototype.collisionTrigger = function (player) {
 /* +------------------------------------------+ */
 /* |             ===  Slime  ===               | */
 /* +------------------------------------------+ */
-function Slime(game, x, y) {
-	this.game = game;
+function Slime(x, y) {
+	
 	this.runAnimationSpeed = 0.2;
 	this.walkAnimationSpeed = 0.4;
 	this.isWalking = true;
@@ -835,8 +832,8 @@ Slime.prototype.collisionTrigger = function (player) {
 /* +------------------------------------------+ */
 /* |             ===  Snake03  ===               | */
 /* +------------------------------------------+ */
-function Snake03(game, x, y) {
-	this.game = game;
+function Snake03(x, y) {
+	
 	this.runAnimationSpeed = 0.2;
 	this.walkAnimationSpeed = 0.4;
 	this.isWalking = true;
@@ -878,8 +875,8 @@ Snake03.prototype.collisionTrigger = function (player) {
 /* +------------------------------------------+ */
 /* |             ===  Snake04  ===               | */
 /* +------------------------------------------+ */
-function Snake04(game, x, y) {
-	this.game = game;
+function Snake04(x, y) {
+	
 	this.runAnimationSpeed = 0.1;
 	this.walkAnimationSpeed = 0.3;
 	this.isWalking = true;
@@ -921,8 +918,8 @@ Snake04.prototype.collisionTrigger = function (player) {
 /* +------------------------------------------+ */
 /* |         ===  StoneMonster  ===           | */
 /* +------------------------------------------+ */
-function StoneMonster(game, x, y) {
-	this.game = game;
+function StoneMonster(x, y) {
+	
 	this.runAnimationSpeed = 0.4;
 	this.walkAnimationSpeed = 0.6;
 	this.isWalking = true;
@@ -965,8 +962,8 @@ StoneMonster.prototype.collisionTrigger = function (player) {
 /* +------------------------------------------+ */
 /* |          ===  TreeMonster  ===           | */
 /* +------------------------------------------+ */
-function TreeMonster(game, x, y) {
-	this.game = game;
+function TreeMonster(x, y) {
+	
 	this.runAnimationSpeed = 0.4;
 	this.walkAnimationSpeed = 0.6;
 	this.isWalking = true;
@@ -1008,8 +1005,8 @@ TreeMonster.prototype.collisionTrigger = function (player) {
 /* +------------------------------------------+ */
 /* |          ===  UndeadCreeper  ===           | */
 /* +------------------------------------------+ */
-function UndeadCreeper(game, x, y) {
-	this.game = game;
+function UndeadCreeper(x, y) {
+	
 	this.runAnimationSpeed = 0.1;
 	this.walkAnimationSpeed = 1.8;
 	this.isWalking = true;
@@ -1052,8 +1049,8 @@ UndeadCreeper.prototype.collisionTrigger = function (player) {
 /* +------------------------------------------+ */
 /* |            ===  Zombie  ===              | */
 /* +------------------------------------------+ */
-function Zombie(game, x, y) {
-	this.game = game;
+function Zombie(x, y) {
+	
 	this.runAnimationSpeed = 0.4;
 	this.walkAnimationSpeed = 1;
 	this.isWalking = true;
@@ -1097,8 +1094,8 @@ Zombie.prototype.collisionTrigger = function (player) {
 /* +------------------------------------------+ */
 /* |            ===  Skeleton  ===            | */
 /* +------------------------------------------+ */
-function Skeleton(game, x, y) {
-	this.game = game;
+function Skeleton(x, y) {
+	
 	this.runAnimationSpeed = 0.3;
 	this.walkAnimationSpeed = 1;
 	this.isWalking = true;
@@ -1141,8 +1138,8 @@ Skeleton.prototype.collisionTrigger = function (player) {
 /* +------------------------------------------+ */
 /* |              ===  Lich  ===              | */
 /* +------------------------------------------+ */
-function Lich(game, x, y) {
-	this.game = game;
+function Lich(x, y) {
+	
 	this.runAnimationSpeed = 0.2;
 	this.walkAnimationSpeed = 0.4;
 	this.isWalking = true;

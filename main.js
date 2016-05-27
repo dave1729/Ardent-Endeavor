@@ -60,7 +60,7 @@ Animation.prototype.updateEntity = function (entity) {
 }
 
 //no inheritance
-function Background(game, spritesheet) {
+function Background(spritesheet) {
 	this.entityID = 0;
 	this.spritesheet = spritesheet;
 	this.game = gm;
@@ -85,7 +85,7 @@ Background.prototype.update = function () {
 };
 
 //no inheritance
-function Collidable_background(game, spritesheet) {
+function Collidable_background(spritesheet) {
 	this.entityID = 3;
 	this.spritesheet = spritesheet;
 	this.game = gm;

@@ -44,8 +44,7 @@ Event.prototype.interactTrigger = function (player) {
  * image(s) of the game world and move the character to the
  * correct coordinates.
  */
-function MapTeleportEvent(game, x, y, w, h, destMapid, destx, desty) {
-	this.game = game;
+function MapTeleportEvent(x, y, w, h, destMapid, destx, desty) {
 	this.destMapid = destMapid;
 	this.destx = destx;
 	this.desty = desty;
