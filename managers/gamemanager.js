@@ -34,7 +34,7 @@ GameManager.prototype.start = function() {
 	this.queueAssets();
     this.am.downloadAll(() => {
 		// this.startBattle(new Fire(gm, 64, 256));
-	 	this.initialize(new Player(this.am.getAsset("./img/player.png")),1, 64*0, 64*18);
+	 	this.initialize(new Player(this.am.getAsset("./img/player.png")),1, 64*3, 64*6);
         this.loop();
     })
 }
@@ -80,7 +80,7 @@ GameManager.prototype.queueAssets = function () {
     this.am.queueDownload("./img/enemies/tree_monster.png");
     this.am.queueDownload("./img/enemies/undead_creeper.png");
     this.am.queueDownload("./img/enemies/undead_jacket.png");
-    this.am.queueDownload("./img/enemies/undead02.png");
+    this.am.queueDownload("./img/enemies/undead05.png");
     this.am.queueDownload("./img/enemies/undead03.png");
     this.am.queueDownload("./img/enemies/undead04.png");
     this.am.queueDownload("./img/LevelOneBattleGrassAndTree.png");
