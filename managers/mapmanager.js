@@ -9,8 +9,7 @@
  * .getMap (mapid) returns map
  * 
  */
-function MapManager(game) {
-	this.game = game;
+function MapManager() {
 	this.maps = [];
 	this.battleMaps = [];
 }
@@ -42,7 +41,7 @@ function BattleMap(spec) {
  * .addEntity (entity)
  * 
  */
-function Map(game, mapid, backgroundLayer, collisionLayer, collisionMask) {
+function Map(mapid, backgroundLayer, collisionLayer, collisionMask) {
 	this.id = mapid;
 	this.bgLayer = backgroundLayer;
 	this.cLayer = collisionLayer;
