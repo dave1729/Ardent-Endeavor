@@ -146,7 +146,7 @@ Animation.prototype.drawEnemyType01 = function (tick, ctx, x, y) {
 		yindex = this.row;
 
 		var screenPoint = gm.cam.getMyScreenXandY(x, y);
-		if (this.spriteSheet)
+		if (this.spriteSheet && ctx)
 		{
 			ctx.drawImage(this.spriteSheet,
 				xindex * this.frameWidth, yindex * this.frameHeight,
