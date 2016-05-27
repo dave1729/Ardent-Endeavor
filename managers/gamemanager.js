@@ -80,7 +80,7 @@ GameManager.prototype.queueAssets = function () {
     this.am.queueDownload("./img/enemies/tree_monster.png");
     this.am.queueDownload("./img/enemies/undead_creeper.png");
     this.am.queueDownload("./img/enemies/undead_jacket.png");
-    this.am.queueDownload("./img/enemies/undead02.png");
+    this.am.queueDownload("./img/enemies/undead05.png");
     this.am.queueDownload("./img/enemies/undead03.png");
     this.am.queueDownload("./img/enemies/undead04.png");
     this.am.queueDownload("./img/LevelOneBattleGrassAndTree.png");
