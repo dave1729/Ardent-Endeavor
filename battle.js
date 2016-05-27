@@ -494,7 +494,7 @@ function* idMaker(min, max)
 Battle.prototype.spawnEnemy = function () {
     let point = {x: valueBetween(1, 9), y: valueBetween(1, 9)}
     let health1 = valueBetween(10, 30);
-    let damage1 = valueBetween(0, 20);
+    let damage1 = valueBetween(5, 20);
     let clone = _.cloneDeep(this.enemyType)
     if(!gm.bm.cursor.isCellOccupied(point))
     {
