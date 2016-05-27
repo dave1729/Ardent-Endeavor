@@ -51,7 +51,7 @@ MapManager.prototype.initialize = function () {
     map01.addEntity(new BirdMonster(11*TILE_SIZE, 4*TILE_SIZE));
     map01.addEntity(new FlyingBug(29*TILE_SIZE, 2*TILE_SIZE));
     //End New Enemies
-    map01.addEntity(new MapTeleportEvent(640, 640, 50, 50, 3, 15*TILE_SIZE+TILE_SIZE/2, 28*TILE_SIZE));		
+    // map01.addEntity(new MapTeleportEvent(640, 640, 50, 50, 3, 15*TILE_SIZE+TILE_SIZE/2, 28*TILE_SIZE));		
 	 map01.addEntity(new MapTeleportEvent(2024, 1730, 20, 50, 2, 3*TILE_SIZE, 1*TILE_SIZE+TILE_SIZE/2));
 	
     //map01.addEntity(new Billy(64, 256+64));

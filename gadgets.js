@@ -1,9 +1,8 @@
 /**
  * 
  */
-function Gadget(game, x, y) {
+function Gadget(x, y) {
 	//this.animation = new Animation(spritesheet, 64, 64, 8, 0.07, 60, true, 1.0);
-	this.game = game;
 	this.x = x;
 	this.y = y;
 }
@@ -48,8 +47,7 @@ Gadget.prototype.collisionTrigger = function (player, startX, startY) {
 /* +------------------------------------------+ */
 /* |             ===  Chest  ===              | */
 /* +------------------------------------------+ */
-function Chest(game, x, y, chestType, item) {
-	this.game = game;
+function Chest(x, y, chestType, item) {
 	//Animation(spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale)
 	this.animation = new Animation(gm.am.getAsset("./img/chest.png"), 
 					 		32, 48, 1, 0.06, 4, false, 1);
@@ -131,8 +129,7 @@ Animation.prototype.drawChest = function (tick, ctx, x, y, column, state) {
 /* +------------------------------------------+ */
 /* |              ===  Door  ===              | */
 /* +------------------------------------------+ */
-function Door(game, x, y, doorType, isNewMap, destMapid, destx, desty) {
-	this.game = game;
+function Door(x, y, doorType, isNewMap, destMapid, destx, desty) {
 	this.isNewMap = isNewMap;
 	this.destMapid = destMapid;
 	this.destx = destx;
