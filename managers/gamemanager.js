@@ -151,9 +151,10 @@ GameManager.prototype.startBattle = function (enemy) {
 	
 	this.cam.stopFollow();
 	this.cam.jumpToByCorner(0, 0);
-	
+	this.gamePaused = true;
 	this.em.cacheEntities();
 	this.em.removeAllEntities();
+	this.gamePaused = false;
 	this.im.setAllFalse("Dungeon");
 	this.bm.startBattle({enemyType: enemy});
 	
@@ -163,9 +164,11 @@ GameManager.prototype.startBattle = function (enemy) {
 
 /* Disables battle scene, loading regular functionality to overworld. */
 GameManager.prototype.endBattle = function () {
+	this.gamePaused = true;
 	this.em.removeAllEntities();
     gm.bm.currentBattle = undefined;
 	this.em.restoreEntities();
+	this.gamePaused = false;
 	this.im.changeCurrentGroupTo("Dungeon")
 	this.cam.follow(this.player);
 	
