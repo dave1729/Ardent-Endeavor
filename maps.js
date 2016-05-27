@@ -78,7 +78,7 @@ MapManager.prototype.initialize = function () {
     map02.addEntity(new UndeadCreeper(4*TILE_SIZE, 26*TILE_SIZE));
     map02.addEntity(new Zombie(29*TILE_SIZE, 22*TILE_SIZE));
     map02.addEntity(new UndeadJacket(17*TILE_SIZE, 23*TILE_SIZE));
-    map02.addEntity(new UndeadJacket(gm, 27*TILE_SIZE, 4*TILE_SIZE));
+    map02.addEntity(new UndeadJacket(27*TILE_SIZE, 4*TILE_SIZE));
     map02.addEntity(new Zombie(2*TILE_SIZE, 5*TILE_SIZE));
     //End New Enemies
     
