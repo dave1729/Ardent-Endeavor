@@ -146,13 +146,15 @@ Animation.prototype.drawEnemyType01 = function (tick, ctx, x, y) {
 		yindex = this.row;
 
 		var screenPoint = gm.cam.getMyScreenXandY(x, y);
-		
-		ctx.drawImage(this.spriteSheet,
+		if (this.spriteSheet)
+		{
+			ctx.drawImage(this.spriteSheet,
 				xindex * this.frameWidth, yindex * this.frameHeight,
 				this.frameWidth, this.frameHeight,
 				screenPoint.x, screenPoint.y,
 				this.frameWidth * this.scale,
 				this.frameHeight * this.scale);
+		}
 	}
 }
 
