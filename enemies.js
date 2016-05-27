@@ -146,13 +146,15 @@ Animation.prototype.drawEnemyType01 = function (tick, ctx, x, y) {
 		yindex = this.row;
 
 		var screenPoint = gm.cam.getMyScreenXandY(x, y);
-		
-		ctx.drawImage(this.spriteSheet,
+		if (this.spriteSheet && ctx)
+		{
+			ctx.drawImage(this.spriteSheet,
 				xindex * this.frameWidth, yindex * this.frameHeight,
 				this.frameWidth, this.frameHeight,
 				screenPoint.x, screenPoint.y,
 				this.frameWidth * this.scale,
 				this.frameHeight * this.scale);
+		}
 	}
 }
 
@@ -1056,13 +1058,13 @@ function Zombie(x, y) {
 	this.isWalking = true;
 	this.overWorldSpeed = 0.6;
 	//Animation(spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale) {
-	this.downAnimation = new Animation(gm.am.getAsset("./img/enemies/undead02.png"),
+	this.downAnimation = new Animation(gm.am.getAsset("./img/enemies/undead05.png"),
 			40, 56, 3, this.walkAnimationSpeed, 3, true, 1.14, 0);
-	this.leftAnimation = new Animation(gm.am.getAsset("./img/enemies/undead02.png"),
+	this.leftAnimation = new Animation(gm.am.getAsset("./img/enemies/undead05.png"),
 			40, 56, 3, this.walkAnimationSpeed, 3, true, 1.14, 1);
-	this.rightAnimation = new Animation(gm.am.getAsset("./img/enemies/undead02.png"),
+	this.rightAnimation = new Animation(gm.am.getAsset("./img/enemies/undead05.png"),
 			40, 56, 3, this.walkAnimationSpeed, 3, true, 1.14, 2);
-	this.upAnimation = new Animation(gm.am.getAsset("./img/enemies/undead02.png"),
+	this.upAnimation = new Animation(gm.am.getAsset("./img/enemies/undead05.png"),
 			40, 56, 3, this.walkAnimationSpeed, 3, true, 1.14, 3);
 	this.x = x;
 	this.y = y;
