@@ -22,22 +22,16 @@ MapManager.prototype.initialize = function () {
 	this.battleMaps.push(bmap01);
 	this.battleMaps.push(bmap02);
 	
-	/* Map 1 - grasslands */
+	/* Map 1 - Grasslands */
 	var map01 = new Map(1,
 		    new Background(gm.am.getAsset("./img/Background_Layer.png")),
 		    new Background(gm.am.getAsset("./img/Foreground_Layer.png")),
 		    new Collidable_background(gm.am.getAsset("./img/Collision_Layer.png"))
 	);
-	//map01.addEntity(new MapTeleportEvent(400, 400, 50, 50, 2, 800, 800));
-	//map01.addEntity(new MapTeleportEvent(700, 700, 50, 50, 2, 500, 500));
 	
-	//map01.addEntity(new Green(64, 64));
-    //map01.addEntity(new Shark(64, 128));
-    //map01.addEntity(new Fire(64, 256));
+	//ENEMIES
     map01.addEntity(new Bandit(18*TILE_SIZE, 21*TILE_SIZE));
     map01.addEntity(new Goblin(19*TILE_SIZE, 22*TILE_SIZE));
-    
-    //Newly Added Enemies
     map01.addEntity(new TreeMonster(15*TILE_SIZE, 4*TILE_SIZE));
     map01.addEntity(new TreeMonster(9*TILE_SIZE, 1*TILE_SIZE));
     map01.addEntity(new TreeMonster(19*TILE_SIZE, 6*TILE_SIZE));
@@ -51,82 +45,117 @@ MapManager.prototype.initialize = function () {
     map01.addEntity(new BirdMonster(11*TILE_SIZE, 4*TILE_SIZE));
     map01.addEntity(new FlyingBug(29*TILE_SIZE, 2*TILE_SIZE));
     //End New Enemies
-    // map01.addEntity(new MapTeleportEvent(640, 640, 50, 50, 3, 15*TILE_SIZE+TILE_SIZE/2, 28*TILE_SIZE));		
-	 map01.addEntity(new MapTeleportEvent(2024, 1730, 20, 50, 2, 3*TILE_SIZE, 1*TILE_SIZE+TILE_SIZE/2));
+    
+    //This is David's Skip to Level 3 For Testing Teleport (behind the tree)
+    map01.addEntity(new MapTeleportEvent(32, 720, 5, 5, 3, 15*TILE_SIZE+TILE_SIZE/2, 28*TILE_SIZE));
+    
+    //Regular End of Level Teleport
+	map01.addEntity(new MapTeleportEvent(2024, 1730, 20, 50, 2, 3*TILE_SIZE, 1*TILE_SIZE+TILE_SIZE/2));
 	
+	//Obvious Chests
+    map01.addEntity(new Chest(19*TILE_SIZE, 19*TILE_SIZE, 2, "an Emerald!"));
+    map01.addEntity(new Chest(12*TILE_SIZE, 27*TILE_SIZE, 1, "Gold!"));
+    map01.addEntity(new Chest(1*TILE_SIZE, 20*TILE_SIZE, 2, "an Emerald!"));
+    map01.addEntity(new Chest(30*TILE_SIZE, 1*TILE_SIZE, 1, "Gold!"));
+    map01.addEntity(new Chest(24*TILE_SIZE, 28*TILE_SIZE, 2, "an Emerald!"));
+    
+    //HIDDEN CHESTS
+    map01.addEntity(new Chest(1*TILE_SIZE, 2*TILE_SIZE, 1, "Gold!"));
+    map01.addEntity(new Chest(19*TILE_SIZE + 16, 1*TILE_SIZE - 12, 1, "Gold!"));
+    map01.addEntity(new Chest(29*TILE_SIZE + 16, 21*TILE_SIZE - 12, 1, "Gold!"));
+    map01.addEntity(new Chest(6*TILE_SIZE + 16, 14*TILE_SIZE - 12, 1, "Gold!"));
+    map01.addEntity(new Chest(31*TILE_SIZE + 16, 9*TILE_SIZE - 12, 1, "Gold!"));
+    
+    //OLD UNUSED CODE
     //map01.addEntity(new Billy(64, 256+64));
-    //map01.addEntity(new Chest(5*TILE_SIZE, 2*TILE_SIZE, 1, "Peanut"));
-    //map01.addEntity(new Chest(6*TILE_SIZE, 2*TILE_SIZE, 0, "Pinecone"));
-    map01.addEntity(new Chest(19*TILE_SIZE, 19*TILE_SIZE, 2, "Emerald"));
-    map01.addEntity(new Chest(12*TILE_SIZE, 27*TILE_SIZE, 1, "Treasure"));
-    map01.addEntity(new Chest(1*TILE_SIZE, 6*TILE_SIZE, 2, "Emerald"));
-    map01.addEntity(new Chest(30*TILE_SIZE, 1*TILE_SIZE, 1, "Treasure"));
-    map01.addEntity(new Chest(24*TILE_SIZE, 28*TILE_SIZE, 2, "Emerald"));
     //map01.addEntity(new Door(3*TILE_SIZE, 3*TILE_SIZE, 0, false, null, 10*TILE_SIZE, 10*TILE_SIZE));
     this.addMap(map01);
     
     
-    /* Map 2 - Temple */
+    /* Map 2 - Maze */
     var map02 = new Map(2,
 		    new Background(gm.am.getAsset("./img/Background_Layer2.png")),
 		    new Background(gm.am.getAsset("./img/Foreground_Layer2.png")),
 		    new Collidable_background(gm.am.getAsset("./img/Collision_Layer2.png"))
 	);
-    //New Enemies
+    
+    //ENEMIES
     map02.addEntity(new StoneMonster(15*TILE_SIZE, 4*TILE_SIZE));
     map02.addEntity(new UndeadCreeper(19*TILE_SIZE, 6*TILE_SIZE));
     map02.addEntity(new UndeadCreeper(4*TILE_SIZE, 26*TILE_SIZE));
     map02.addEntity(new Zombie(29*TILE_SIZE, 22*TILE_SIZE));
     map02.addEntity(new UndeadJacket(17*TILE_SIZE, 23*TILE_SIZE));
-    map02.addEntity(new UndeadJacket(27*TILE_SIZE, 4*TILE_SIZE));
-    map02.addEntity(new Zombie(2*TILE_SIZE, 5*TILE_SIZE));
-    //End New Enemies
-    
+    map02.addEntity(new Zombie(2*TILE_SIZE, 5*TILE_SIZE));    
     map02.addEntity(new UndeadJacket(11*TILE_SIZE, 3*TILE_SIZE));
     map02.addEntity(new UndeadJacket(10*TILE_SIZE, 25*TILE_SIZE));
     map02.addEntity(new UndeadJacket(25*TILE_SIZE, 22*TILE_SIZE));
     map02.addEntity(new Skeleton(25*TILE_SIZE, 7*TILE_SIZE));
+    map02.addEntity(new StoneMonster(14*TILE_SIZE, 17*TILE_SIZE));
+    map02.addEntity(new UndeadJacket(28*TILE_SIZE, 18*TILE_SIZE));
+    map02.addEntity(new UndeadCreeper(24*TILE_SIZE, 10*TILE_SIZE));
+    map02.addEntity(new UndeadCreeper(27*TILE_SIZE, 10*TILE_SIZE));
+	
+	//Obvious Chests
+	map02.addEntity(new Chest(1*TILE_SIZE, 1*TILE_SIZE, 2, "an Emerald!"));
+	map02.addEntity(new Chest(1*TILE_SIZE, 23*TILE_SIZE, 1, "Gold!"));
+	map02.addEntity(new Chest(14*TILE_SIZE, 16*TILE_SIZE, 2, "an Emerald!"));
+	map02.addEntity(new Chest(15*TILE_SIZE, 1*TILE_SIZE, 1, "Gold!"));
+	map02.addEntity(new Chest(25*TILE_SIZE, 15*TILE_SIZE, 2, "an Emerald!"));
+	
+    //HIDDEN CHESTS
+    map02.addEntity(new Chest(28*TILE_SIZE + 16, 26*TILE_SIZE - 12, 1, "Gold!"));
+    map02.addEntity(new Chest(28*TILE_SIZE + 16, 15*TILE_SIZE - 12, 1, "Gold!"));
+    map02.addEntity(new Chest(5*TILE_SIZE + 16, 1*TILE_SIZE - 12, 1, "Gold!"));
+    
+    //REALLY HIDDEN CHEST!!!
+    map02.addEntity(new Chest(21*TILE_SIZE + 16, 1*TILE_SIZE - 12, 1, "Gold!"));
+    
+    //Return to Level 1
     map02.addEntity(new MapTeleportEvent(3*TILE_SIZE, 0*TILE_SIZE, 50, 50, 1, 1944, 1740));
+    
+    //To Level 3
 	map02.addEntity(new MapTeleportEvent(1641, 390, 50, 50, 3, 15*TILE_SIZE+TILE_SIZE/2, 28*TILE_SIZE));
-	
-	map02.addEntity(new Chest(1*TILE_SIZE, 1*TILE_SIZE, 2, "Emerald"));
-	map02.addEntity(new Chest(1*TILE_SIZE, 23*TILE_SIZE, 1, "Treasure"));
-	map02.addEntity(new Chest(14*TILE_SIZE, 16*TILE_SIZE, 2, "Emerald"));
-	map02.addEntity(new Chest(15*TILE_SIZE, 1*TILE_SIZE, 1, "Treasure"));
-	map02.addEntity(new Chest(25*TILE_SIZE, 15*TILE_SIZE, 2, "Emerald"));
-	
-	//map02.addEntity(new Green(64, 64));
-    //map02.addEntity(new Shark(64, 128));
-    //map02.addEntity(new Fire(64, 256));
+    
     this.addMap(map02);
 	
     
-    /* Map 2 - Temple */
+    /* Map 3 - Castle */
     var map03 = new Map(3,
 		    new Background(gm.am.getAsset("./img/Background_Layer3.png")),
 		    new Background(gm.am.getAsset("./img/Foreground_Layer3.png")),
 		    new Collidable_background(gm.am.getAsset("./img/Collision_Layer3.png"))
 	);
-	//map03.addEntity(new MapTeleportEvent(128, 256, 50, 50, 1, 800, 800));
+	
+    //ENEMIES
+    map03.addEntity(new Slime(22*TILE_SIZE, 6*TILE_SIZE));
+    map03.addEntity(new Slime(14*TILE_SIZE, 16*TILE_SIZE));
+    map03.addEntity(new Slime(12*TILE_SIZE, 13*TILE_SIZE));
+    map03.addEntity(new Slime(7*TILE_SIZE, 9*TILE_SIZE));
+    map03.addEntity(new Slime(26*TILE_SIZE, 25*TILE_SIZE));
+    map03.addEntity(new Slime(26*TILE_SIZE, 14*TILE_SIZE));
+    map03.addEntity(new Slime(29*TILE_SIZE, 14*TILE_SIZE));
+    map03.addEntity(new Slime(16*TILE_SIZE, 5*TILE_SIZE));
+    map03.addEntity(new Slime(1*TILE_SIZE, 13*TILE_SIZE));
+    map03.addEntity(new Devil(6*TILE_SIZE, 11*TILE_SIZE));
+    map03.addEntity(new Mercenary(27*TILE_SIZE, 2*TILE_SIZE));
     map03.addEntity(new ThreeHeadedDog(23*TILE_SIZE, 23*TILE_SIZE));
-    map03.addEntity(new ThreeHeadedDog(23*TILE_SIZE, 13*TILE_SIZE));
-    map03.addEntity(new Ogre(4*TILE_SIZE, 6*TILE_SIZE));
-    map03.addEntity(new Ogre(8*TILE_SIZE, 6*TILE_SIZE));
+    map03.addEntity(new ThreeHeadedDog(20*TILE_SIZE, 9*TILE_SIZE));
+    map03.addEntity(new Ogre(4*TILE_SIZE, 7*TILE_SIZE));
+    map03.addEntity(new Ogre(8*TILE_SIZE, 7*TILE_SIZE));
 	map03.addEntity(new UndeadCreeper(3*TILE_SIZE, 22*TILE_SIZE));
-	map03.addEntity(new YouWinEvent(9*TILE_SIZE, 0*TILE_SIZE, 2*TILE_SIZE, 1.3*TILE_SIZE));
 	map03.addEntity(new Lich(6*TILE_SIZE, 5*TILE_SIZE));
+	map03.addEntity(new YouWinEvent(9*TILE_SIZE, 0*TILE_SIZE, 2*TILE_SIZE, 1.3*TILE_SIZE));
 	
-    map03.addEntity(new Chest(2*TILE_SIZE, 22*TILE_SIZE, 2, "Emerald"));
-    map03.addEntity(new Chest(29*TILE_SIZE, 21*TILE_SIZE, 1, "Treasure"));
-    map03.addEntity(new Chest(25*TILE_SIZE, 9*TILE_SIZE, 2, "Emerald"));
-    map03.addEntity(new Chest(3*TILE_SIZE, 12*TILE_SIZE, 1, "Treasure"));
-    map03.addEntity(new Chest(2*TILE_SIZE, 2*TILE_SIZE, 2, "Emerald"));
+	//Obvious Chests
+    map03.addEntity(new Chest(2*TILE_SIZE, 22*TILE_SIZE, 2, "an Emerald!"));
+    map03.addEntity(new Chest(29*TILE_SIZE, 21*TILE_SIZE, 1, "Gold!"));
+    map03.addEntity(new Chest(25*TILE_SIZE, 9*TILE_SIZE, 2, "an Emerald!"));
+    map03.addEntity(new Chest(3*TILE_SIZE, 12*TILE_SIZE, 1, "Gold!"));
+    map03.addEntity(new Chest(2*TILE_SIZE, 2*TILE_SIZE, 2, "an Emerald!"));
 	
+    //Return to Level 2
 	map03.addEntity(new MapTeleportEvent(15*TILE_SIZE, 29*TILE_SIZE+TILE_SIZE-20, TILE_SIZE*2, 20, 2, 1641, 470));
 	
-	//map03.addEntity(new Green(64, 64));
-    //map03.addEntity(new Shark(64, 128));
-    //map03.addEntity(new Fire(64, 256));
     this.addMap(map03);
 	
 	return true;
