@@ -62,10 +62,26 @@ Camera.prototype.update = function() {
 			this.leftX = Math.floor(newX);
 			this.rightX = Math.floor(newX + this.width);
 		}
+		else if (newX < 0){
+			this.leftX = 0
+			this.rightX = Math.floor(this.width);
+		}
+		else if (newX > (dungeonWidth - gm.canvas.width)) {
+			this.leftX = Math.floor(dungeonWidth - this.width);
+			this.rightX = Math.floor(dungeonWidth);
+		}
 		
 		if(newY >= 0 && newY <= (dungeonHeight - gm.canvas.height) ) {
 			this.topY = Math.floor(newY);
 			this.bottomY = Math.floor(newY + this.height);
+		}
+		else if (newY < 0){
+			this.topY = 0
+			this.bottomY = Math.floor(this.height);
+		}
+		else if (newY > (dungeonHeight - gm.canvas.height)) {
+			this.topY = Math.floor(dungeonHeight - this.height);
+			this.bottomY = Math.floor(dungeonHeight);
 		}
 	}
 
