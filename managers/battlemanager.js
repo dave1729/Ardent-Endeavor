@@ -1,7 +1,22 @@
 function BattleManager() {
     this.cursor = new Cursor();
     this.grid = new Grid();
+    this.battleUnits = [];
     this.currentBattle = undefined;
+}
+
+BattleManager.prototype.init = function () {
+    this.createPlayers();
+}
+
+BattleManager.prototype.createPlayers = function ()
+{
+    this.battleUnits.push(new PlayerUnit({spriteSheet:gm.am.getAsset("./img/player1.png"), 
+                                          x: 0, y : 0, health: 100, damage: 10}));
+    this.battleUnits.push(new PlayerUnit({spriteSheet:gm.am.getAsset("./img/player2.png"), 
+                                          x: 0, y : 0, health: 100, damage: 10}));
+    this.battleUnits.push(new PlayerUnit({spriteSheet:gm.am.getAsset("./img/player3.png"), 
+                                          x: 0, y : 0, health: 100, damage: 10}));
 }
 
 BattleManager.prototype.createBattle = function (spec) {

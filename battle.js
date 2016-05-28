@@ -285,11 +285,11 @@ Battle.prototype.setupPhase = function () {
     let click = gm.bm.cursor.getClick();
     if(click)
     {
-        if(!gm.bm.cursor.isCellOccupied())
+        if(!gm.bm.cursor.isCellOccupied(click.x, click.y))
         {
             if (this.validPlacement(click.x, click.y))
             {
-                this.spawnPlayer();
+                this.spawnPlayer(click.x, click.y);
             }
         }
         gm.im.currentgroup.click = undefined;
@@ -310,6 +310,10 @@ Battle.prototype.resolveFight = function () {
     {
         if (defender.AIPackage)
         {
+            //Give player exp and gold
+            gm.player.gold += defender.battle.gold;
+            attacker.exp += defender.battle.exp;
+            
             this.enemyUnits.splice(this.enemyUnits.indexOf(defender), 1);
         }
         else
@@ -436,22 +440,32 @@ Battle.prototype.resetPUnitActions = function () {
     })
 }
 
-Battle.prototype.spawnPlayer = function (params) 
+Battle.prototype.spawnPlayer = function (x, y) 
 {
-    console.log("./img/player" + this.maxPlayers + ".png")
-    let over = new Player(gm.am.getAsset("./img/player" + this.maxPlayers + ".png"));
-    
-    over.x = gm.bm.cursor.x * TILE_SIZE;
-    over.y = gm.bm.cursor.y * TILE_SIZE;
-    over.animation.sheetWidth = 4;
-    over.animation.frames = 12;
-    over.animation.frameDuration = 0.2;
-    let spawn = new PlayerUnit({overworld: over, x: gm.bm.cursor.x, y :gm.bm.cursor.y, health: 100, damage: 10});
+    let spawn = gm.bm.battleUnits[this.maxPlayers - 1];
+    spawn.x = x;
+    spawn.y = y;
+    console.log(spawn);
     gm.em.addEntity(spawn);
-    this.availableUnits.push(spawn);
     this.playerUnits.push(spawn);
     this.maxPlayers--;
 }
+// Battle.prototype.spawnPlayer = function (params) 
+// {
+//     console.log("./img/player" + this.maxPlayers + ".png")
+//     let over = new Player(gm.am.getAsset("./img/player" + this.maxPlayers + ".png"));
+    
+//     over.x = gm.bm.cursor.x * TILE_SIZE;
+//     over.y = gm.bm.cursor.y * TILE_SIZE;
+//     over.animation.sheetWidth = 4;
+//     over.animation.frames = 12;
+//     over.animation.frameDuration = 0.2;
+//     let spawn = new PlayerUnit({overworld: over, spriteSheet:gm.am.getAsset("./img/player" + this.maxPlayers + ".png"),  x: gm.bm.cursor.x, y :gm.bm.cursor.y, health: 100, damage: 10});
+//     gm.em.addEntity(spawn);
+//     this.availableUnits.push(spawn);
+//     this.playerUnits.push(spawn);
+//     this.maxPlayers--;
+// }
 
 Battle.prototype.validPlacement = function (x, y) {
     return this.validLocations.filter((point) => {
@@ -478,7 +492,7 @@ Battle.prototype.spawnEnemies = function () {
     this.spawnEnemy();
     this.spawnEnemy();
     this.spawnEnemy();
-        this.spawnEnemy();
+    this.spawnEnemy();
 }
 function valueBetween(min, max)
 {
@@ -495,7 +509,7 @@ Battle.prototype.spawnEnemy = function () {
     let point = {x: valueBetween(1, 9), y: valueBetween(1, 9)}
     let health1 = valueBetween(10, 30);
     let damage1 = valueBetween(5, 20);
-    let clone = this.enemyType
+    let clone = this.enemyType;
     if(!gm.bm.cursor.isCellOccupied(point))
     {
         let spawn = new EnemyUnit({x: point.x, y: point.y, overworld: clone, health: health1, damage: damage1});

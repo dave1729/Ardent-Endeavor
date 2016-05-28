@@ -46,7 +46,10 @@ function Enemy(x, y) {
 	};
 	
 	this.angle = this.direction.DOWN;
-	
+	this.battle = {
+		gold: 5,
+		exp: 3
+	}
 	this.runAnimationSpeed = 0.2;
 	this.walkAnimationSpeed = 0.4;
 	this.isWalking = true;
