@@ -70,9 +70,10 @@ Chest.prototype.draw = function () {
 	Gadget.prototype.draw.call(this);
 }
 Chest.prototype.update = function () {
-	if (this.state === 2 && this.animation.isDone()) {
-		gm.openDialogueBox(this.constructor.name,
-				"You found " + this.item);
+	if (this.state === 2 && this.animation.isDone())
+	{
+		gm.openDialogueBox(this.item.name,
+				"You found " + this.item.toString());
 		this.state = 3;
 	}
 	Gadget.prototype.update.call(this);

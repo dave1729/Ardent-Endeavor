@@ -54,17 +54,17 @@ MapManager.prototype.initialize = function () {
 	
 	//Obvious Chests
     map01.addEntity(new Chest(19*TILE_SIZE, 19*TILE_SIZE, 2, "an Emerald!"));
-    map01.addEntity(new Chest(12*TILE_SIZE, 27*TILE_SIZE, 1, "Gold!"));
+    map01.addEntity(new Chest(12*TILE_SIZE, 27*TILE_SIZE, 1, new Currency({value: 5, name: "Gold"})));
     map01.addEntity(new Chest(1*TILE_SIZE, 20*TILE_SIZE, 2, "an Emerald!"));
-    map01.addEntity(new Chest(30*TILE_SIZE, 1*TILE_SIZE, 1, "Gold!"));
+    map01.addEntity(new Chest(30*TILE_SIZE, 1*TILE_SIZE, 1, new Currency({value: 5, name: "Gold"})));
     map01.addEntity(new Chest(24*TILE_SIZE, 28*TILE_SIZE, 2, "an Emerald!"));
     
     //HIDDEN CHESTS
-    map01.addEntity(new Chest(1*TILE_SIZE, 2*TILE_SIZE, 1, "Gold!"));
-    map01.addEntity(new Chest(19*TILE_SIZE + 16, 1*TILE_SIZE - 12, 1, "Gold!"));
-    map01.addEntity(new Chest(29*TILE_SIZE + 16, 21*TILE_SIZE - 12, 1, "Gold!"));
-    map01.addEntity(new Chest(6*TILE_SIZE + 16, 14*TILE_SIZE - 12, 1, "Gold!"));
-    map01.addEntity(new Chest(31*TILE_SIZE + 16, 9*TILE_SIZE - 12, 1, "Gold!"));
+    map01.addEntity(new Chest(1*TILE_SIZE, 2*TILE_SIZE, 1, new Currency({value: 5, name: "Gold"})));
+    map01.addEntity(new Chest(19*TILE_SIZE + 16, 1*TILE_SIZE - 12, 1, new Currency({value: 5, name: "Gold"})));
+    map01.addEntity(new Chest(29*TILE_SIZE + 16, 21*TILE_SIZE - 12, 1, new Currency({value: 5, name: "Gold"})));
+    map01.addEntity(new Chest(6*TILE_SIZE + 16, 14*TILE_SIZE - 12, 1, new Currency({value: 5, name: "Gold"})));
+    map01.addEntity(new Chest(31*TILE_SIZE + 16, 9*TILE_SIZE - 12, 1, new Currency({value: 5, name: "Gold"})));
     
     //OLD UNUSED CODE
     //map01.addEntity(new Billy(64, 256+64));
@@ -97,18 +97,18 @@ MapManager.prototype.initialize = function () {
 	
 	//Obvious Chests
 	map02.addEntity(new Chest(1*TILE_SIZE, 1*TILE_SIZE, 2, "an Emerald!"));
-	map02.addEntity(new Chest(1*TILE_SIZE, 23*TILE_SIZE, 1, "Gold!"));
+	map02.addEntity(new Chest(1*TILE_SIZE, 23*TILE_SIZE, 1, new Currency({value: 5, name: "Gold"})));
 	map02.addEntity(new Chest(14*TILE_SIZE, 16*TILE_SIZE, 2, "an Emerald!"));
-	map02.addEntity(new Chest(15*TILE_SIZE, 1*TILE_SIZE, 1, "Gold!"));
+	map02.addEntity(new Chest(15*TILE_SIZE, 1*TILE_SIZE, 1, new Currency({value: 5, name: "Gold"})));
 	map02.addEntity(new Chest(25*TILE_SIZE, 15*TILE_SIZE, 2, "an Emerald!"));
 	
     //HIDDEN CHESTS
-    map02.addEntity(new Chest(28*TILE_SIZE + 16, 26*TILE_SIZE - 12, 1, "Gold!"));
-    map02.addEntity(new Chest(28*TILE_SIZE + 16, 15*TILE_SIZE - 12, 1, "Gold!"));
-    map02.addEntity(new Chest(5*TILE_SIZE + 16, 1*TILE_SIZE - 12, 1, "Gold!"));
+    map02.addEntity(new Chest(28*TILE_SIZE + 16, 26*TILE_SIZE - 12, 1, new Currency({value: 5, name: "Gold"})));
+    map02.addEntity(new Chest(28*TILE_SIZE + 16, 15*TILE_SIZE - 12, 1, new Currency({value: 5, name: "Gold"})));
+    map02.addEntity(new Chest(5*TILE_SIZE + 16, 1*TILE_SIZE - 12, 1, new Currency({value: 5, name: "Gold"})));
     
     //REALLY HIDDEN CHEST!!!
-    map02.addEntity(new Chest(21*TILE_SIZE + 16, 1*TILE_SIZE - 12, 1, "Gold!"));
+    map02.addEntity(new Chest(21*TILE_SIZE + 16, 1*TILE_SIZE - 12, 1, new Currency({value: 5, name: "Gold"})));
     
     //Return to Level 1
     map02.addEntity(new MapTeleportEvent(3*TILE_SIZE, 0*TILE_SIZE, 50, 50, 1, 1944, 1740));
@@ -148,9 +148,9 @@ MapManager.prototype.initialize = function () {
 	
 	//Obvious Chests
     map03.addEntity(new Chest(2*TILE_SIZE, 22*TILE_SIZE, 2, "an Emerald!"));
-    map03.addEntity(new Chest(29*TILE_SIZE, 21*TILE_SIZE, 1, "Gold!"));
+    map03.addEntity(new Chest(29*TILE_SIZE, 21*TILE_SIZE, 1, new Currency({value: 5, name: "Gold"})));
     map03.addEntity(new Chest(25*TILE_SIZE, 9*TILE_SIZE, 2, "an Emerald!"));
-    map03.addEntity(new Chest(3*TILE_SIZE, 12*TILE_SIZE, 1, "Gold!"));
+    map03.addEntity(new Chest(3*TILE_SIZE, 12*TILE_SIZE, 1, new Currency({value: 5, name: "Gold"})));
     map03.addEntity(new Chest(2*TILE_SIZE, 2*TILE_SIZE, 2, "an Emerald!"));
 	
     //Return to Level 2
