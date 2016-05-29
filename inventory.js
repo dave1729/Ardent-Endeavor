@@ -63,8 +63,8 @@ Currency.prototype.toString = function (params) {
 
 function Consumable(spec)
 {
-    //function pointer to an effect that happens on the target
-    this.effect = spec.effect;
+    //function pointer to an effects that happen to the user
+    this.effects = spec.effects;
     Item.call(this, spec);
 }
 
@@ -73,7 +73,10 @@ Consumable.prototype.constructor = Consumable;
 
 Consumable.prototype.use = function (target)
 {
-    this.effect.activate(target);
+    this.effects.forEach((effect) =>
+    {
+        effect.activate(target);
+    })
 }
 
 function Equipment(spec)
@@ -110,7 +113,7 @@ function inventoryHowTo ()
 {
     let inv = new Inventory();
     inv.addItem(new Consumable({name: "Health Potion", description: "Restores 20 health", 
-                                quantity: 3, effect: new RestoreHealth({value: 20})}));
+                                quantity: 3, effects: [new RestoreHealth({value: 20})]}));
     // find index when you click on it 
     //second parameter the target to use on afk PlayerUnit
     inv.useItem(0, playerUnit)
