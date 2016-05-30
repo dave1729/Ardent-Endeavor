@@ -118,8 +118,11 @@ Unit.prototype.calculateActionRadius = function (spec)
 function EnemyUnit(spec)
 {
     this.AIPackage = gm.ai.AIPackages.Berserker;
-    this.overworld = spec.overworld;
-    this.animation = spec.overworld.animation;
+    // spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale, row
+    console.log(spec.animation)
+    this.animation = new Animation(spec.animation.spriteSheet, spec.animation.frameWidth, spec.animation.frameHeight,
+                                   spec.animation.sheetWidth, spec.animation.frameDuration, spec.animation.frames, 
+                                   spec.animation.loop, spec.animation.scale, spec.animation.row);
     Unit.call(this, spec);
 }
 
@@ -136,11 +139,8 @@ EnemyUnit.prototype.draw = function (ctx) {
         ctx.closePath();
         ctx.fill();
     }
-    	var location = {x: this.x * TILE_SIZE,
-					y: this.y * TILE_SIZE,
-					xOffset: this.xOffset,
-					yOffset: this.yOffset };
-	this.overworld.draw(ctx, location);
+    // tick, ctx, x, y
+	this.animation.drawEnemyType01(gm.clockTick, ctx, this.x * TILE_SIZE, this.y * TILE_SIZE);
     Unit.prototype.draw.call(this, ctx);
 }
 

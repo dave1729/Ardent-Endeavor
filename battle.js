@@ -512,7 +512,7 @@ Battle.prototype.spawnEnemy = function () {
     let clone = this.enemyType;
     if(!gm.bm.cursor.isCellOccupied(point))
     {
-        let spawn = new EnemyUnit({x: point.x, y: point.y, overworld: clone, health: health1, damage: damage1});
+        let spawn = new EnemyUnit({x: point.x, y: point.y, animation: this.enemyType.downAnimation, health: health1, damage: damage1});
         gm.em.addEntity(spawn);
         this.enemyUnits.push(spawn);
     }
