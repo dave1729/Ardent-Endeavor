@@ -311,8 +311,8 @@ Battle.prototype.resolveFight = function () {
         if (defender.AIPackage)
         {
             //Give player exp and gold
-            gm.player.gold += defender.battle.gold;
-            attacker.exp += defender.battle.exp;
+            gm.player.gold += defender.reward.gold;
+            attacker.exp += defender.reward.exp;
             
             this.enemyUnits.splice(this.enemyUnits.indexOf(defender), 1);
         }
@@ -327,17 +327,13 @@ Battle.prototype.resolveFight = function () {
 }
 
 Battle.prototype.playerPhase = function () {
-    // if (this.availableUnits.length === 0)
-    // {
-    //     console.log("TURN DONE")
-    //     this.currentPhase = this.enemyPhase;
-    // }
     if (gm.bm.cursor.selected && gm.bm.cursor.target)
     {
         this.resolveFight();
         gm.bm.cursor.deselect();
         gm.im.currentgroup.click = undefined;
     }
+    
     if(gm.im.checkInput("endTurn"))
     {
         console.log("TURN DONE")
@@ -420,6 +416,8 @@ Battle.prototype.enemyPhaseTest = function (enemyMoves)
     {
         console.log("Defeat.")
         gm.endBattle();
+        // TODO: JUSTIN fix this comment out gm.endBattle(); after
+        // gm.gameOver();
     }
     if (this.enemyUnits.length === 0)
     {
@@ -445,27 +443,10 @@ Battle.prototype.spawnPlayer = function (x, y)
     let spawn = gm.bm.battleUnits[this.maxPlayers - 1];
     spawn.x = x;
     spawn.y = y;
-    console.log(spawn);
     gm.em.addEntity(spawn);
     this.playerUnits.push(spawn);
     this.maxPlayers--;
 }
-// Battle.prototype.spawnPlayer = function (params) 
-// {
-//     console.log("./img/player" + this.maxPlayers + ".png")
-//     let over = new Player(gm.am.getAsset("./img/player" + this.maxPlayers + ".png"));
-    
-//     over.x = gm.bm.cursor.x * TILE_SIZE;
-//     over.y = gm.bm.cursor.y * TILE_SIZE;
-//     over.animation.sheetWidth = 4;
-//     over.animation.frames = 12;
-//     over.animation.frameDuration = 0.2;
-//     let spawn = new PlayerUnit({overworld: over, spriteSheet:gm.am.getAsset("./img/player" + this.maxPlayers + ".png"),  x: gm.bm.cursor.x, y :gm.bm.cursor.y, health: 100, damage: 10});
-//     gm.em.addEntity(spawn);
-//     this.availableUnits.push(spawn);
-//     this.playerUnits.push(spawn);
-//     this.maxPlayers--;
-// }
 
 Battle.prototype.validPlacement = function (x, y) {
     return this.validLocations.filter((point) => {
@@ -482,10 +463,6 @@ Battle.prototype.resetUnits = function () {
     this.availableUnits = this.playerUnits;
 }
 
-Battle.prototype.disableInput = function () {
-    gm.disableInput = true;
-}
-
 Battle.prototype.spawnEnemies = function () {
 
     this.spawnEnemy();
@@ -494,6 +471,7 @@ Battle.prototype.spawnEnemies = function () {
     this.spawnEnemy();
     this.spawnEnemy();
 }
+
 function valueBetween(min, max)
 {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -512,7 +490,7 @@ Battle.prototype.spawnEnemy = function () {
     let clone = this.enemyType;
     if(!gm.bm.cursor.isCellOccupied(point))
     {
-        let spawn = new EnemyUnit({x: point.x, y: point.y, animation: this.enemyType.downAnimation, health: health1, damage: damage1});
+        let spawn = new EnemyUnit({x: point.x, y: point.y, animation: this.enemyType.downAnimation, health: health1, damage: damage1, reward: this.enemyType.reward});
         gm.em.addEntity(spawn);
         this.enemyUnits.push(spawn);
     }

@@ -257,6 +257,12 @@ GameManager.prototype.closeDialogueBox = function () {
 	document.getElementById("uiLayer").style.zIndex = "-1";
 }
 
+GameManager.prototype.gameOver = function () 
+{
+	this.em.removeAllEntities();
+	this.openDialogueBox("God", "Game Over");
+}
+
 GameManager.prototype.checkMapCollision = function (rectBox, callback) {
 	imgData = this.ctxCol.getImageData(rectBox.x, rectBox.y, rectBox.width, rectBox.height);
 	

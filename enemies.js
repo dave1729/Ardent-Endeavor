@@ -46,7 +46,7 @@ function Enemy(x, y) {
 	};
 	
 	this.angle = this.direction.DOWN;
-	this.battle = {
+	this.reward = {
 		gold: 5,
 		exp: 3
 	}

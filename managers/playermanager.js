@@ -3,6 +3,7 @@ var gm = gm || {};
 function Player(spritesheet) {
 	this.spriteSquareSize = 64;
 	this.scale = 1;
+	this.gold = 0;
 	//Animation: spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale
 	this.animation = new Animation(spritesheet, this.spriteSquareSize, this.spriteSquareSize, 9, 0.1, 32, true, this.scale);
 	this.regSpeed = 325;

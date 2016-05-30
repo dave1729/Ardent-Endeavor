@@ -118,8 +118,7 @@ Unit.prototype.calculateActionRadius = function (spec)
 function EnemyUnit(spec)
 {
     this.AIPackage = gm.ai.AIPackages.Berserker;
-    // spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale, row
-    console.log(spec.animation)
+    this.reward = spec.reward;
     this.animation = new Animation(spec.animation.spriteSheet, spec.animation.frameWidth, spec.animation.frameHeight,
                                    spec.animation.sheetWidth, spec.animation.frameDuration, spec.animation.frames, 
                                    spec.animation.loop, spec.animation.scale, spec.animation.row);
@@ -173,6 +172,8 @@ function PlayerUnit(spec)
     //function Animation(spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale, row) {
     this.animation = new Animation(spec.spriteSheet, 64, 64, 4, 0.2, 12, true, 1);
     this.selectedAction = {move: false, attack: false}
+    this.exp = 0;
+    this.level = 0;
     this.possibleAttacks = [];
     Unit.call(this, spec);
 }

@@ -527,6 +527,7 @@ function DialogueBox(uimanager, ctx) {
 	this.buttonMsg = "";
 	this.buttons = [];
 }
+
 DialogueBox.prototype.update = function () {
 	
 	if (gm.im.checkInput("confirm")) {
