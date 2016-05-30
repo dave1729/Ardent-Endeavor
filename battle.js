@@ -352,6 +352,7 @@ Battle.prototype.playerPhase = function () {
         //End battle
         //Remove all entities from array
         console.log("Victory!")
+        this.resetPUnitActions();
         gm.endBattle();
     }
         //Check if t has been 
@@ -422,6 +423,7 @@ Battle.prototype.enemyPhaseTest = function (enemyMoves)
     if (this.enemyUnits.length === 0)
     {
         console.log("Victory!")
+        this.resetPUnitActions();
         gm.endBattle();
     }
     this.resetPUnitActions();
