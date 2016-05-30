@@ -57,7 +57,7 @@ Currency.prototype.use = function (target) {
 }
 
 Currency.prototype.toString = function (params) {
-    return this.value + this.name;
+    return this.value + " " + this.name;
 }
 
 
