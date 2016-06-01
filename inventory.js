@@ -5,6 +5,11 @@ function Inventory(spec) {
 Inventory.prototype = Object.create(Inventory.prototype);
 Inventory.prototype.constructor = Inventory;
 
+Inventory.LIBRARY = {
+    HEALTH_POTION: new Consumable({name: "Health Potion", description: "Restores 20 health", 
+                                   quantity: 1, effects: [new RestoreHealth({value: 20})]})
+}
+
 Inventory.prototype.addItem = function (item) {
     if (typeof item === Currency)
     {
@@ -12,7 +17,34 @@ Inventory.prototype.addItem = function (item) {
     }
     else
     {
-        this.items.push(item);
+        let index = this.items.indexOf(item);
+        if (index === -1)
+        {
+            this.items.push(item);
+        }
+        else
+        {
+            this.items[index].quantity++;
+        }   
+    }
+}
+
+Inventory.prototype.addItem = function (item, quantity) {
+    if (typeof item === Currency)
+    {
+        item.use(gm.player);
+    }
+    else
+    {
+        let index = this.items.indexOf(item);
+        if (index === -1)
+        {
+            this.items.push(item);
+        }
+        else
+        {
+            this.items[index].quantity += quantity;
+        }   
     }
 }
 
@@ -112,9 +144,10 @@ RestoreHealth.prototype.activate = function (target) {
 function inventoryHowTo ()
 {
     let inv = new Inventory();
-    inv.addItem(new Consumable({name: "Health Potion", description: "Restores 20 health", 
-                                quantity: 3, effects: [new RestoreHealth({value: 20})]}));
+    inv.addItem(Inventory.LIBRARY.HEALTH_POTION);
+    inv.addItem(Inventory.LIBRARY.HEALTH_POTION, 4);
+    console.log(inv)
     // find index when you click on it 
     //second parameter the target to use on afk PlayerUnit
-    inv.useItem(0, playerUnit)
+    // inv.useItem(0, playerUnit)
 }
