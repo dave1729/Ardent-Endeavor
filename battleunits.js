@@ -24,6 +24,7 @@ Unit.prototype.draw = function (ctx) {
 	this.drawHealthBar(ctx);
     //this.animation.drawEntity(gm.clockTick, ctx, this.x * TILE_SIZE, this.y * TILE_SIZE);
 }
+
 Unit.prototype.drawHealthBar = function (ctx) {
 	gm.ctx.fillStyle = "rgb(184, 0, 72)";
 	gm.ctx.lineWidth = 1;
@@ -174,12 +175,30 @@ function PlayerUnit(spec)
     this.selectedAction = {move: false, attack: false}
     this.exp = 0;
     this.level = 0;
+    this.nextLevelExp = this.getNextLevelExp();
     this.possibleAttacks = [];
     Unit.call(this, spec);
 }
 
 PlayerUnit.prototype = Object.create(Unit.prototype);
 PlayerUnit.prototype.constructor = PlayerUnit;
+
+// Disgea Level Up formula
+PlayerUnit.prototype.getNextLevelExp = function ()
+{
+     return Math.round(0.04 * (this.level ^ 3) + 0.8 * (this.level ^ 2) + 2 * this.level)
+}
+
+PlayerUnit.prototype.rewardExp = function (exp)
+{
+    this.exp += exp;
+    if (this.exp >= this.nextLevelExp)
+    {
+        this.level++;
+        this.nextLevelExp = this.getNextLevelExp();
+        this.rewardExp(0);
+    }
+}
 
 PlayerUnit.prototype.draw = function (ctx)
 {
@@ -205,6 +224,15 @@ PlayerUnit.prototype.deselect = function () {
     this.selected = false;
 }
 
+PlayerUnit.prototype.reset = function ()
+{
+    this.selectedAction.attacked = false;
+    this.selectedAction.moved = false;
+    this.deselect();
+    this.attacked = false;
+    this.moved = false;
+}
+
 PlayerUnit.prototype.validAction = function (validActions, point)
 {
     var result = false;
@@ -218,15 +246,6 @@ PlayerUnit.prototype.validAction = function (validActions, point)
         })
     }
     return result;
-}
-
-PlayerUnit.prototype.isAvailable = function ()
-{
-    if (gm.bm.currentBattle.availableUnits.includes(this))
-    {
-        return true;
-    }
-    return false;
 }
 
 PlayerUnit.prototype.moveSelected = function ()

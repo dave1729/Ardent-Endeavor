@@ -3,6 +3,7 @@ function BattleManager() {
     this.grid = new Grid();
     this.battleUnits = [];
     this.currentBattle = undefined;
+    this.maxPlayers = 3;
 }
 
 BattleManager.prototype.init = function () {
@@ -32,8 +33,9 @@ BattleManager.prototype.createBattle = function (spec) {
             {x: 0,
             y: 4}
         ],
-        maxPlayers: 3,
+        maxPlayers: this.maxPlayers,
         playerUnits: [],
+        availableUnits: this.battleUnits.filter((unit) => { return unit.health !== 0}),
         enemyUnits: [],
         enemyType: spec.enemyType,
         immovableTiles: map.blockedTiles
