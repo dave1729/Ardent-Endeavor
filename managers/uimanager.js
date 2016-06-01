@@ -11,6 +11,7 @@ function UIManager() {
 	this.gameMenu.addButtonPackage(this.gameMenu.getGameMenuButtons());
 	this.dialogueBox = new DialogueBox(this, this.ctx);
 	this.optionsMenu = new OptionsMenu(this, this.ctx, this.screenWidth / 4 + 15, 10);
+	this.itemsMenu = new ItemsMenu(this, this.ctx, this.screenWidth / 4 + 15, 10);
 	this.statusBox = new StatusBox(this, this.ctx);
 	
 	this.showStatusBox = false;
@@ -34,6 +35,9 @@ UIManager.prototype.update = function() {
 		switch(this.menuState) {
 			case "options":
 				this.optionsMenu.update();
+				break;
+			case "items":
+				this.itemsMenu.update();
 				break;
 		}
 		
@@ -59,6 +63,9 @@ UIManager.prototype.draw = function() {
 		switch(this.menuState) {
 		case "options":
 			this.optionsMenu.draw();
+			break;
+		case "items":
+			this.itemsMenu.draw();
 			break;
 	}
 		
@@ -337,6 +344,65 @@ OptionsMenu.prototype.draw = function () {
 
 
 
+/* +------------------------------------------+ */
+/* |           ===  Items Menu  ===           | */
+/* +------------------------------------------+ */
+function ItemsMenu(uimanager, ctx, x, y) {
+	this.ui = uimanager;
+	this.VERT_PADDING = this.ui.screenWidth / 50;
+	this.BUTTON_HEIGHT = this.ui.screenHeight / 12;
+	this.MENU_WIDTH = this.ui.screenWidth * 3 / 4 - 20;
+	this.TOP_BOT_PADDING = this.ui.screenHeight / 48;
+	
+	this.x = x;
+	this.y = y;
+	this.ctx = ctx;
+	this.items = [];
+	this.init();
+}
+
+ItemsMenu.prototype.init = function () {
+	this.items.push();
+}
+ItemsMenu.prototype.update = function () {
+	// Update buttons
+	var i;
+	for (i = 0; i < this.items.length; i++) {
+		this.items[i].update(this.ctx);
+	}
+	
+}
+ItemsMenu.prototype.draw = function () {
+	// Draw the backdrop and border
+	this.ctx.strokeStyle = "rgb(255, 255, 255)";
+	this.ctx.fillStyle = "rgba(0, 98, 130, 0.7)";
+	roundRect(this.ctx, this.x, this.y, this.MENU_WIDTH, (this.BUTTON_HEIGHT * this.items.length + this.TOP_BOT_PADDING*2), 15, true, true);
+			
+	// Draw buttons
+	var i;
+	for (i = 0; i < this.items.length; i++) {
+		this.items[i].draw(this.ctx);
+	}
+}
+
+
+function uiItem(parent, ctx, x, y, width, height, item) {
+	this.item = item;
+	this.x = x;
+	this.y = y;
+	this.width = width;
+	this.height = height;
+	this.parent = parent;
+	this.ctx = ctx;
+	this.itemBtn = new Button(parent, ctx, item.name, x+30, y, width-30, height,
+		runItem = function () {
+			console.log("Clicked " + item.name);
+		});
+}
+
+
+
+
 
 
 /* +------------------------------------------+ */
@@ -556,7 +622,9 @@ DialogueBox.prototype.draw = function () {
 	this.ctx.fillStyle = "rgba(0, 98, 130, 0.7)";
 	
 	// Name Box
-	roundRect(this.ctx, this.x + 10, this.y - this.LINE_HEIGHT - this.TOP_BOT_PADDING, this.MENU_WIDTH / 3, this.LINE_HEIGHT + (this.TOP_BOT_PADDING), 5, true, true);
+	if (this.targetName != null) {
+		roundRect(this.ctx, this.x + 10, this.y - this.LINE_HEIGHT - this.TOP_BOT_PADDING, this.MENU_WIDTH / 3, this.LINE_HEIGHT + (this.TOP_BOT_PADDING), 5, true, true);
+	}
 	// Dialogue Box
 	roundRect(this.ctx, this.x, this.y, this.MENU_WIDTH, ((this.LINE_HEIGHT * this.PAGE_SIZE) + (this.TOP_BOT_PADDING*2)), 15, true, true);
 	
@@ -566,7 +634,9 @@ DialogueBox.prototype.draw = function () {
 	this.ctx.font = fontSize + "px sans-serif";
 	var textY = null;
 	
-	this.ctx.fillText(this.targetName, this.x + 18, this.y - 10);
+	if (this.targetName != null) {
+		this.ctx.fillText(this.targetName, this.x + 18, this.y - 10);
+	}
 	
 	for (var i = 0; i < this.PAGE_SIZE; i++) {
 		textY =  (this.y + this.TOP_BOT_PADDING + (i * this.LINE_HEIGHT)) + (this.LINE_HEIGHT/2);
