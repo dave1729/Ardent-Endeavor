@@ -16,7 +16,7 @@ function GameManager(ctx, ctxUI, ctxCollision, canvas)
 	
 	this.im = null; // InputManager
     this.am = null; // AssetManager
-	this.ai = null;
+	this.ai = null; // AiManager
 	this.bm = null; // BattleManager
     this.cam = null; // Camera
     this.mm = null; // MapManager
@@ -29,11 +29,11 @@ function GameManager(ctx, ctxUI, ctxCollision, canvas)
     
 }
 GameManager.prototype.start = function() {
-    this.initManagers();
     this.init();
 	this.queueAssets();
     this.am.downloadAll(() => {
-		// this.startBattle(new Fire(gm, 64, 256));
+		//Preloads playerUnits
+		this.bm.init();
 	 	this.initialize(new Player(this.am.getAsset("./img/player.png")),1, 64*3, 64*6);
         this.loop();
     })
@@ -41,9 +41,9 @@ GameManager.prototype.start = function() {
 
 GameManager.prototype.queueAssets = function () {
 	this.am.queueDownload("./img/player3.png");
-		this.am.queueDownload("./img/player2.png");
-			this.am.queueDownload("./img/player1.png");
-						this.am.queueDownload("./img/player.png");
+	this.am.queueDownload("./img/player2.png");
+	this.am.queueDownload("./img/player1.png");
+	this.am.queueDownload("./img/player.png");
     this.am.queueDownload("./img/GrassOnlyBackground.png");
     this.am.queueDownload("./img/collidable_background.png");
     this.am.queueDownload("./img/Background_Layer.png");
@@ -125,10 +125,8 @@ GameManager.prototype.initManagers = function (params) {
 GameManager.prototype.init = function () {
     this.surfaceWidth = this.ctx.canvas.width;
     this.surfaceHeight = this.ctx.canvas.height;
-	
 	this.initManagers();
     this.timer = new Timer();
-    this.disableInput = false;
     this.startInput();
     this.hitBoxVisible = false;
     console.log('game initialized');
@@ -190,6 +188,8 @@ GameManager.prototype.openGameMenu = function () {
 	this.im.changeCurrentGroupTo("ui");
 	this.startInput(this.ctxUI);
 	this.ui.showGameMenu = true;
+	this.ui.playerDisplay.init();
+	this.ui.itemsMenu.init();
 	// need to disable previous keys (maybe).
 	document.getElementById("uiLayer").style.zIndex = "3";
 }
@@ -264,6 +264,12 @@ GameManager.prototype.closeDialogueBox = function () {
 	this.startInput(this.ctx);
 	this.ui.showDialogue = false;
 	document.getElementById("uiLayer").style.zIndex = "-1";
+}
+
+GameManager.prototype.gameOver = function () 
+{
+	this.em.removeAllEntities();
+	this.openDialogueBox("God", "Game Over");
 }
 
 GameManager.prototype.checkMapCollision = function (rectBox, callback) {

@@ -1,12 +1,10 @@
 function Unit(spec)
 {
     this.cursor = gm.bm.cursor;
-    this.overworld = spec.overworld;
-    this.animation = this.overworld.animation;
     this.health = spec.health;
     this.maxhealth = spec.health;
     this.selected = false;
-        this.damage = spec.damage;
+    this.damage = spec.damage;
     this.moved = false;
     this.attacked = false;
     this.attackRange = 1;
@@ -23,14 +21,10 @@ Unit.prototype = Object.create(Entity.prototype);
 Unit.prototype.constructor = Unit;
 
 Unit.prototype.draw = function (ctx) {
-	var location = {x: this.x * TILE_SIZE,
-					y: this.y * TILE_SIZE,
-					xOffset: this.xOffset,
-					yOffset: this.yOffset };
-	this.overworld.draw(ctx, location);
 	this.drawHealthBar(ctx);
     //this.animation.drawEntity(gm.clockTick, ctx, this.x * TILE_SIZE, this.y * TILE_SIZE);
 }
+
 Unit.prototype.drawHealthBar = function (ctx) {
 	gm.ctx.fillStyle = "rgb(184, 0, 72)";
 	gm.ctx.lineWidth = 1;
@@ -47,23 +41,23 @@ Unit.prototype.drawHealthBar = function (ctx) {
 Unit.prototype.update = function () {
     if(gm.bm.currentBattle)
     {
-            if (gm.bm.currentBattle.currentPhase === gm.bm.currentBattle.playerPhase)
-    {
-        if (this.playerPhase)
+        if (gm.bm.currentBattle.currentPhase === gm.bm.currentBattle.playerPhase)
         {
-            this.playerPhase();
+            if (this.playerPhase)
+            {
+                this.playerPhase();
+            }
         }
-    }
-    else if (gm.bm.currentBattle.currentPhase === gm.bm.currentBattle.enemyPhase)
-    {
-        if (this.enemyPhase)
-            this.enemyPhase();
-    }
-    else if (gm.bm.currentBattle.currentPhase === gm.bm.currentBattle.setupPhase)
-    {
-        if (this.setupPhase)
-            this.setupPhase();
-    }
+        else if (gm.bm.currentBattle.currentPhase === gm.bm.currentBattle.enemyPhase)
+        {
+            if (this.enemyPhase)
+                this.enemyPhase();
+        }
+        else if (gm.bm.currentBattle.currentPhase === gm.bm.currentBattle.setupPhase)
+        {
+            if (this.setupPhase)
+                this.setupPhase();
+        }
     }
 }
 
@@ -125,6 +119,10 @@ Unit.prototype.calculateActionRadius = function (spec)
 function EnemyUnit(spec)
 {
     this.AIPackage = gm.ai.AIPackages.Berserker;
+    this.reward = spec.reward;
+    this.animation = new Animation(spec.animation.spriteSheet, spec.animation.frameWidth, spec.animation.frameHeight,
+                                   spec.animation.sheetWidth, spec.animation.frameDuration, spec.animation.frames, 
+                                   spec.animation.loop, spec.animation.scale, spec.animation.row);
     Unit.call(this, spec);
 }
 
@@ -141,7 +139,9 @@ EnemyUnit.prototype.draw = function (ctx) {
         ctx.closePath();
         ctx.fill();
     }
-    Unit.prototype.draw.call(this);
+    // tick, ctx, x, y
+	this.animation.drawEnemyType01(gm.clockTick, ctx, this.x * TILE_SIZE, this.y * TILE_SIZE);
+    Unit.prototype.draw.call(this, ctx);
 }
 
 EnemyUnit.prototype.playerPhase = function () {
@@ -170,13 +170,35 @@ EnemyUnit.prototype.playerPhase = function () {
 
 function PlayerUnit(spec)
 {
+    //function Animation(spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale, row) {
+    this.animation = new Animation(spec.spriteSheet, 64, 64, 4, 0.2, 12, true, 1);
     this.selectedAction = {move: false, attack: false}
+    this.exp = 0;
+    this.level = 0;
+    this.nextLevelExp = this.getNextLevelExp();
     this.possibleAttacks = [];
     Unit.call(this, spec);
 }
 
 PlayerUnit.prototype = Object.create(Unit.prototype);
 PlayerUnit.prototype.constructor = PlayerUnit;
+
+// Disgea Level Up formula
+PlayerUnit.prototype.getNextLevelExp = function ()
+{
+     return Math.round(0.04 * (this.level ^ 3) + 0.8 * (this.level ^ 2) + 2 * this.level)
+}
+
+PlayerUnit.prototype.rewardExp = function (exp)
+{
+    this.exp += exp;
+    if (this.exp >= this.nextLevelExp)
+    {
+        this.level++;
+        this.nextLevelExp = this.getNextLevelExp();
+        this.rewardExp(0);
+    }
+}
 
 PlayerUnit.prototype.draw = function (ctx)
 {
@@ -185,13 +207,12 @@ PlayerUnit.prototype.draw = function (ctx)
         ctx.beginPath();
         ctx.fillStyle = "rgba(0, 255, 0, 1)";
         ctx.strokeStyle = "rgba(0, 0, 255, 1)"; 
-        ctx.arc(this.x * TILE_SIZE + 32,this.y * TILE_SIZE + 32, 32, 0, 2*Math.PI);
+        ctx.arc(this.x * TILE_SIZE + 32, this.y * TILE_SIZE + 32, 32, 0, 2*Math.PI);
         ctx.closePath();
         ctx.fill();
     }
     this.animation.drawEntity(gm.clockTick, ctx, this.x * TILE_SIZE, this.y * TILE_SIZE);
-    this.drawHealthBar(ctx);
-    // this.animation.drawPlayer(gm.clockTick, gm.ctx, this.x * TILE_SIZE, this.y * TILE_SIZE, this.overworld);
+    Unit.prototype.draw.call(this, ctx);
 }
 
 PlayerUnit.prototype.kill = function () 
@@ -201,6 +222,15 @@ PlayerUnit.prototype.kill = function ()
 
 PlayerUnit.prototype.deselect = function () {
     this.selected = false;
+}
+
+PlayerUnit.prototype.reset = function ()
+{
+    this.selectedAction.attacked = false;
+    this.selectedAction.moved = false;
+    this.deselect();
+    this.attacked = false;
+    this.moved = false;
 }
 
 PlayerUnit.prototype.validAction = function (validActions, point)
@@ -216,15 +246,6 @@ PlayerUnit.prototype.validAction = function (validActions, point)
         })
     }
     return result;
-}
-
-PlayerUnit.prototype.isAvailable = function ()
-{
-    if (gm.bm.currentBattle.availableUnits.includes(this))
-    {
-        return true;
-    }
-    return false;
 }
 
 PlayerUnit.prototype.moveSelected = function ()
@@ -246,9 +267,7 @@ PlayerUnit.prototype.moveSelected = function ()
             if (!gm.bm.cursor.isCellOccupied())
             {
                 this.x = click.x;
-                this.overworld.x = click.x;
                 this.y = click.y;
-                this.overworld.x = click.y;
                 this.moved = true;
                 this.selectedAction.move = false;
             }

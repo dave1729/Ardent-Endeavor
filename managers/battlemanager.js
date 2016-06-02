@@ -1,7 +1,23 @@
 function BattleManager() {
     this.cursor = new Cursor();
     this.grid = new Grid();
+    this.battleUnits = [];
     this.currentBattle = undefined;
+    this.maxPlayers = 3;
+}
+
+BattleManager.prototype.init = function () {
+    this.createPlayers();
+}
+
+BattleManager.prototype.createPlayers = function ()
+{
+    this.battleUnits.push(new PlayerUnit({spriteSheet:gm.am.getAsset("./img/player1.png"), 
+                                          x: 0, y : 0, health: 100, damage: 10}));
+    this.battleUnits.push(new PlayerUnit({spriteSheet:gm.am.getAsset("./img/player2.png"), 
+                                          x: 0, y : 0, health: 100, damage: 10}));
+    this.battleUnits.push(new PlayerUnit({spriteSheet:gm.am.getAsset("./img/player3.png"), 
+                                          x: 0, y : 0, health: 100, damage: 10}));
 }
 
 BattleManager.prototype.createBattle = function (spec) {
@@ -17,8 +33,9 @@ BattleManager.prototype.createBattle = function (spec) {
             {x: 0,
             y: 4}
         ],
-        maxPlayers: 3,
+        maxPlayers: this.maxPlayers,
         playerUnits: [],
+        availableUnits: this.battleUnits.filter((unit) => { return unit.health !== 0}),
         enemyUnits: [],
         enemyType: spec.enemyType,
         immovableTiles: map.blockedTiles
