@@ -6,7 +6,7 @@ function Player(spritesheet) {
 	this.gold = 0;
 	//Animation: spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale
 	this.animation = new Animation(spritesheet, this.spriteSquareSize, this.spriteSquareSize, 9, 0.1, 32, true, this.scale);
-	this.regSpeed = 325;
+	this.regSpeed = 175;
 	this.speedX = 0;
 	this.speedY = 0;
 	this.layer = 5;
