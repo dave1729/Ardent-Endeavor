@@ -11,6 +11,7 @@ function UIManager() {
 	this.gameMenu.addButtonPackage(this.gameMenu.getGameMenuButtons());
 	this.dialogueBox = new DialogueBox(this, this.ctx);
 	this.optionsMenu = new OptionsMenu(this, this.ctx, this.screenWidth / 4 + 15, 10);
+	this.itemsMenu = new ItemsMenu(this, this.ctx, this.screenWidth / 4 + 15, 10);
 	this.statusBox = new StatusBox(this, this.ctx);
 	
 	this.showStatusBox = false;
@@ -34,6 +35,9 @@ UIManager.prototype.update = function() {
 		switch(this.menuState) {
 			case "options":
 				this.optionsMenu.update();
+				break;
+			case "items":
+				this.itemsMenu.update();
 				break;
 		}
 		
@@ -59,6 +63,9 @@ UIManager.prototype.draw = function() {
 		switch(this.menuState) {
 		case "options":
 			this.optionsMenu.draw();
+			break;
+		case "items":
+			this.itemsMenu.draw();
 			break;
 	}
 		
@@ -180,19 +187,19 @@ GameMenu.prototype.getGameMenuButtons = function () {
 				gm.ui.menuState = "items";
 			}));
 	
-	buttons.push(new Button(this, this.ctx, "Magic",
-			this.x + this.VERT_PADDING,
-			this.y + (this.BUTTON_HEIGHT*1 + this.TOP_BOT_PADDING),
-			this.MENU_WIDTH - this.VERT_PADDING*2,
-			this.BUTTON_HEIGHT,
-			openMagic = function () {
-				console.log("Open Magic");
-				gm.ui.menuState = "magic";
-			}));
+//	buttons.push(new Button(this, this.ctx, "Magic",
+//			this.x + this.VERT_PADDING,
+//			this.y + (this.BUTTON_HEIGHT*1 + this.TOP_BOT_PADDING),
+//			this.MENU_WIDTH - this.VERT_PADDING*2,
+//			this.BUTTON_HEIGHT,
+//			openMagic = function () {
+//				console.log("Open Magic");
+//				gm.ui.menuState = "magic";
+//			}));
 	
 	buttons.push(new Button(this, this.ctx, "Equipment",
 			this.x + this.VERT_PADDING,
-			this.y + (this.BUTTON_HEIGHT*2 + this.TOP_BOT_PADDING),
+			this.y + (this.BUTTON_HEIGHT*1 + this.TOP_BOT_PADDING),
 			this.MENU_WIDTH - this.VERT_PADDING*2,
 			this.BUTTON_HEIGHT,
 			openEquipment = function () {
@@ -202,7 +209,7 @@ GameMenu.prototype.getGameMenuButtons = function () {
 	
 	buttons.push(new Button(this, this.ctx, "Status",
 			this.x + this.VERT_PADDING,
-			this.y + (this.BUTTON_HEIGHT*3 + this.TOP_BOT_PADDING),
+			this.y + (this.BUTTON_HEIGHT*2 + this.TOP_BOT_PADDING),
 			this.MENU_WIDTH - this.VERT_PADDING*2,
 			this.BUTTON_HEIGHT,
 			openStatus = function () {
@@ -213,7 +220,7 @@ GameMenu.prototype.getGameMenuButtons = function () {
 	
 	buttons.push(new Button(this, this.ctx, "Options",
 			this.x + this.VERT_PADDING,
-			this.y + (this.BUTTON_HEIGHT*4 + this.TOP_BOT_PADDING),
+			this.y + (this.BUTTON_HEIGHT*3 + this.TOP_BOT_PADDING),
 			this.MENU_WIDTH - this.VERT_PADDING*2,
 			this.BUTTON_HEIGHT,
 			openOptions = function () {
@@ -221,16 +228,16 @@ GameMenu.prototype.getGameMenuButtons = function () {
 				gm.ui.menuState = "options";
 			}));
 	
-	buttons.push(new Button(this, this.ctx, "Save",
-			this.x + this.VERT_PADDING,
-			this.y + (this.BUTTON_HEIGHT*5 + this.TOP_BOT_PADDING),
-			this.MENU_WIDTH - this.VERT_PADDING*2,
-			this.BUTTON_HEIGHT,
-			openSave = function () {
-				console.log("Open Save");
-				gm.ui.menuState = "save";
-				//gm.openDialogueBox("Star Wars", "CHEWBACCA: A legendary Wookiee warrior and Han Solo’s co-pilot aboard the Millennium Falcon, Chewbacca was part of a core group of Rebels who restored freedom to the galaxy. Known for his short temper and accuracy with a bowcaster, Chewie also has a big heart -- and is unwavering in his loyalty to his friends. He has stuck with Han through years of turmoil that have changed both the galaxy and their lives.");
-			}));
+//	buttons.push(new Button(this, this.ctx, "Save",
+//			this.x + this.VERT_PADDING,
+//			this.y + (this.BUTTON_HEIGHT*5 + this.TOP_BOT_PADDING),
+//			this.MENU_WIDTH - this.VERT_PADDING*2,
+//			this.BUTTON_HEIGHT,
+//			openSave = function () {
+//				console.log("Open Save");
+//				gm.ui.menuState = "save";
+//				//gm.openDialogueBox("Star Wars", "CHEWBACCA: A legendary Wookiee warrior and Han Solo’s co-pilot aboard the Millennium Falcon, Chewbacca was part of a core group of Rebels who restored freedom to the galaxy. Known for his short temper and accuracy with a bowcaster, Chewie also has a big heart -- and is unwavering in his loyalty to his friends. He has stuck with Han through years of turmoil that have changed both the galaxy and their lives.");
+//			}));
 	return buttons;
 }
 
@@ -332,6 +339,63 @@ OptionsMenu.prototype.draw = function () {
 	for (i = 0; i < this.items.length; i++) {
 		this.items[i].draw(this.ctx);
 	}
+}
+
+
+/* +------------------------------------------+ */
+/* |           ===  Items Menu  ===           | */
+/* +------------------------------------------+ */
+function ItemsMenu(uimanager, ctx, x, y) {
+	this.ui = uimanager;
+	this.VERT_PADDING = this.ui.screenWidth / 50;
+	this.BUTTON_HEIGHT = this.ui.screenHeight / 12;
+	this.MENU_WIDTH = this.ui.screenWidth * 3 / 4 - 20;
+	this.TOP_BOT_PADDING = this.ui.screenHeight / 48;
+	
+	this.x = x;
+	this.y = y;
+	this.ctx = ctx;
+	this.items = [];
+	this.init();
+}
+
+ItemsMenu.prototype.init = function () {
+	this.items.push();
+}
+ItemsMenu.prototype.update = function () {
+	// Update buttons
+	var i;
+	for (i = 0; i < this.items.length; i++) {
+		this.items[i].update(this.ctx);
+	}
+	
+}
+ItemsMenu.prototype.draw = function () {
+	// Draw the backdrop and border
+	this.ctx.strokeStyle = "rgb(255, 255, 255)";
+	this.ctx.fillStyle = "rgba(0, 98, 130, 0.7)";
+	roundRect(this.ctx, this.x, this.y, this.MENU_WIDTH, (this.BUTTON_HEIGHT * this.items.length + this.TOP_BOT_PADDING*2), 15, true, true);
+			
+	// Draw buttons
+	var i;
+	for (i = 0; i < this.items.length; i++) {
+		this.items[i].draw(this.ctx);
+	}
+}
+
+
+function uiItem(parent, ctx, x, y, width, height, item) {
+	this.item = item;
+	this.x = x;
+	this.y = y;
+	this.width = width;
+	this.height = height;
+	this.parent = parent;
+	this.ctx = ctx;
+	this.itemBtn = new Button(parent, ctx, item.name, x+30, y, width-30, height,
+		runItem = function () {
+			console.log("Clicked " + item.name);
+		});
 }
 
 

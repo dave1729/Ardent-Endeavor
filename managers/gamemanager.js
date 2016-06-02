@@ -85,6 +85,13 @@ GameManager.prototype.queueAssets = function () {
     this.am.queueDownload("./img/enemies/undead04.png");
     this.am.queueDownload("./img/LevelOneBattleGrassAndTree.png");
     this.am.queueDownload("./img/LevelOneBattleGrass.png");
+    this.am.queueDownload("./img/LevelOneBattleBoat.png");
+    this.am.queueDownload("./img/LevelTwoBattleGrass.png");
+    this.am.queueDownload("./img/LevelTwoBattleMaze.png");
+    this.am.queueDownload("./img/LevelTwoBattleTree.png");
+    this.am.queueDownload("./img/LevelThreeBattleHallway.png");
+    this.am.queueDownload("./img/LevelThreeBattleHall.png");
+    this.am.queueDownload("./img/LevelThreeBattleRoom.png");
 }
 
 /* loads the starting map and character's starting position. */
