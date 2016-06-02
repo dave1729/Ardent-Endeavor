@@ -2,16 +2,11 @@ function Inventory(spec) {
     this.items = [];
 }
 
-//Inventory.prototype = Object.create(Inventory.prototype);
+Inventory.prototype = Object.create(Inventory.prototype);
 Inventory.prototype.constructor = Inventory;
 
-Inventory.LIBRARY = {
-    HEALTH_POTION: new Consumable({name: "Health Potion", description: "Restores 20 health", 
-                                   quantity: 1, effects: [new RestoreHealth({value: 20})]})
-}
-
 Inventory.prototype.addItem = function (item) {
-    if (typeof item === Currency)
+    if (item instanceof Currency)
     {
         item.use(gm.player);
     }
@@ -64,7 +59,7 @@ function Item(spec)
     this.quantity = spec.quantity;
 }
 
-//Item.prototype = Object.create(Item.prototype);
+Item.prototype = Object.create(Item.prototype);
 Item.prototype.constructor = Item;
 
 Item.prototype.use = function (target) {
@@ -81,7 +76,7 @@ function Currency(spec)
     Item.call(this, spec);
 }
 
-//Currency.prototype = Object.create(Item.prototype);
+Currency.prototype = Object.create(Item.prototype);
 Currency.prototype.constructor = Currency;
 
 Currency.prototype.use = function (target) {
@@ -100,7 +95,7 @@ function Consumable(spec)
     Item.call(this, spec);
 }
 
-//Consumable.prototype = Object.create(Item.prototype);
+Consumable.prototype = Object.create(Item.prototype);
 Consumable.prototype.constructor = Consumable;
 
 Consumable.prototype.use = function (target)
@@ -109,7 +104,7 @@ Consumable.prototype.use = function (target)
     {
         effect.activate(target);
     })
-    this.quantity--;
+    Item.prototype.use.call(this, target);
 }
 
 function Equipment(spec)
@@ -127,7 +122,7 @@ Effect.prototype.activate = function (target) {
     console.log("Please set an effect for this to activate")
 }
 
-//Effect.prototype = Object.create(Effect.prototype);
+Effect.prototype = Object.create(Effect.prototype);
 Effect.prototype.constructor = Effect;
 
 
@@ -135,7 +130,7 @@ function RestoreHealth(spec) {
     this.value = spec.value;
 }
 
-//RestoreHealth.prototype = Object.create(Effect.prototype);
+RestoreHealth.prototype = Object.create(Effect.prototype);
 RestoreHealth.prototype.constructor = RestoreHealth;
 
 RestoreHealth.prototype.activate = function (target) {
@@ -147,8 +142,13 @@ function inventoryHowTo ()
     let inv = new Inventory();
     inv.addItem(Inventory.LIBRARY.HEALTH_POTION);
     inv.addItem(Inventory.LIBRARY.HEALTH_POTION, 4);
-    console.log(inv)
     // find index when you click on it 
     //second parameter the target to use on afk PlayerUnit
     // inv.useItem(0, playerUnit)
+}
+
+// Leave Library done here and it works
+Inventory.LIBRARY = {
+    HEALTH_POTION: new Consumable({name: "Health Potion", description: "Restores 20 health", 
+                                   quantity: 10, effects: [new RestoreHealth({value: 20})]})
 }
