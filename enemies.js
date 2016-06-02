@@ -35,7 +35,7 @@ function Enemy(x, y) {
 	this.x = x;
 	this.y = y;
 	this.overWorldSpeed = 1;
-	
+	this.battleMap = 1;
 	this.direction = {
 			// down-(1) right-(0) up-(-1) left-(-3)
 			// Based off of radians.
@@ -294,6 +294,7 @@ function Bandit(x, y) {
 	this.tileXOffSet = 11;
 	this.hitBox = new CollisionBox(this, 5, 10, TILE_SIZE-20, TILE_SIZE-10);
 	this.angle = this.direction.DOWN;
+	this.battleMap = 2;
 }
 Bandit.prototype = new Enemy();
 Bandit.prototype.constructor = Bandit;
@@ -337,6 +338,7 @@ function UndeadJacket(x, y) {
 	this.tileXOffSet = 11;
 	this.hitBox = new CollisionBox(this, 5, 10, TILE_SIZE-20, TILE_SIZE-10);
 	this.angle = this.direction.DOWN;
+	this.battleMap = 4;
 }
 UndeadJacket.prototype = new Enemy();
 UndeadJacket.prototype.constructor = UndeadJacket;
@@ -380,6 +382,7 @@ function BirdMonster(x, y) {
 	this.tileXOffSet = 0;
 	this.hitBox = new CollisionBox(this, 5, 10, TILE_SIZE-20, TILE_SIZE-10);
 	this.angle = this.direction.DOWN;
+	this.battleMap = 1;
 }
 BirdMonster.prototype = new Enemy();
 BirdMonster.prototype.constructor = BirdMonster;
@@ -423,6 +426,7 @@ function FlyingBug(x, y) {
 	this.tileXOffSet = -8;
 	this.hitBox = new CollisionBox(this, 5, 10, TILE_SIZE-20, TILE_SIZE-10);
 	this.angle = this.direction.DOWN;
+	this.battleMap = 0;
 }
 FlyingBug.prototype = new Enemy();
 FlyingBug.prototype.constructor = FlyingBug;
@@ -466,6 +470,7 @@ function Devil(x, y) {
 	this.tileXOffSet = 8;
 	this.hitBox = new CollisionBox(this, 5, 10, TILE_SIZE-20, TILE_SIZE-10);
 	this.angle = this.direction.DOWN;
+	this.battleMap = 8;
 }
 Devil.prototype = new Enemy();
 Devil.prototype.constructor = Devil;
@@ -509,6 +514,7 @@ function ThreeHeadedDog(x, y) {
 	this.tileXOffSet = 0;
 	this.hitBox = new CollisionBox(this, 5, 10, TILE_SIZE-20, TILE_SIZE-10);
 	this.angle = this.direction.DOWN;
+	this.battleMap = 7;
 }
 ThreeHeadedDog.prototype = new Enemy();
 ThreeHeadedDog.prototype.constructor = ThreeHeadedDog;
@@ -553,6 +559,7 @@ function Kraken(x, y) {
 	this.tileYOffSet = -16;
 	this.hitBox = new CollisionBox(this, 5, 10, TILE_SIZE-20, TILE_SIZE-10);
 	this.angle = this.direction.DOWN;
+	this.battleMap = 2;
 }
 Kraken.prototype = new Enemy();
 Kraken.prototype.constructor = Kraken;
@@ -596,6 +603,7 @@ function LizardMan(x, y) {
 	this.tileXOffSet = 8;
 	this.hitBox = new CollisionBox(this, 5, 10, TILE_SIZE-20, TILE_SIZE-10);
 	this.angle = this.direction.DOWN;
+	this.battleMap = 1;
 }
 LizardMan.prototype = new Enemy();
 LizardMan.prototype.constructor = LizardMan;
@@ -639,6 +647,7 @@ function Goblin(x, y) {
 	this.tileXOffSet = 8;
 	this.hitBox = new CollisionBox(this, 5, 10, TILE_SIZE-20, TILE_SIZE-10);
 	this.angle = this.direction.DOWN;
+	this.battleMap = 1;
 }
 Goblin.prototype = new Enemy();
 Goblin.prototype.constructor = Goblin;
@@ -682,6 +691,7 @@ function Mercenary(x, y) {
 	this.tileXOffSet = 0;
 	this.hitBox = new CollisionBox(this, 5, 10, TILE_SIZE-20, TILE_SIZE-10);
 	this.angle = this.direction.DOWN;
+	this.battleMap = 8;
 }
 Mercenary.prototype = new Enemy();
 Mercenary.prototype.constructor = Mercenary;
@@ -725,6 +735,7 @@ function Naga(x, y) {
 	this.tileXOffSet = 0;
 	this.hitBox = new CollisionBox(this, 5, 10, TILE_SIZE-20, TILE_SIZE-10);
 	this.angle = this.direction.DOWN;
+	this.battleMap = 2;
 }
 Naga.prototype = new Enemy();
 Naga.prototype.constructor = Naga;
@@ -768,6 +779,7 @@ function Ogre(x, y) {
 	this.tileXOffSet = 5;
 	this.hitBox = new CollisionBox(this, 5, 10, TILE_SIZE-20, TILE_SIZE-10);
 	this.angle = this.direction.DOWN;
+	this.battleMap = 8;
 }
 Ogre.prototype = new Enemy();
 Ogre.prototype.constructor = Ogre;
@@ -811,6 +823,7 @@ function Slime(x, y) {
 	this.tileXOffSet = 0;
 	this.hitBox = new CollisionBox(this, 5, 10, TILE_SIZE-20, TILE_SIZE-10);
 	this.angle = this.direction.DOWN;
+	this.battleMap = 6;
 }
 Slime.prototype = new Enemy();
 Slime.prototype.constructor = Slime;
@@ -854,6 +867,7 @@ function Snake03(x, y) {
 	this.tileXOffSet = 0;
 	this.hitBox = new CollisionBox(this, 5, 10, TILE_SIZE-20, TILE_SIZE-10);
 	this.angle = this.direction.DOWN;
+	this.battleMap = 1;
 }
 Snake03.prototype = new Enemy();
 Snake03.prototype.constructor = Snake03;
@@ -897,6 +911,7 @@ function Snake04(x, y) {
 	this.tileXOffSet = 0;
 	this.hitBox = new CollisionBox(this, 5, 10, TILE_SIZE-20, TILE_SIZE-10);
 	this.angle = this.direction.DOWN;
+	this.battleMap = 1;
 }
 Snake04.prototype = new Enemy();
 Snake04.prototype.constructor = Snake04;
@@ -940,6 +955,7 @@ function StoneMonster(x, y) {
 	this.tileXOffSet = 0;
 	this.hitBox = new CollisionBox(this, 5, 10, TILE_SIZE-20, TILE_SIZE-10);
 	this.angle = this.direction.DOWN;
+	this.battleMap = 5;
 }
 StoneMonster.prototype = new Enemy();
 StoneMonster.prototype.constructor = StoneMonster;
@@ -984,6 +1000,7 @@ function TreeMonster(x, y) {
 	this.tileXOffSet = 0;
 	this.hitBox = new CollisionBox(this, 5, 10, TILE_SIZE-20, TILE_SIZE-10);
 	this.angle = this.direction.DOWN;
+	this.battleMap = 0;
 }
 TreeMonster.prototype = new Enemy();
 TreeMonster.prototype.constructor = TreeMonster;
@@ -1028,6 +1045,7 @@ function UndeadCreeper(x, y) {
 	this.tileYOffSet = 8;
 	this.hitBox = new CollisionBox(this, 5, 10, TILE_SIZE-20, TILE_SIZE-10);
 	this.angle = this.direction.DOWN;
+	this.battleMap = 3;
 }
 UndeadCreeper.prototype = new Enemy();
 UndeadCreeper.prototype.constructor = UndeadCreeper;
@@ -1072,6 +1090,7 @@ function Zombie(x, y) {
 	this.tileYOffSet = 0;
 	this.hitBox = new CollisionBox(this, 5, 10, TILE_SIZE-20, TILE_SIZE-10);
 	this.angle = this.direction.DOWN;
+	this.battleMap = 4;
 }
 Zombie.prototype = new Enemy();
 Zombie.prototype.constructor = Zombie;
@@ -1117,6 +1136,7 @@ function Skeleton(x, y) {
 	this.tileYOffSet = 0;
 	this.hitBox = new CollisionBox(this, 5, 10, TILE_SIZE-20, TILE_SIZE-10);
 	this.angle = this.direction.DOWN;
+	this.battleMap = 3;
 }
 Skeleton.prototype = new Enemy();
 Skeleton.prototype.constructor = Skeleton;
@@ -1161,6 +1181,7 @@ function Lich(x, y) {
 	this.tileYOffSet = 0;
 	this.hitBox = new CollisionBox(this, 5, 10, TILE_SIZE-20, TILE_SIZE-10);
 	this.angle = this.direction.DOWN;
+	this.battleMap = 8;
 }
 Lich.prototype = new Enemy();
 Lich.prototype.constructor = Lich;

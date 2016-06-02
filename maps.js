@@ -17,10 +17,43 @@ MapManager.prototype.initialize = function () {
 	
 	/* Battle Maps */
 	var bmap01 = new BattleMap({blockedTiles: [{x: 2, y: 7}, {x: 4, y: 1}, {x: 4, y: 3}, {x: 5, y: 5}, {x: 6, y: 2}, {x: 6, y: 7}], backgroundLayer: new Background(gm.am.getAsset("./img/LevelOneBattleGrassAndTree.png"))})
-	
 	var bmap02 = new BattleMap({blockedTiles: [], backgroundLayer: new Background(gm.am.getAsset("./img/LevelOneBattleGrass.png"))})
+	var bmap03 = new BattleMap({blockedTiles: [{x: 0, y: 0}, {x: 1, y: 0}, {x: 2, y: 0}, {x: 3, y: 0}, {x: 4, y: 0}, {x: 5, y: 0}, {x: 6, y: 0}, {x: 7, y: 0}, {x: 8, y: 0}, {x: 9, y: 0},
+	                                           {x: 0, y: 1}, {x: 1, y: 1}, {x: 2, y: 1}, {x: 3, y: 1}, {x: 4, y: 1}, {x: 5, y: 1}, {x: 6, y: 1}, {x: 7, y: 1}, {x: 8, y: 1}, {x: 9, y: 1},
+	                                           {x: 0, y: 8}, {x: 1, y: 8}, {x: 2, y: 8}, {x: 3, y: 8}, {x: 4, y: 8}, {x: 5, y: 8}, {x: 6, y: 8}, {x: 7, y: 8}, {x: 8, y: 8}, {x: 9, y: 8},
+	                                           {x: 0, y: 9}, {x: 1, y: 9}, {x: 2, y: 9}, {x: 3, y: 9}, {x: 4, y: 9}, {x: 5, y: 9}, {x: 6, y: 9}, {x: 7, y: 9}, {x: 8, y: 9}, {x: 9, y: 9}],
+	                                           backgroundLayer: new Background(gm.am.getAsset("./img/LevelOneBattleBoat.png"))})
+	var bmap04 = new BattleMap({blockedTiles: [], backgroundLayer: new Background(gm.am.getAsset("./img/LevelTwoBattleGrass.png"))})
+	var bmap05 = new BattleMap({blockedTiles: [{x: 0, y: 0}, {x: 0, y: 1}, {x: 0, y: 6}, {x: 0, y: 7}, {x: 0, y: 8}, {x: 0, y: 9}, {x: 2, y: 1}, {x: 2, y: 2}, {x: 2, y: 3}, {x: 2, y: 5}, {x: 2, y: 6}, {x: 2, y: 7}, {x: 2, y: 9},
+	                                           {x: 3, y: 3}, {x: 3, y: 7}, {x: 3, y: 9}, {x: 4, y: 0}, {x: 4, y: 3}, {x: 4, y: 4}, {x: 4, y: 5}, {x: 4, y: 7}, {x: 4, y: 9}, {x: 5, y: 0}, {x: 5, y: 1}, {x: 5, y: 5}, {x: 5, y: 7}, {x: 5, y: 9},
+	                                           {x: 6, y: 0}, {x: 6, y: 1}, {x: 6, y: 2}, {x: 6, y: 3}, {x: 6, y: 5}, {x: 6, y: 9}, {x: 7, y: 5}, {x: 7, y: 6}, {x: 7, y: 7}, {x: 7, y: 9}, {x: 8, y: 1}, {x: 8, y: 2}, {x: 8, y: 3}, {x: 8, y: 9},
+	                                           {x: 9, y: 7}, {x: 9, y: 8}, {x: 9, y: 9}], backgroundLayer: new Background(gm.am.getAsset("./img/LevelTwoBattleMaze.png"))})
+	var bmap06 = new BattleMap({blockedTiles: [{x: 0, y: 0}, {x: 1, y: 0}, {x: 2, y: 0}, {x: 3, y: 0}, {x: 4, y: 0}, {x: 5, y: 0}, {x: 6, y: 0}, {x: 7, y: 0}, {x: 8, y: 0}, {x: 9, y: 0},
+	                                           {x: 0, y: 9}, {x: 1, y: 9}, {x: 2, y: 9}, {x: 3, y: 9}, {x: 4, y: 9}, {x: 5, y: 9}, {x: 6, y: 9}, {x: 7, y: 9}, {x: 8, y: 9}, {x: 9, y: 9},
+	                                           {x: 2, y: 2}, {x: 3, y: 2}, {x: 4, y: 2}, {x: 5, y: 2}, {x: 6, y: 2}, {x: 2, y: 3}, {x: 4, y: 5}, {x: 7, y: 5}, {x: 7, y: 6}, {x: 2, y: 6},
+	                                           {x: 2, y: 7}, {x: 3, y: 7}, {x: 4, y: 7}], backgroundLayer: new Background(gm.am.getAsset("./img/LevelTwoBattleTree.png"))})
+	var bmap07 = new BattleMap({blockedTiles: [{x: 0, y: 0}, {x: 1, y: 0}, {x: 2, y: 0}, {x: 3, y: 0}, {x: 4, y: 0}, {x: 5, y: 0}, {x: 6, y: 0}, {x: 7, y: 0}, {x: 8, y: 0}, {x: 9, y: 0},
+	                                           {x: 0, y: 1}, {x: 1, y: 1}, {x: 2, y: 1}, {x: 3, y: 1}, {x: 4, y: 1}, {x: 5, y: 1}, {x: 6, y: 1}, {x: 7, y: 1}, {x: 8, y: 1}, {x: 9, y: 1},
+	                                           {x: 0, y: 7}, {x: 1, y: 7}, {x: 2, y: 7}, {x: 3, y: 7}, {x: 4, y: 7}, {x: 5, y: 7}, {x: 6, y: 7}, {x: 7, y: 7}, {x: 8, y: 7}, {x: 9, y: 7},
+	                                           {x: 0, y: 8}, {x: 1, y: 8}, {x: 2, y: 8}, {x: 3, y: 8}, {x: 4, y: 8}, {x: 5, y: 8}, {x: 6, y: 8}, {x: 7, y: 8}, {x: 8, y: 8}, {x: 9, y: 8},
+	                                           {x: 0, y: 9}, {x: 1, y: 9}, {x: 2, y: 9}, {x: 3, y: 9}, {x: 4, y: 9}, {x: 5, y: 9}, {x: 6, y: 9}, {x: 7, y: 9}, {x: 8, y: 9}, {x: 9, y: 9}],
+	                                           backgroundLayer: new Background(gm.am.getAsset("./img/LevelThreeBattleHallway.png"))})
+	var bmap08 = new BattleMap({blockedTiles: [{x: 0, y: 0}, {x: 1, y: 0}, {x: 2, y: 0}, {x: 3, y: 0}, {x: 4, y: 0}, {x: 5, y: 0}, {x: 6, y: 0}, {x: 7, y: 0}, {x: 8, y: 0}, {x: 9, y: 0},
+	                                           {x: 0, y: 9}, {x: 1, y: 9}, {x: 2, y: 9}, {x: 3, y: 9}, {x: 4, y: 9}, {x: 5, y: 9}, {x: 6, y: 9}, {x: 7, y: 9}, {x: 8, y: 9}, {x: 9, y: 9},
+	                                           {x: 0, y: 7}, {x: 0, y: 8}, {x: 9, y: 7}, {x: 9, y: 8}, {x: 3, y: 1}, {x: 4, y: 1}, {x: 5, y: 1}, {x: 6, y: 1}, {x: 3, y: 2}, {x: 4, y: 2},
+	                                           {x: 5, y: 2}, {x: 6, y: 2}], backgroundLayer: new Background(gm.am.getAsset("./img/LevelThreeBattleHall.png"))})
+	var bmap09 = new BattleMap({blockedTiles: [{x: 0, y: 0}, {x: 1, y: 0}, {x: 2, y: 0}, {x: 3, y: 0}, {x: 4, y: 0}, {x: 5, y: 0}, {x: 6, y: 0}, {x: 7, y: 0}, {x: 8, y: 0}, {x: 9, y: 0}],
+		                                      backgroundLayer: new Background(gm.am.getAsset("./img/LevelThreeBattleRoom.png"))})
+	
 	this.battleMaps.push(bmap01);
 	this.battleMaps.push(bmap02);
+	this.battleMaps.push(bmap03);
+	this.battleMaps.push(bmap04);
+	this.battleMaps.push(bmap05);
+	this.battleMaps.push(bmap06);
+	this.battleMaps.push(bmap07);
+	this.battleMaps.push(bmap08);
+	this.battleMaps.push(bmap09);
 	
 	/* Map 1 - Grasslands */
 	var map01 = new Map(1,
@@ -47,7 +80,7 @@ MapManager.prototype.initialize = function () {
     //End New Enemies
     
     //This is David's Skip to Level 3 For Testing Teleport (behind the tree)
-    map01.addEntity(new MapTeleportEvent(32, 720, 5, 5, 3, 15*TILE_SIZE+TILE_SIZE/2, 28*TILE_SIZE));
+    //map01.addEntity(new MapTeleportEvent(32, 720, 5, 5, 3, 15*TILE_SIZE+TILE_SIZE/2, 28*TILE_SIZE));
     
     //Regular End of Level Teleport
 	map01.addEntity(new MapTeleportEvent(2024, 1730, 20, 50, 2, 3*TILE_SIZE, 1*TILE_SIZE+TILE_SIZE/2));
