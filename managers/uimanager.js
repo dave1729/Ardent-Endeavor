@@ -14,6 +14,9 @@ function UIManager() {
 	this.itemsMenu = new ItemsMenu(this, this.ctx, this.screenWidth / 4 + 15, 10);
 	this.statusBox = new StatusBox(this, this.ctx);
 	
+	this.playerDisplay = new PlayerDisplay(this, this.ctx, 10, null);
+	this.focusItem = null;
+	
 	this.showStatusBox = false;
 	this.showDialogue = false;
 	this.showGameMenu = false;
@@ -31,6 +34,7 @@ function UIManager() {
 UIManager.prototype.update = function() {
 	if (this.showGameMenu) {
 		this.gameMenu.update();
+		this.playerDisplay.update();
 		
 		switch(this.menuState) {
 			case "options":
@@ -59,6 +63,7 @@ UIManager.prototype.draw = function() {
 	this.ctx.clearRect(0, 0, this.screenWidth, this.screenHeight);
 	if (this.showGameMenu) {
 		this.gameMenu.draw();
+		this.playerDisplay.draw();
 		
 		switch(this.menuState) {
 		case "options":
@@ -94,6 +99,159 @@ UIManager.prototype.controls = function () {
 	gm.im.addInput(new Input("menu", 'i'));
 	gm.im.addInput(new Input("confirm", 'e'));
 	gm.im.changeCurrentGroupTo(temp);
+}
+
+/* +------------------------------------------+ */
+/* |         ===  Player Display  ===         | */
+/* +------------------------------------------+ */
+function PlayerDisplay(uimanager, ctx, x, y) {
+	this.ui = uimanager;
+	this.ctx = ctx;
+	this.BORDER_PADDING = 5;
+	this.VERT_PADDING = this.ui.screenWidth / 50;
+	this.MENU_WIDTH = this.ui.screenWidth - (this.BORDER_PADDING * 2);
+	this.PLAYER_HEIGHT = this.ui.screenHeight / 7;
+	this.PLAYER_WIDTH = (this.ui.screenWidth - (this.VERT_PADDING * 4) - (this.BORDER_PADDING * 2)) / 3;
+	this.TOP_BOT_PADDING = this.ui.screenHeight / 48;
+	
+	this.x = this.BORDER_PADDING;
+	this.y = this.ui.screenHeight - this.BORDER_PADDING - this.TOP_BOT_PADDING*2 - this.PLAYER_HEIGHT;
+	this.buttons = [];
+	this.init();
+}
+
+PlayerDisplay.prototype.init = function () {
+	this.buttons.length = 0;
+	for (var i = 0; i < gm.bm.battleUnits.length; i++) {
+		this.buttons.push(new PlayerButton(this, this.ctx, gm.bm.battleUnits[i],
+				this.x + this.VERT_PADDING*(i+1) + this.PLAYER_WIDTH*i, this.y + this.TOP_BOT_PADDING,
+				this.PLAYER_WIDTH, this.PLAYER_HEIGHT
+				));
+	}
+	
+}
+
+PlayerDisplay.prototype.update = function () {
+	// Update buttons
+	var i;
+	for (i = 0; i < this.buttons.length; i++) {
+		this.buttons[i].update(this.ctx);
+	}
+	
+}
+PlayerDisplay.prototype.draw = function () {
+	// Draw the backdrop and border
+	this.ctx.strokeStyle = "rgb(255, 255, 255)";
+	this.ctx.fillStyle = "rgba(0, 98, 130, 0.7)";
+	roundRect(this.ctx, this.x, this.y, this.MENU_WIDTH, (this.PLAYER_HEIGHT + this.TOP_BOT_PADDING*2), 5, true, true);
+			
+	// Draw Currency
+	roundRect(this.ctx, this.x, this.y - 55, this.MENU_WIDTH / 4, (this.PLAYER_HEIGHT / 4 + this.TOP_BOT_PADDING*2), 5, true, true);
+	// Font options
+	var fontSize = 24;
+	this.ctx.fillStyle = "rgb(255, 255, 255)";
+	this.ctx.font = fontSize + "px sans-serif";
+	// Text position
+	var textSize = this.ctx.measureText("HP:");
+	var textX = this.x + this.VERT_PADDING;// + (this.width/2) - (textSize.width);
+	var textY = this.y-(this.PLAYER_HEIGHT/4);// + (fontSize);
+	this.ctx.fillText(gm.player.gold + " gold", textX, textY);
+
+	
+	// Draw buttons
+	var i;
+	for (i = 0; i < this.buttons.length; i++) {
+		this.buttons[i].draw(this.ctx);
+	}
+}
+
+
+function PlayerButton(parent, ctx, playerUnit, x, y, width, height) {
+	this.parent = parent;
+	this.ctx = ctx;
+	this.playerUnit = playerUnit;
+	this.x = x;
+	this.y = y;
+	this.width = width;
+	this.height = height;
+	this.hovered = false;
+	this.onClickEvent = null;
+}
+
+PlayerButton.prototype.moveButton = function (x, y, width, height) {
+	this.x = x;
+	this.y = y;
+	this.width = width;
+	this.height = height;
+}
+
+PlayerButton.prototype.update = function (canvas) {
+    
+    if (gm.im.checkMouse() && gm.im.getMouse() != null) {
+    	//console.log("x: " + gm.im.getMouse().x + "  y: " + gm.im.getMouse().y);
+    	if (gm.im.getMouse().x > this.x && 
+				gm.im.currentgroup.mouse.y > this.y &&
+				gm.im.currentgroup.mouse.x < this.x + this.width &&
+				gm.im.currentgroup.mouse.y < this.y + this.height) {
+			this.hovered = true;
+		} else {
+			this.hovered = false;
+		}
+    }
+    if (gm.im.checkMouse() && gm.im.getClick() != null) {
+    	if (gm.im.getMouse().x > this.x && 
+				gm.im.currentgroup.mouse.y > this.y &&
+				gm.im.currentgroup.mouse.x < this.x + this.width &&
+				gm.im.currentgroup.mouse.y < this.y + this.height) {
+    		//console.log(this.text + " menu option was clicked");
+    		if (gm.ui.focusItem != null) {
+        		//this.onClickEvent();
+    			if (gm.ui.focusItem.constructor.name === "Consumable") {
+    				console.log(gm.ui.focusItem.constructor.name);
+    				gm.ui.focusItem.use(this.playerUnit);
+    				gm.ui.focusItem = null;
+    				gm.ui.itemsMenu.init();
+    			}
+    		}
+    	}
+    }
+}
+
+PlayerButton.prototype.draw = function(ctx) {
+	// Button color
+	if (gm.ui.focusItem != null && this.hovered) {
+		ctx.fillStyle = 'rgba(255,165,0,0.5)';
+	} else {
+		ctx.fillStyle = 'rgba(0,0,0,0)';
+	}
+	
+	// Draw button frame
+	ctx.fillRect(this.x, this.y, this.width, this.height);
+	
+	// Font options
+	var fontSize = 24;
+	ctx.fillStyle = "rgb(255, 255, 255)";
+	ctx.font = fontSize + "px sans-serif";
+	
+	// Text position
+	var textSize = ctx.measureText("HP:");
+	var textX = this.x + (this.width/2) - (textSize.width);
+	var textY = this.y + (fontSize);
+	
+	// Draw playerUnit
+    //this.playerUnit.animation.drawEntity(gm.clockTick, ctx, this.x - this.parent.VERT_PADDING, this.y + this.parent.PLAYER_HEIGHT + this.parent.TOP_BOT_PADDING);
+	ctx.drawImage(this.playerUnit.animation.spriteSheet,
+			0, 0,  // source from sheet
+			this.playerUnit.animation.frameWidth, this.playerUnit.animation.frameHeight,
+			this.x - this.parent.VERT_PADDING, this.y + this.parent.TOP_BOT_PADDING,
+			this.playerUnit.animation.frameWidth * this.playerUnit.animation.scale,
+			this.playerUnit.animation.frameHeight * this.playerUnit.animation.scale);	
+	
+	// Draw text
+	ctx.fillText(this.playerUnit.name, textX, textY);
+	ctx.font = 20 + "px sans-serif";
+	ctx.fillText("Lvl: " + this.playerUnit.level + "  xp: " + this.playerUnit.exp + "/" + this.playerUnit.nextLevelExp, textX, textY+fontSize*1);
+	ctx.fillText("HP: " + this.playerUnit.health + " / " + this.playerUnit.maxhealth, textX, textY+fontSize*2+5);
 }
 
 
@@ -350,7 +508,7 @@ OptionsMenu.prototype.draw = function () {
 function ItemsMenu(uimanager, ctx, x, y) {
 	this.ui = uimanager;
 	this.VERT_PADDING = this.ui.screenWidth / 50;
-	this.BUTTON_HEIGHT = this.ui.screenHeight / 12;
+	this.BUTTON_HEIGHT = this.ui.screenHeight / 20;
 	this.MENU_WIDTH = this.ui.screenWidth * 3 / 4 - 20;
 	this.TOP_BOT_PADDING = this.ui.screenHeight / 48;
 	
@@ -358,17 +516,31 @@ function ItemsMenu(uimanager, ctx, x, y) {
 	this.y = y;
 	this.ctx = ctx;
 	this.items = [];
-	this.init();
+	//this.init();
 }
 
 ItemsMenu.prototype.init = function () {
-	this.items.push();
+	this.items.length = 0;
+	var counter = 0;
+	for (var i = 0; i < gm.player.inventory.items.length; i++) {
+		if (gm.player.inventory.items[i].constructor.name === "Consumable" &&
+				gm.player.inventory.items[i].quantity > 0) {
+			this.items.push(new uiItem(this, this.ctx, this.x, counter,
+					this.MENU_WIDTH, this.BUTTON_HEIGHT,
+					gm.player.inventory.items[i]
+			));
+			counter++;
+		}
+	}
 }
 ItemsMenu.prototype.update = function () {
 	// Update buttons
 	var i;
 	for (i = 0; i < this.items.length; i++) {
 		this.items[i].update(this.ctx);
+	}
+	for (var j = 0; j < gm.player.inventory.items.length; j++) {
+		console.log(gm.player.inventory.items[j].quantity + " " + gm.player.inventory.items[j].name);
 	}
 	
 }
@@ -386,18 +558,37 @@ ItemsMenu.prototype.draw = function () {
 }
 
 
-function uiItem(parent, ctx, x, y, width, height, item) {
+function uiItem(parent, ctx, x, i, width, height, item) {
 	this.item = item;
 	this.x = x;
-	this.y = y;
+	this.y = parent.y + parent.TOP_BOT_PADDING + (parent.BUTTON_HEIGHT * i);
 	this.width = width;
 	this.height = height;
 	this.parent = parent;
 	this.ctx = ctx;
-	this.itemBtn = new Button(parent, ctx, item.name, x+30, y, width-30, height,
+	this.itemBtn = new Button(parent, ctx, item.name + " - " + item.description, this.x+50, this.y, width/4*3, height,
 		runItem = function () {
 			console.log("Clicked " + item.name);
+			gm.ui.focusItem = item;
 		});
+}
+
+uiItem.prototype.update = function (canvas) {
+    this.itemBtn.update();
+}
+
+uiItem.prototype.draw = function(ctx) {
+	// Font options
+	var fontSize = 20;
+	this.ctx.fillStyle = "rgb(255, 255, 255)";
+	this.ctx.font = fontSize + "px sans-serif";
+	// Text position
+	var textSize = this.ctx.measureText(this.item.quantity);
+	var textX = this.x + this.parent.VERT_PADDING + (textSize.width);
+	var textY = this.y + (fontSize) + 2;
+	this.ctx.fillText(this.item.quantity, textX, textY);
+	
+	this.itemBtn.draw(ctx, "left");
 }
 
 
@@ -452,7 +643,12 @@ Button.prototype.update = function (canvas) {
     }
 }
 
-Button.prototype.draw = function(ctx) {
+Button.prototype.draw = function(ctx, align) {
+	var alignment = "center";
+	if (align != null && align != undefined) {
+		alignment = align;
+	}
+	
 	// Button color
 	if (this.hovered) {
 		ctx.fillStyle = 'rgba(255,165,0,0.5)';
@@ -471,6 +667,9 @@ Button.prototype.draw = function(ctx) {
 	// Text position
 	var textSize = ctx.measureText(this.text);
 	var textX = this.x + (this.width/2) - (textSize.width/2);
+	if (alignment === "left") {
+		textX = this.x + 15;
+	}
 	var textY = this.y + (this.height) - (fontSize/2);
 	
 	// Draw text

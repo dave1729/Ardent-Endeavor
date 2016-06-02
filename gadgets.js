@@ -72,8 +72,9 @@ Chest.prototype.draw = function () {
 Chest.prototype.update = function () {
 	if (this.state === 2 && this.animation.isDone())
 	{
-		gm.openDialogueBox(this.item.name,
+		gm.openDialogueBox(null,
 				"You found " + this.item.toString());
+		gm.player.inventory.addItem(this.item, this.item.quantity);
 		this.state = 3;
 	}
 	Gadget.prototype.update.call(this);
@@ -85,7 +86,7 @@ Chest.prototype.interactTrigger = function () {
 	if (this.state === 1) {
 		this.state = 2;
 	} else if (this.state === 3) {
-		gm.openDialogueBox(this.constructor.name,
+		gm.openDialogueBox(null,
 				"Chest is empty");
 	}
 }

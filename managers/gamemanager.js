@@ -181,6 +181,8 @@ GameManager.prototype.openGameMenu = function () {
 	this.im.changeCurrentGroupTo("ui");
 	this.startInput(this.ctxUI);
 	this.ui.showGameMenu = true;
+	this.ui.playerDisplay.init();
+	this.ui.itemsMenu.init();
 	// need to disable previous keys (maybe).
 	document.getElementById("uiLayer").style.zIndex = "3";
 }

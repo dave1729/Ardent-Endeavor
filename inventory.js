@@ -2,7 +2,7 @@ function Inventory(spec) {
     this.items = [];
 }
 
-Inventory.prototype = Object.create(Inventory.prototype);
+//Inventory.prototype = Object.create(Inventory.prototype);
 Inventory.prototype.constructor = Inventory;
 
 Inventory.LIBRARY = {
@@ -30,7 +30,7 @@ Inventory.prototype.addItem = function (item) {
 }
 
 Inventory.prototype.addItem = function (item, quantity) {
-    if (typeof item === Currency)
+    if (item instanceof Currency)
     {
         item.use(gm.player);
     }
@@ -64,7 +64,7 @@ function Item(spec)
     this.quantity = spec.quantity;
 }
 
-Item.prototype = Object.create(Item.prototype);
+//Item.prototype = Object.create(Item.prototype);
 Item.prototype.constructor = Item;
 
 Item.prototype.use = function (target) {
@@ -81,7 +81,7 @@ function Currency(spec)
     Item.call(this, spec);
 }
 
-Currency.prototype = Object.create(Item.prototype);
+//Currency.prototype = Object.create(Item.prototype);
 Currency.prototype.constructor = Currency;
 
 Currency.prototype.use = function (target) {
@@ -100,7 +100,7 @@ function Consumable(spec)
     Item.call(this, spec);
 }
 
-Consumable.prototype = Object.create(Item.prototype);
+//Consumable.prototype = Object.create(Item.prototype);
 Consumable.prototype.constructor = Consumable;
 
 Consumable.prototype.use = function (target)
@@ -109,6 +109,7 @@ Consumable.prototype.use = function (target)
     {
         effect.activate(target);
     })
+    this.quantity--;
 }
 
 function Equipment(spec)
@@ -126,7 +127,7 @@ Effect.prototype.activate = function (target) {
     console.log("Please set an effect for this to activate")
 }
 
-Effect.prototype = Object.create(Effect.prototype);
+//Effect.prototype = Object.create(Effect.prototype);
 Effect.prototype.constructor = Effect;
 
 
@@ -134,7 +135,7 @@ function RestoreHealth(spec) {
     this.value = spec.value;
 }
 
-RestoreHealth.prototype = Object.create(Effect.prototype);
+//RestoreHealth.prototype = Object.create(Effect.prototype);
 RestoreHealth.prototype.constructor = RestoreHealth;
 
 RestoreHealth.prototype.activate = function (target) {

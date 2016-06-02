@@ -54,6 +54,7 @@ MapManager.prototype.initialize = function () {
 	
 	//Obvious Chests
     // map01.addEntity(new Chest(19*TILE_SIZE, 19*TILE_SIZE, 2, "an Emerald!"));
+    map01.addEntity(new Chest(6*TILE_SIZE, 6*TILE_SIZE, 0, Inventory.LIBRARY.HEALTH_POTION));
     map01.addEntity(new Chest(12*TILE_SIZE, 27*TILE_SIZE, 1, new Currency({value: 5, name: "Gold"})));
     // map01.addEntity(new Chest(1*TILE_SIZE, 20*TILE_SIZE, 2, "an Emerald!"));
     map01.addEntity(new Chest(30*TILE_SIZE, 1*TILE_SIZE, 1, new Currency({value: 5, name: "Gold"})));
