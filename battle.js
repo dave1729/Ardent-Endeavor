@@ -146,10 +146,14 @@ BattleOverlay.prototype.highlightPossibleAttacks = function (ctx)
 function Cursor ()
 {
     this.visible = true;
-    this.goodAttack = false;
     this.selected = undefined;
     this.target = undefined;
     Entity.call(this, -TILE_SIZE, -TILE_SIZE);
+}
+
+Cursor.prototype.reset = function () {
+    this.selected = undefined;
+    this.target = undefined;
 }
 
 Cursor.prototype.deselect = function () {
@@ -251,7 +255,7 @@ function Battle(spec)
     this.enemyUnits = spec.enemyUnits;
     this.immovableTiles = spec.immovableTiles;
     this.currentPhase = this.setupPhase;
-    this.availableUnits = [];
+    this.availableUnits = spec.availableUnits;
     this.enemyType = spec.enemyType;
 }
 
@@ -285,11 +289,11 @@ Battle.prototype.setupPhase = function () {
     let click = gm.bm.cursor.getClick();
     if(click)
     {
-        if(!gm.bm.cursor.isCellOccupied())
+        if(!gm.bm.cursor.isCellOccupied(click.x, click.y))
         {
             if (this.validPlacement(click.x, click.y))
             {
-                this.spawnPlayer();
+                this.spawnPlayer(click.x, click.y);
             }
         }
         gm.im.currentgroup.click = undefined;
@@ -302,63 +306,41 @@ Battle.prototype.setupPhase = function () {
     }
 }
 
-Battle.prototype.resolveFight = function () {
+Battle.prototype.resolveBattle = function ()
+ {
     let attacker = gm.bm.cursor.selected;
     let defender = gm.bm.cursor.target;
-    defender.health = defender.health - attacker.damage;
-    if (defender.health <= 0)
-    {
-        if (defender.AIPackage)
-        {
-            this.enemyUnits.splice(this.enemyUnits.indexOf(defender), 1);
-        }
-        else
-        {
-            this.playerUnits.splice(this.playerUnits.indexOf(defender), 1);
-        }
-        gm.bm.cursor.target.removeFromWorld = true;
-    }
+    this.resolveFight(attacker, defender);
     attacker.attacked = true;
     gm.bm.cursor.target = undefined;
 }
 
 Battle.prototype.playerPhase = function () {
-    // if (this.availableUnits.length === 0)
-    // {
-    //     console.log("TURN DONE")
-    //     this.currentPhase = this.enemyPhase;
-    // }
     if (gm.bm.cursor.selected && gm.bm.cursor.target)
     {
-        this.resolveFight();
+        this.resolveBattle();
         gm.bm.cursor.deselect();
         gm.im.currentgroup.click = undefined;
     }
+    
     if(gm.im.checkInput("endTurn"))
     {
         console.log("TURN DONE")
-        this.playerUnits.forEach((unit) =>
-        {
-            unit.selected = false;
-        })
-        gm.bm.cursor.selected = undefined;
-        gm.bm.cursor.target = undefined;
+        this.resetPUnits();
+        gm.bm.cursor.reset();
         gm.im.setFalse("endTurn");
-        // console.log("SWITCHING")
         this.currentPhase = this.enemyPhase;
     }
+    
     if (this.enemyUnits.length === 0)
     {
-        //End battle
-        //Remove all entities from array
-        console.log("Victory!")
-        gm.endBattle();
+        this.victory();
     }
-        //Check if t has been 
+
 }
 
 Battle.prototype.enemyPhase = function () {
-    gm.im.setFalse("endTurn");
+    // gm.im.setFalse("endTurn");
     if(!this.aiCalled)
     {
         // console.log("Running AI")
@@ -395,6 +377,48 @@ Battle.prototype.enemyPhase = function () {
 //	}
 //}
 
+Battle.prototype.resolveFight = function (attacker, defender) 
+{
+    if (!defender.removeFromWorld)
+    {
+        defender.health = defender.health - attacker.damage;
+        if (defender.health <= 0)
+        {
+            if (defender.AIPackage)
+            {
+                //Give player exp and gold
+                gm.player.gold += defender.reward.gold;
+                attacker.rewardExp(defender.reward.exp);
+                
+                this.enemyUnits.splice(this.enemyUnits.indexOf(defender), 1);
+            }
+            else
+            {
+                defender.health = 0;
+                this.playerUnits.splice(this.playerUnits.indexOf(defender), 1);
+                gm.bm.maxPlayers--;
+            }
+            defender.removeFromWorld = true;
+        }
+    }
+}
+Battle.prototype.victory = function ()
+{
+    console.log("Victory!")
+    this.resetPUnits();
+    gm.bm.cursor.reset();
+    gm.endBattle();
+}
+
+Battle.prototype.defeat = function ()
+{
+    console.log("Defeat.")
+    this.resetPUnits();
+    gm.bm.cursor.reset();
+    gm.endBattle();
+    // gm.gameOver();
+}
+
 Battle.prototype.enemyPhaseTest = function (enemyMoves) 
 {
     enemyMoves.forEach((move) => {
@@ -404,51 +428,41 @@ Battle.prototype.enemyPhaseTest = function (enemyMoves)
         move.enemy.y = dest.y;
         if(move.isAttacking)
         {
-            move.target.health = move.target.health - move.enemy.damage;
-            if (move.target.health <= 0)
-            {
-                this.playerUnits.splice(this.playerUnits.indexOf(move.target), 1);
-                move.target.removeFromWorld = true;
-            }
+            this.resolveFight(move.enemy, move.target);
         }
     })
+    
+    gm.im.currentgroup.click = undefined;
+    
     if (this.playerUnits.length === 0)
     {
-        console.log("Defeat.")
-        gm.endBattle();
+        this.defeat();
+        this.resetPUnits();
     }
     if (this.enemyUnits.length === 0)
     {
-        console.log("Victory!")
-        gm.endBattle();
+        this.victory();
+        this.resetPUnits();
+
     }
-    this.resetPUnitActions();
-    gm.im.currentgroup.click = undefined;
     this.aiCalled = false;
     this.currentPhase = this.playerPhase;
 }
 
-Battle.prototype.resetPUnitActions = function () {
-    this.playerUnits.forEach((unit) =>
-    {
-        unit.moved = false;
-        unit.attacked = false;
-    })
-}
+// Battle.prototype.resetPUnitActions = function () {
+//     this.playerUnits.forEach((unit) =>
+//     {
+//         unit.moved = false;
+//         unit.attacked = false;
+//     })
+// }
 
-Battle.prototype.spawnPlayer = function (params) 
+Battle.prototype.spawnPlayer = function (x, y) 
 {
-    console.log("./img/player" + this.maxPlayers + ".png")
-    let over = new Player(gm.am.getAsset("./img/player" + this.maxPlayers + ".png"));
-    
-    over.x = gm.bm.cursor.x * TILE_SIZE;
-    over.y = gm.bm.cursor.y * TILE_SIZE;
-    over.animation.sheetWidth = 4;
-    over.animation.frames = 12;
-    over.animation.frameDuration = 0.2;
-    let spawn = new PlayerUnit({overworld: over, x: gm.bm.cursor.x, y :gm.bm.cursor.y, health: 100, damage: 10});
+    let spawn = gm.bm.battleUnits[this.maxPlayers - 1];
+    spawn.x = x;
+    spawn.y = y;
     gm.em.addEntity(spawn);
-    this.availableUnits.push(spawn);
     this.playerUnits.push(spawn);
     this.maxPlayers--;
 }
@@ -459,17 +473,11 @@ Battle.prototype.validPlacement = function (x, y) {
     }).length  !== 0;
 }
 
-Battle.prototype.unitUsed = function (unit) 
-{
-    this.availableUnits.splice(this.availableUnits.indexOf(unit), 1);
-}
-
-Battle.prototype.resetUnits = function () {
-    this.availableUnits = this.playerUnits;
-}
-
-Battle.prototype.disableInput = function () {
-    gm.disableInput = true;
+Battle.prototype.resetPUnits = function () {
+    this.playerUnits.forEach((unit) =>
+    {
+        unit.reset();
+    })
 }
 
 Battle.prototype.spawnEnemies = function () {
@@ -478,8 +486,9 @@ Battle.prototype.spawnEnemies = function () {
     this.spawnEnemy();
     this.spawnEnemy();
     this.spawnEnemy();
-        this.spawnEnemy();
+    this.spawnEnemy();
 }
+
 function valueBetween(min, max)
 {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -495,10 +504,10 @@ Battle.prototype.spawnEnemy = function () {
     let point = {x: valueBetween(1, 9), y: valueBetween(1, 9)}
     let health1 = valueBetween(10, 30);
     let damage1 = valueBetween(5, 20);
-    let clone = this.enemyType
+    let clone = this.enemyType;
     if(!gm.bm.cursor.isCellOccupied(point))
     {
-        let spawn = new EnemyUnit({x: point.x, y: point.y, overworld: clone, health: health1, damage: damage1});
+        let spawn = new EnemyUnit({x: point.x, y: point.y, animation: this.enemyType.downAnimation, health: health1, damage: damage1, reward: this.enemyType.reward});
         gm.em.addEntity(spawn);
         this.enemyUnits.push(spawn);
     }

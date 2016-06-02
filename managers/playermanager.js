@@ -3,6 +3,7 @@ var gm = gm || {};
 function Player(spritesheet) {
 	this.spriteSquareSize = 64;
 	this.scale = 1;
+	this.gold = 0;
 	//Animation: spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale
 	this.animation = new Animation(spritesheet, this.spriteSquareSize, this.spriteSquareSize, 9, 0.1, 32, true, this.scale);
 	this.regSpeed = 325;
@@ -10,9 +11,8 @@ function Player(spritesheet) {
 	this.speedY = 0;
 	this.layer = 5;
 	this.entityID = 1;
-	this.ctx = gm.ctx;
 	this.interactRange = 5;
-	
+	this.inventory = new Inventory();
 	// When changing the hitbox, also change x and y shift in draw collision box
 	this.hitBox = new CollisionBox(this, 18, 34, this.spriteSquareSize-36, this.spriteSquareSize-36);
 	Entity.call(this, 235, 215);
@@ -20,6 +20,7 @@ function Player(spritesheet) {
 
 Player.prototype.init = function () {
 	this.controls();
+	
 }
 
 Player.prototype.controls = function () {
