@@ -45,7 +45,7 @@ GameManager.prototype.queueAssets = function () {
 	this.am.queueDownload("./img/player1.png");
 	this.am.queueDownload("./img/player.png");
 	this.am.queueDownload("./img/PirateGirl.png");
-	this.am.queueDownload("./img/PirateGirlWithBandana.png");
+	this.am.queueDownload("./img/PirateGirlWithPirateHat.png");
     this.am.queueDownload("./img/GrassOnlyBackground.png");
     this.am.queueDownload("./img/collidable_background.png");
     this.am.queueDownload("./img/Background_Layer.png");
