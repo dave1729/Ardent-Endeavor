@@ -117,20 +117,20 @@ MapManager.prototype.initialize = function () {
 	);
     
     //ENEMIES
-//    map02.addEntity(new StoneMonster(15*TILE_SIZE, 4*TILE_SIZE));
-//    map02.addEntity(new UndeadCreeper(19*TILE_SIZE, 6*TILE_SIZE));
-//    map02.addEntity(new UndeadCreeper(4*TILE_SIZE, 26*TILE_SIZE));
-//    map02.addEntity(new Zombie(29*TILE_SIZE, 22*TILE_SIZE));
-//    map02.addEntity(new UndeadJacket(17*TILE_SIZE, 23*TILE_SIZE));
-//    map02.addEntity(new Zombie(2*TILE_SIZE, 5*TILE_SIZE));    
-//    map02.addEntity(new UndeadJacket(11*TILE_SIZE, 3*TILE_SIZE));
-//    map02.addEntity(new UndeadJacket(10*TILE_SIZE, 25*TILE_SIZE));
-//    map02.addEntity(new UndeadJacket(25*TILE_SIZE, 22*TILE_SIZE));
-//    map02.addEntity(new Skeleton(25*TILE_SIZE, 7*TILE_SIZE));
-//    map02.addEntity(new StoneMonster(14*TILE_SIZE, 17*TILE_SIZE));
-//    map02.addEntity(new UndeadJacket(28*TILE_SIZE, 18*TILE_SIZE));
-//    map02.addEntity(new UndeadCreeper(24*TILE_SIZE, 10*TILE_SIZE));
-//    map02.addEntity(new UndeadCreeper(27*TILE_SIZE, 10*TILE_SIZE));
+    map02.addEntity(new StoneMonster(15*TILE_SIZE, 4*TILE_SIZE));
+    map02.addEntity(new UndeadCreeper(19*TILE_SIZE, 6*TILE_SIZE));
+    map02.addEntity(new UndeadCreeper(4*TILE_SIZE, 26*TILE_SIZE));
+    map02.addEntity(new Zombie(29*TILE_SIZE, 22*TILE_SIZE));
+    map02.addEntity(new UndeadJacket(17*TILE_SIZE, 23*TILE_SIZE));
+    map02.addEntity(new Zombie(2*TILE_SIZE, 5*TILE_SIZE));    
+    map02.addEntity(new UndeadJacket(11*TILE_SIZE, 3*TILE_SIZE));
+    map02.addEntity(new UndeadJacket(10*TILE_SIZE, 25*TILE_SIZE));
+    map02.addEntity(new UndeadJacket(25*TILE_SIZE, 22*TILE_SIZE));
+    map02.addEntity(new Skeleton(25*TILE_SIZE, 7*TILE_SIZE));
+    map02.addEntity(new StoneMonster(14*TILE_SIZE, 17*TILE_SIZE));
+    map02.addEntity(new UndeadJacket(28*TILE_SIZE, 18*TILE_SIZE));
+    map02.addEntity(new UndeadCreeper(24*TILE_SIZE, 10*TILE_SIZE));
+    map02.addEntity(new UndeadCreeper(27*TILE_SIZE, 10*TILE_SIZE));
 	
 	//Obvious Chests
 	// map02.addEntity(new Chest(1*TILE_SIZE, 1*TILE_SIZE, 2, "an Emerald!"));
@@ -150,7 +150,7 @@ MapManager.prototype.initialize = function () {
     //Return to Level 1
     map02.addEntity(new MapTeleportEvent(3*TILE_SIZE, 0*TILE_SIZE, 50, 50, 1, 1944, 1740));
     
-    //To Level 3
+    //To Level 3 THIS HAS BEEN MOVED INTO THE ADD INVENTORY FUNCTION WHERE THE CHECKFORKEY IS
 	//map02.addEntity(new MapTeleportEvent(1641, 390, 50, 50, 3, 15*TILE_SIZE+TILE_SIZE/2, 28*TILE_SIZE));
     
     this.addMap(map02);
