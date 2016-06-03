@@ -64,7 +64,7 @@ MapManager.prototype.initialize = function () {
 	
 	//ENEMIES
     map01.addEntity(new Bandit(18*TILE_SIZE, 21*TILE_SIZE));
-    map01.addEntity(new Goblin(19*TILE_SIZE, 22*TILE_SIZE));
+    map01.addEntity(new Bandit(19*TILE_SIZE, 22*TILE_SIZE));
     map01.addEntity(new TreeMonster(15*TILE_SIZE, 4*TILE_SIZE));
     map01.addEntity(new TreeMonster(9*TILE_SIZE, 1*TILE_SIZE));
     map01.addEntity(new TreeMonster(19*TILE_SIZE, 6*TILE_SIZE));
@@ -179,7 +179,7 @@ MapManager.prototype.initialize = function () {
     map03.addEntity(new ThreeHeadedDog(20*TILE_SIZE, 9*TILE_SIZE));
     map03.addEntity(new Ogre(4*TILE_SIZE, 7*TILE_SIZE));
     map03.addEntity(new Ogre(8*TILE_SIZE, 7*TILE_SIZE));
-	map03.addEntity(new UndeadCreeper(3*TILE_SIZE, 22*TILE_SIZE));
+	map03.addEntity(new Mercenary(3*TILE_SIZE, 22*TILE_SIZE));
 	map03.addEntity(new Lich(6*TILE_SIZE, 5*TILE_SIZE));
 	map03.addEntity(new YouWinEvent(9*TILE_SIZE, 0*TILE_SIZE, 2*TILE_SIZE, 1.3*TILE_SIZE));
 	
