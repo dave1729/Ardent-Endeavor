@@ -47,7 +47,7 @@ Gadget.prototype.collisionTrigger = function (player, startX, startY) {
 /* +------------------------------------------+ */
 /* |             ===  Chest  ===              | */
 /* +------------------------------------------+ */
-function Chest(x, y, chestType, item) {
+function Chest(x, y, chestType, item, quantity) {
 	//Animation(spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale)
 	this.animation = new Animation(gm.am.getAsset("./img/chest.png"), 
 					 		32, 48, 1, 0.06, 4, false, 1);
@@ -58,6 +58,7 @@ function Chest(x, y, chestType, item) {
 	this.screenY = this.y;
 	this.state = 1;
 	this.item = item;
+	this.quantity = quantity;
 	// 1 - Closed; 2 - Opening; 3 - Open
 	this.hitBox = new CollisionBox(this, 2, 22, TILE_SIZE-36, TILE_SIZE-42);
 }
@@ -74,7 +75,7 @@ Chest.prototype.update = function () {
 	{
 		gm.openDialogueBox(null,
 				"You found " + this.item.toString());
-		gm.player.inventory.addItem(this.item, this.item.quantity);
+		gm.player.inventory.addItem(this.item, this.quantity);
 		this.state = 3;
 	}
 	Gadget.prototype.update.call(this);

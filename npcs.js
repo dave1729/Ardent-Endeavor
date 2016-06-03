@@ -118,8 +118,11 @@ Billy.prototype.story = function () {
 		this.storyStage = 3;
 		break;
 	case 3:
-		gm.openDialogueBox(this.constructor.name, 
-				"Please stop using me for your tests...");
+		console.log("get ready to open merchant page");
+		gm.im.setAllFalse();
+		gm.openMerchantMenu();
+//		gm.openDialogueBox(this.constructor.name, 
+//				"Please stop using me for your tests...");
 		break;
 	default:
 		break;
