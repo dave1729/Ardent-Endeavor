@@ -29,6 +29,10 @@ Inventory.prototype.addItem = function (item, quantity) {
     {
         item.use(gm.player);
     }
+    else if (item.name === "Castle Key") {
+    	alert("Adding Door Teleport");
+    	gm.em.addEntity(new MapTeleportEvent(1641, 390, 50, 50, 3, 15*TILE_SIZE+TILE_SIZE/2, 28*TILE_SIZE));
+    }
     else
     {
         let index = this.items.indexOf(item);
@@ -86,19 +90,6 @@ Currency.prototype.use = function (target) {
 Currency.prototype.toString = function (params) {
     return this.value + " " + this.name;
 }
-
-//function PirateHat() {
-//    Item.call({name: "Pirate Hat", description: "a fancy pirate hat", quantity: 1});
-//}
-// 
-//PirateHat.prototype = Object.create(Item.prototype);
-//PirateHat.prototype.constructor = PirateHat;
-//
-//PirateHat.prototype.use = function (target) {
-//	gm.openDialogueBox(this.constructor.name, 
-//	"You'd better not ware this, you might loose it before returning it to the boat captin.");
-//}
-
 
 function Consumable(spec)
 {
@@ -163,5 +154,6 @@ function inventoryHowTo ()
 Inventory.LIBRARY = {
     HEALTH_POTION: new Consumable({name: "Health Potion", description: "Restores 20 health", 
                                    quantity: 10, effects: [new RestoreHealth({value: 20})]}),
-    PIRATE_HAT: new Item({name: "Pirate Hat", description: "A Fancy Pirate Hat", quantity: 1})
+    PIRATE_HAT: new Item({name: "Pirate Hat", description: "A Fancy Pirate Hat", quantity: 1}),
+    CASTLE_KEY: new Item({name: "Castle Key", description: "An Old Key", quantity: 1})
 }
