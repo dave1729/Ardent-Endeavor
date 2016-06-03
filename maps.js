@@ -79,6 +79,9 @@ MapManager.prototype.initialize = function () {
     map01.addEntity(new FlyingBug(29*TILE_SIZE, 2*TILE_SIZE));
     //End New Enemies
     
+    //Pirate Girl
+    map01.addEntity(new PirateGirl(23*TILE_SIZE, 13*TILE_SIZE));
+    
     //This is David's Skip to Level 3 For Testing Teleport (behind the tree)
     //map01.addEntity(new MapTeleportEvent(32, 720, 5, 5, 3, 15*TILE_SIZE+TILE_SIZE/2, 28*TILE_SIZE));
     
