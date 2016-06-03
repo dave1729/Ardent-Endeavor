@@ -119,7 +119,7 @@ YouWinEvent.prototype.collisionTrigger = function (player) {
 	gm.openDialogueBox(null,
 		"You win, congratulations!!!");
 }
-Event.prototype.interactTrigger = function (player) {
+YouWinEvent.prototype.interactTrigger = function (player) {
 	gm.openDialogueBox(null,
 		"You win, congratulations!!!");
 }
