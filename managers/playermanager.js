@@ -103,6 +103,20 @@ Player.prototype.draw = function (ctx) {
 	this.animation.drawPlayer(gm.clockTick, ctx, this.x, this.y, this);
 }
 
+Player.prototype.tryRemoveItem = function (itemName) {
+	var initialInventorySize = this.inventory.items.length;
+	for(var i = 0; i < initialInventorySize; i++) {
+		if(this.inventory.items[i].name === itemName) {
+			this.inventory.items.splice(i, 1);
+			if(initialInventorySize === this.inventory.items.length) {
+				console.log("In Player Manager, Splice in hasItem function Did not reduce list properly.");
+			}
+			return true;
+		}
+	}
+	return false;
+}
+
 Player.prototype.update = function () {
 	if (this.animation.elapsedTime < this.animation.totalTime) {
 		var currentAdjust = gm.clockTick * this.speed;

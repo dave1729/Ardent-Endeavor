@@ -17,6 +17,27 @@ NPC.prototype.update = function () {
 	Event.prototype.update.call(this);
 }
 
+NPC.prototype.directionTowardPlayer = function (entity) {
+	var deltaX = gm.player.x - entity.x;
+	var deltaY = gm.player.y - entity.y;
+	if(Math.abs(deltaX) > Math.abs(deltaY)) {
+		if(deltaX > 0) {
+			entity.direction = "right";
+		}
+		else {
+			entity.direction = "left";
+		}
+	}
+	else {
+		if(deltaY > 0) {
+			entity.direction = "down";
+		}
+		else {
+			entity.direction = "up";
+		}
+	}
+}
+
 NPC.prototype.draw = function () {
 	// Visual Debugging of Event Locations
 	//this.animation.drawEntity(this.game.clockTick, this.game.ctx, this.screenX, this.screenY);
@@ -47,12 +68,11 @@ NPC.prototype.story = function () {
 }
 
 
-
 /* +------------------------------------------+ */
 /* |             ===  Billy  ===              | */
 /* +------------------------------------------+ */
-function Billy(game, x, y) {
-	this.game = game;
+function Billy(x, y) {
+	this.game = gm;
 	this.animation = new Animation(gm.am.getAsset("./img/werewolf.png"), 
 					 		TILE_SIZE, TILE_SIZE, 4, 0.20, 16, true, 1);
 	this.x = x;
@@ -100,6 +120,119 @@ Billy.prototype.story = function () {
 	case 3:
 		gm.openDialogueBox(this.constructor.name, 
 				"Please stop using me for your tests...");
+		break;
+	default:
+		break;
+			
+	}
+}
+
+/* +------------------------------------------+ */
+/* |             ===  Pirate Girl  ===              | */
+/* +------------------------------------------+ */
+function PirateGirl(x, y) {
+	this.game = gm;
+	this.animation = new Animation(gm.am.getAsset("./img/PirateGirl.png"), 
+					 		TILE_SIZE, TILE_SIZE, 9, 0.20, 9, true, 1);
+	this.x = x;
+	this.y = y;
+	this.direction = "down";
+	this.walking = false;
+	this.screenX = this.x;
+	this.screenY = this.y;
+	this.storyStage = 1;
+	this.hitBox = new CollisionBox(this, 10, 10, TILE_SIZE-20, TILE_SIZE-20);
+}
+PirateGirl.prototype = new NPC();
+PirateGirl.prototype.constructor = PirateGirl;
+
+PirateGirl.prototype.draw = function (tick, ctx, x, y, entity) {
+	this.elapsedTime += tick;
+	if (this.animation.isDone()) {
+		if (this.animation.loop) this.animation.elapsedTime = 0;
+	}
+	var frame = this.animation.currentFrame();
+	var xindex = 0;
+	var yindex = 0;
+	xindex = frame % this.animation.sheetWidth;
+
+	//Choosing character sprite from sheet
+	if (this.walking === false) {
+		xindex = 0;
+	}
+	
+	if(this.direction === "up") {
+		yindex = 8;
+	}
+	else if(this.direction === "down") {
+		yindex = 10;
+	}
+	else if(this.direction === "left") {
+		yindex = 9;
+	}
+	else if(this.direction === "right") {
+		yindex = 11;
+	}
+	else {
+		yindex = 10;
+	}
+
+	var screenPoint = gm.cam.getMyScreenXandY(this.x, this.y);
+	
+	gm.ctx.drawImage(this.animation.spriteSheet,
+			xindex * this.animation.frameWidth, yindex * this.animation.frameHeight,  // source from sheet
+			this.animation.frameWidth, this.animation.frameHeight,
+			screenPoint.x, screenPoint.y,
+			this.animation.frameWidth * this.animation.scale,
+			this.animation.frameHeight * this.animation.scale);
+
+	// Collision Box
+	if (gm.hitBoxVisible) {
+		ctx.strokeStyle = "yellow";
+	    ctx.strokeRect(this.hitBox.getScreenX(), this.hitBox.getScreenY(),
+	    		 	   this.hitBox.width, this.hitBox.height);
+	}
+}
+PirateGirl.prototype.update = function () {
+	NPC.prototype.directionTowardPlayer(this);
+}
+PirateGirl.prototype.collisionTrigger = function (player, startX, startY) {
+	NPC.prototype.collisionTrigger.call(this, player, startX, startY);
+}
+PirateGirl.prototype.interactTrigger = function () {
+	if(gm.player.tryRemoveItem("Pirate Hat")) {
+		this.storyStage = 3;
+		this.animation = new Animation(gm.am.getAsset("./img/PirateGirlWithBandana.png"), 
+		 		TILE_SIZE, TILE_SIZE, 9, 0.20, 9, true, 1);
+	}
+	this.story();
+}
+PirateGirl.prototype.story = function () {
+	//console.log(this.storyStage);
+	switch(this.storyStage) {
+	case 1:
+		gm.openDialogueBox(this.constructor.name, 
+				"Ship Captin: Please adventurer. My ship was overtaken by bandits. " +
+				"I barely escaped with my life, and lost my favorite bandana. " +
+				"If you can get all those bandits off my ship, I'll tell you a " +
+				"valuable secret. To prove you have done it, return my favorite bandana to me.");
+		this.storyStage = 2;
+		break;
+	case 2:
+		gm.openDialogueBox(this.constructor.name, 
+				"Why are you still standing here? Go get my hat! If it makes you feel better, " +
+				"pretend it's a quest.");
+		break;
+	case 3:
+		gm.openDialogueBox(this.constructor.name, 
+				"Oh thank you! I love this bandana! Ok, my secret is this... There is a tree in the " +
+				"maze near the castle, where I hid the castle key. But beware, that castle while" +
+				" full of treasure, is quite dangerous.");
+		this.storyStage = 4;
+		break;
+	case 4:
+		gm.openDialogueBox(this.constructor.name, 
+				"Thank you again for getting those bandits off of my boat.");
 		break;
 	default:
 		break;
