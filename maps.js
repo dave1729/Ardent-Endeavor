@@ -54,21 +54,21 @@ MapManager.prototype.initialize = function () {
 	
 	//Obvious Chests
     // map01.addEntity(new Chest(19*TILE_SIZE, 19*TILE_SIZE, 2, "an Emerald!"));
-    map01.addEntity(new Chest(6*TILE_SIZE, 6*TILE_SIZE, 0, Inventory.LIBRARY.HEALTH_POTION));
+    map01.addEntity(new Chest(6*TILE_SIZE, 6*TILE_SIZE, 0, Inventory.LIBRARY.HEALTH_POTION, 12));
     map01.addEntity(new Chest(12*TILE_SIZE, 27*TILE_SIZE, 1, new Currency({value: 5, name: "Gold"})));
     // map01.addEntity(new Chest(1*TILE_SIZE, 20*TILE_SIZE, 2, "an Emerald!"));
     map01.addEntity(new Chest(30*TILE_SIZE, 1*TILE_SIZE, 1, new Currency({value: 5, name: "Gold"})));
     // map01.addEntity(new Chest(24*TILE_SIZE, 28*TILE_SIZE, 2, "an Emerald!"));
     
     //HIDDEN CHESTS
-    map01.addEntity(new Chest(1*TILE_SIZE, 2*TILE_SIZE, 1, new Currency({value: 5, name: "Gold"})));
+    map01.addEntity(new Chest(1*TILE_SIZE, 2*TILE_SIZE, 1, new Currency({value: 150, name: "Gold"})));
     map01.addEntity(new Chest(19*TILE_SIZE + 16, 1*TILE_SIZE - 12, 1, new Currency({value: 5, name: "Gold"})));
     map01.addEntity(new Chest(29*TILE_SIZE + 16, 21*TILE_SIZE - 12, 1, new Currency({value: 5, name: "Gold"})));
     map01.addEntity(new Chest(6*TILE_SIZE + 16, 14*TILE_SIZE - 12, 1, new Currency({value: 5, name: "Gold"})));
     map01.addEntity(new Chest(31*TILE_SIZE + 16, 9*TILE_SIZE - 12, 1, new Currency({value: 5, name: "Gold"})));
     
     //OLD UNUSED CODE
-    //map01.addEntity(new Billy(64, 256+64));
+    map01.addEntity(new Billy(gm, 5*TILE_SIZE, 7*TILE_SIZE));
     //map01.addEntity(new Door(3*TILE_SIZE, 3*TILE_SIZE, 0, false, null, 10*TILE_SIZE, 10*TILE_SIZE));
     this.addMap(map01);
     

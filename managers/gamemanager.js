@@ -193,6 +193,8 @@ GameManager.prototype.closeGameMenu = function () {
 	this.im.changeCurrentGroupTo("Dungeon");
 	this.startInput();
 	this.ui.showGameMenu = false;
+	this.ui.focusItem = null;
+	this.ui.menuState = "none";
 	document.getElementById("uiLayer").style.zIndex = "-1";
 }
 
@@ -256,6 +258,25 @@ GameManager.prototype.closeDialogueBox = function () {
 	this.im.changeCurrentGroupTo("Dungeon");
 	this.startInput(this.ctx);
 	this.ui.showDialogue = false;
+	document.getElementById("uiLayer").style.zIndex = "-1";
+}
+
+GameManager.prototype.openMerchantMenu = function () {
+	this.gamePaused = true;
+	this.showUI = true;
+	this.im.changeCurrentGroupTo("ui");
+	this.startInput(this.ctxUI);
+	gm.im.setAllFalse();
+	this.ui.showMerchant = true;
+	document.getElementById("uiLayer").style.zIndex = "3";
+}
+
+GameManager.prototype.closeMerchantMenu = function () {
+	this.gamePaused = false;
+	this.showUI = false;
+	this.im.changeCurrentGroupTo("Dungeon");
+	this.startInput(this.ctx);
+	this.ui.showMerchant = false;
 	document.getElementById("uiLayer").style.zIndex = "-1";
 }
 

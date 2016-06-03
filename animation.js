@@ -109,3 +109,29 @@ Animation.prototype.drawPlayer = function (tick, ctx, x, y, entity) {
 	    				entity.hitBox.width, entity.hitBox.height);
 	}
 }
+
+
+
+Animation.prototype.drawPlayerUnitUIEntity = function (tick, ctx, x, y) {
+	//only draw if it's gonna be vivible
+	if(gm.cam.isVisible(this)) {
+		this.elapsedTime += tick;
+		if (this.isDone()) {
+			if (this.loop) this.elapsedTime = 0;
+		}
+		var frame = this.currentFrame();
+		var xindex = 0;
+		var yindex = this.yindex;
+		xindex = frame % this.sheetWidth;
+		yindex = Math.floor(frame / this.sheetWidth);
+
+		var screenPoint = gm.cam.getMyScreenXandY(x, y);
+		
+		ctx.drawImage(this.spriteSheet,
+				xindex * this.frameWidth, yindex * this.frameHeight,  // source from sheet
+				this.frameWidth, this.frameHeight,
+				x, y,
+				this.frameWidth * this.scale,
+				this.frameHeight * this.scale);		
+	}
+}
