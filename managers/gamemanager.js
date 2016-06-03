@@ -271,7 +271,10 @@ GameManager.prototype.closeDialogueBox = function () {
 GameManager.prototype.gameOver = function () 
 {
 	this.em.removeAllEntities();
-	this.openDialogueBox("God", "Game Over");
+	this.openDialogueBox(null,
+		"game over... Refresh the page to play again.");
+	this.ui.dialogueBox.canClose = false;
+	
 }
 
 GameManager.prototype.checkMapCollision = function (rectBox, callback) {

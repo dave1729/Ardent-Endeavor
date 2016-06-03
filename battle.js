@@ -415,8 +415,8 @@ Battle.prototype.defeat = function ()
     console.log("Defeat.")
     this.resetPUnits();
     gm.bm.cursor.reset();
-    gm.endBattle();
-    // gm.gameOver();
+    // gm.endBattle();
+    gm.gameOver();
 }
 
 Battle.prototype.enemyPhaseTest = function (enemyMoves) 
