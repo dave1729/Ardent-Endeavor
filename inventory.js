@@ -39,11 +39,10 @@ Inventory.prototype.addItem = function (item, quantity) {
         if (index === -1)
         {
             this.items.push(item);
+            index = this.items.indexOf(item);
+            this.items[index].quantity = 0;
         }
-        else
-        {
-            this.items[index].quantity += quantity;
-        }   
+        this.items[index].quantity += quantity;
     }
 }
 
@@ -61,6 +60,7 @@ function Item(spec)
     this.name = spec.name;
     this.description = spec.description;
     this.quantity = spec.quantity;
+    this.price = spec.price;
 }
 
 Item.prototype = Object.create(Item.prototype);
@@ -153,7 +153,8 @@ function inventoryHowTo ()
 // Leave Library done here and it works
 Inventory.LIBRARY = {
     HEALTH_POTION: new Consumable({name: "Health Potion", description: "Restores 20 health", 
-                                   quantity: 10, effects: [new RestoreHealth({value: 20})]}),
+                                   quantity: 10, effects: [new RestoreHealth({value: 20})],
+				   price: 20}),
     PIRATE_HAT: new Item({name: "Pirate Hat", description: "A Fancy Pirate Hat", quantity: 1}),
     CASTLE_KEY: new Item({name: "Castle Key", description: "An Old Key", quantity: 1})
 }
