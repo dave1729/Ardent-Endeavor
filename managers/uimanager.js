@@ -835,6 +835,7 @@ function DialogueBox(uimanager, ctx) {
 	this.TOP_BOT_PADDING = this.ui.screenHeight / 42;
 	this.PAGE_SIZE = 4; // lines per page.
 	this.LINE_SIZE = 75; // characters per line.
+	this.canClose = true;
 	
 	// Text values
 	this.targetName = "";
@@ -855,7 +856,8 @@ DialogueBox.prototype.update = function () {
 	
 	if (gm.im.checkInput("confirm")) {
 		if (this.lastPage) {
-			gm.closeDialogueBox();
+			if (this.canClose)
+				gm.closeDialogueBox();
 		} else {
 			gm.im.setAllFalse();
 			this.lineCount += this.PAGE_SIZE;
