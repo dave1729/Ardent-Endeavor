@@ -145,13 +145,13 @@ MapManager.prototype.initialize = function () {
     map02.addEntity(new Chest(5*TILE_SIZE + 16, 1*TILE_SIZE - 12, 1, new Currency({value: 5, name: "Gold"})));
     
     //REALLY HIDDEN CHEST!!!
-    map02.addEntity(new Chest(21*TILE_SIZE + 16, 1*TILE_SIZE - 12, 1, new Currency({value: 5, name: "Gold"})));
+    map02.addEntity(new Chest(21*TILE_SIZE + 16, 1*TILE_SIZE - 12, 1, Inventory.LIBRARY.CASTLE_KEY));
     
     //Return to Level 1
     map02.addEntity(new MapTeleportEvent(3*TILE_SIZE, 0*TILE_SIZE, 50, 50, 1, 1944, 1740));
     
-    //To Level 3
-	map02.addEntity(new MapTeleportEvent(1641, 390, 50, 50, 3, 15*TILE_SIZE+TILE_SIZE/2, 28*TILE_SIZE));
+    //To Level 3 THIS HAS BEEN MOVED INTO THE ADD INVENTORY FUNCTION WHERE THE CHECKFORKEY IS
+	//map02.addEntity(new MapTeleportEvent(1641, 390, 50, 50, 3, 15*TILE_SIZE+TILE_SIZE/2, 28*TILE_SIZE));
     
     this.addMap(map02);
 	
