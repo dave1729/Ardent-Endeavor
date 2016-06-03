@@ -104,7 +104,7 @@ MapManager.prototype.initialize = function () {
     map01.addEntity(new Chest(31*TILE_SIZE + 16, 9*TILE_SIZE - 12, 1, new Currency({value: 5, name: "Gold"})));
     
     //OLD UNUSED CODE
-    map01.addEntity(new Billy(gm, 5*TILE_SIZE, 7*TILE_SIZE));
+    map01.addEntity(new Billy(5*TILE_SIZE, 7*TILE_SIZE));
     //map01.addEntity(new Door(3*TILE_SIZE, 3*TILE_SIZE, 0, false, null, 10*TILE_SIZE, 10*TILE_SIZE));
     this.addMap(map01);
     

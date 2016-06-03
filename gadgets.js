@@ -74,7 +74,7 @@ Chest.prototype.update = function () {
 	if (this.state === 2 && this.animation.isDone())
 	{
 		gm.openDialogueBox(null,
-				"You found " + this.item.toString());
+				"You found " + this.quantity + " " + this.item.toString());
 		gm.player.inventory.addItem(this.item, this.quantity);
 		this.state = 3;
 	}
