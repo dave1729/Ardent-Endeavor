@@ -44,12 +44,12 @@ Inventory.prototype.addItem = function (item, quantity) {
 }
 
 Inventory.prototype.useItem = function (index, target) {
-    let item = this.items[index];
+//    let item = this.items[index];
     item.use(target);
-    if(item.durability === 0)
-    {
-        this.items.slice(index, 1);
-    }
+//    if(item.durability === 0)
+//    {
+//        this.items.slice(index, 1);
+//    }
 }
 
 function Item(spec) 
@@ -86,6 +86,18 @@ Currency.prototype.use = function (target) {
 Currency.prototype.toString = function (params) {
     return this.value + " " + this.name;
 }
+
+//function PirateHat() {
+//    Item.call({name: "Pirate Hat", description: "a fancy pirate hat", quantity: 1});
+//}
+// 
+//PirateHat.prototype = Object.create(Item.prototype);
+//PirateHat.prototype.constructor = PirateHat;
+//
+//PirateHat.prototype.use = function (target) {
+//	gm.openDialogueBox(this.constructor.name, 
+//	"You'd better not ware this, you might loose it before returning it to the boat captin.");
+//}
 
 
 function Consumable(spec)
@@ -150,5 +162,6 @@ function inventoryHowTo ()
 // Leave Library done here and it works
 Inventory.LIBRARY = {
     HEALTH_POTION: new Consumable({name: "Health Potion", description: "Restores 20 health", 
-                                   quantity: 10, effects: [new RestoreHealth({value: 20})]})
+                                   quantity: 10, effects: [new RestoreHealth({value: 20})]}),
+    PIRATE_HAT: new Item({name: "Pirate Hat", description: "A Fancy Pirate Hat", quantity: 1})
 }

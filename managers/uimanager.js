@@ -580,7 +580,8 @@ ItemsMenu.prototype.init = function () {
 	this.items.length = 0;
 	var counter = 0;
 	for (var i = 0; i < gm.player.inventory.items.length; i++) {
-		if (gm.player.inventory.items[i].constructor.name === "Consumable" &&
+		if ((gm.player.inventory.items[i].constructor.name === "Consumable" ||
+				gm.player.inventory.items[i].constructor.name === "Item") &&
 				gm.player.inventory.items[i].quantity > 0) {
 			this.items.push(new uiItem(this, this.ctx, this.x, counter,
 					this.MENU_WIDTH, this.BUTTON_HEIGHT,
