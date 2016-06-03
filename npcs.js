@@ -202,7 +202,7 @@ PirateGirl.prototype.collisionTrigger = function (player, startX, startY) {
 PirateGirl.prototype.interactTrigger = function () {
 	if(gm.player.tryRemoveItem("Pirate Hat")) {
 		this.storyStage = 3;
-		this.animation = new Animation(gm.am.getAsset("./img/PirateGirlWithBandana.png"), 
+		this.animation = new Animation(gm.am.getAsset("./img/PirateGirlWithPirateHat.png"), 
 		 		TILE_SIZE, TILE_SIZE, 9, 0.20, 9, true, 1);
 	}
 	this.story();
@@ -213,19 +213,19 @@ PirateGirl.prototype.story = function () {
 	case 1:
 		gm.openDialogueBox(this.constructor.name, 
 				"Ship Captin: Please adventurer. My ship was overtaken by bandits. " +
-				"I barely escaped with my life, and lost my favorite bandana. " +
+				"I barely escaped with my life, and lost my favorite Hat. " +
 				"If you can get all those bandits off my ship, I'll tell you a " +
-				"valuable secret. To prove you have done it, return my favorite bandana to me.");
+				"valuable secret. To prove you have done it, return my favorite Hat to me.");
 		this.storyStage = 2;
 		break;
 	case 2:
 		gm.openDialogueBox(this.constructor.name, 
-				"Why are you still standing here? Go get my hat! If it makes you feel better, " +
+				"Why are you still standing here? Go get my Hat! If it makes you feel better, " +
 				"pretend it's a quest.");
 		break;
 	case 3:
 		gm.openDialogueBox(this.constructor.name, 
-				"Oh thank you! I love this bandana! Ok, my secret is this... There is a tree in the " +
+				"Oh thank you! I love this Hat! Ok, my secret is this... There is a tree in the " +
 				"maze near the castle, where I hid the castle key. But beware, that castle while" +
 				" full of treasure, is quite dangerous.");
 		this.storyStage = 4;
