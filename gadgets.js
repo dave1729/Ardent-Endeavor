@@ -58,7 +58,11 @@ function Chest(x, y, chestType, item, quantity) {
 	this.screenY = this.y;
 	this.state = 1;
 	this.item = item;
-	this.quantity = quantity;
+	if (quantity === undefined) {
+		this.quantity = 1;
+	} else {
+		this.quantity = quantity;
+	}
 	// 1 - Closed; 2 - Opening; 3 - Open
 	this.hitBox = new CollisionBox(this, 2, 22, TILE_SIZE-36, TILE_SIZE-42);
 }
@@ -73,8 +77,12 @@ Chest.prototype.draw = function () {
 Chest.prototype.update = function () {
 	if (this.state === 2 && this.animation.isDone())
 	{
-		gm.openDialogueBox(null,
-				"You found " + this.quantity + " " + this.item.toString());
+		if (this.quantity === 1) {
+			gm.openDialogueBox(null, "You found " + this.item.toString());
+		} else {
+			gm.openDialogueBox(null, "You found " + this.quantity + " " + this.item.toString() + "s");
+		}
+		
 		gm.player.inventory.addItem(this.item, this.quantity);
 		this.state = 3;
 	}

@@ -152,6 +152,10 @@ PlayerDisplay.prototype.draw = function () {
 	this.ctx.fillStyle = "rgba(0, 98, 130, 0.7)";
 	roundRect(this.ctx, this.x, this.y, this.MENU_WIDTH, (this.PLAYER_HEIGHT + this.TOP_BOT_PADDING*2), 5, true, true);
 			
+	if (gm.ui.focusItem != null) {
+		roundRect(this.ctx, this.x + 50 + (this.MENU_WIDTH / 4), this.y - 55, this.MENU_WIDTH / 3, (this.PLAYER_HEIGHT / 4 + this.TOP_BOT_PADDING*2), 5, true, true);
+	}
+	
 	// Draw Currency
 	roundRect(this.ctx, this.x, this.y - 55, this.MENU_WIDTH / 4, (this.PLAYER_HEIGHT / 4 + this.TOP_BOT_PADDING*2), 5, true, true);
 	// Font options
@@ -163,7 +167,12 @@ PlayerDisplay.prototype.draw = function () {
 	var textX = this.x + this.VERT_PADDING;// + (this.width/2) - (textSize.width);
 	var textY = this.y-(this.PLAYER_HEIGHT/4);// + (fontSize);
 	this.ctx.fillText(gm.player.gold + " gold", textX, textY);
-
+	
+	if (gm.ui.focusItem != null) {
+		textSize = this.ctx.measureText("Select Target");
+		var textX = this.x + 50 + (this.MENU_WIDTH / 4) + (this.MENU_WIDTH/3/2) - (textSize.width/2);
+		this.ctx.fillText("Select Target", textX, textY);
+	}
 	
 	// Draw buttons
 	var i;
@@ -553,7 +562,7 @@ ItemsMenu.prototype.draw = function () {
 	this.ctx.strokeStyle = "rgb(255, 255, 255)";
 	this.ctx.fillStyle = "rgba(0, 98, 130, 0.7)";
 	roundRect(this.ctx, this.x, this.y, this.MENU_WIDTH, (this.BUTTON_HEIGHT * this.items.length + this.TOP_BOT_PADDING*2), 15, true, true);
-			
+	
 	// Draw buttons
 	var i;
 	for (i = 0; i < this.items.length; i++) {
