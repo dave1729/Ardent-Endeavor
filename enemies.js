@@ -65,8 +65,10 @@ Enemy.prototype.update = function () {
 	var deltaY = gm.player.hitBox.getScreenY() - this.hitBox.getScreenY();
 	if (Math.abs(deltaX) < 4*TILE_SIZE && Math.abs(deltaY) < 4*TILE_SIZE) {
 		this.angle = Math.atan2(deltaY, deltaX);
-		this.x += this.overWorldSpeed * Math.cos(this.angle);
-		this.y += this.overWorldSpeed * Math.sin(this.angle);
+		var moveX = this.overWorldSpeed * Math.cos(this.angle);
+		var moveY = this.overWorldSpeed * Math.sin(this.angle);
+		this.collisionCheckThenUpdate(moveX, moveY);
+		
 		if (this.isWalking) {
 			this.setWalkAnimationState(false);
 		}
@@ -84,6 +86,106 @@ Enemy.prototype.draw = function () {
 		gm.ctx.strokeStyle = "cyan";
 	    gm.ctx.strokeRect(this.hitBox.getScreenX(), this.hitBox.getScreenY(),
 	    						 this.hitBox.width, this.hitBox.height);
+	}
+}
+
+Enemy.prototype.collisionCheckThenUpdate = function (moveX, moveY) {
+	// Left and Right collision
+	if (moveX != 0) {
+		// Check pixel collision with environment
+		this.x += moveX;
+		var revertX = false;
+		if (moveX < 0) {
+			// only get data for left side
+			imgData = gm.ctxCol.getImageData(this.hitBox.getScreenX(), this.hitBox.getScreenY(),
+					1, this.hitBox.height);
+		} else {
+			// only get data for right side
+			imgData = gm.ctxCol.getImageData(this.hitBox.getScreenX()+this.hitBox.width, this.hitBox.getScreenY(),
+					1, this.hitBox.height);
+		}
+		var incY = Math.floor(this.hitBox.height / COLLISION_ACCURACY);
+		for (var r = 0; r < this.hitBox.height; r += incY) {
+			if ( imgData.data[(0 + r * imgData.width) * 4 + 3] > 50 ) {
+				revertX = true;
+            }
+		}
+		if ( imgData.data[(0 + (this.hitBox.height-1) * imgData.width) * 4 + 3] > 50 ) {
+			revertX = true;
+        }
+	}
+	
+	if (moveY != 0) {
+		this.y += moveY;
+		var revertY = false;
+		if (moveY < 0) {
+			// only get data for left side
+			imgData = gm.ctxCol.getImageData(this.hitBox.getScreenX(), this.hitBox.getScreenY(),
+					this.hitBox.width, 1);
+		} else {
+			// only get data for right side
+			imgData = gm.ctxCol.getImageData(this.hitBox.getScreenX(), this.hitBox.getScreenY()+this.hitBox.height,
+					this.hitBox.width, 1);
+		}
+		var incX = Math.floor(this.hitBox.width / COLLISION_ACCURACY);
+		for (var c = 0; c < this.hitBox.width; c += incX) {
+			if ( imgData.data[(c + 0 * imgData.width) * 4 + 3] > 50 ) {
+				revertY = true;
+            }
+		}
+		if ( imgData.data[((this.hitBox.width-1) + (0) * imgData.width) * 4 + 3] > 50 ) {
+			revertY = true;
+        }
+		
+	}
+	
+	// Check entity collision
+	var rectMain = {x: this.hitBox.getX(), y: this.hitBox.getY(), width: this.hitBox.width, height: this.hitBox.height}
+	for (i = 0; i < gm.em.entities.length; ++i) {
+		if (gm.em.entities[i] instanceof Event 
+				&& gm.cam.isVisible(gm.em.entities[i])
+				&& gm.em.entities[i] != this) {
+			var rectOther = {x: gm.em.entities[i].hitBox.getX(),
+					y: gm.em.entities[i].hitBox.getY(),
+					width: gm.em.entities[i].hitBox.width,
+					height: gm.em.entities[i].hitBox.height}
+
+			if (rectMain.x < rectOther.x + rectOther.width 
+					&& rectMain.x + rectMain.width > rectOther.x 
+					&& rectMain.y < rectOther.y + rectOther.height 
+					&& rectMain.height + rectMain.y > rectOther.y) { 
+				
+				var xTestFail = false;
+				var yTestFail = false;
+				if (rectMain.x - moveX < rectOther.x + rectOther.width 
+						&& rectMain.x - moveX + rectMain.width > rectOther.x 
+						&& rectMain.y < rectOther.y + rectOther.height 
+						&& rectMain.height + rectMain.y > rectOther.y) {
+					yTestFail = true;
+				}
+				if (rectMain.x < rectOther.x + rectOther.width 
+						&& rectMain.x + rectMain.width > rectOther.x 
+						&& rectMain.y - moveY < rectOther.y + rectOther.height 
+						&& rectMain.height + rectMain.y - moveY > rectOther.y) {
+					xTestFail = true;
+				}
+				if (xTestFail && yTestFail) {
+					revertX = true;
+					revertY = true;
+				} else if (xTestFail) {
+					revertX = true;
+				} else if (yTestFail) {
+					revertY = true;
+				}
+			}
+		}
+	}
+	if (revertY) {
+		this.y -= moveY;
+	}
+
+	if (revertX) {
+		this.x -= moveX;
 	}
 }
 
