@@ -114,34 +114,35 @@ Billy.prototype.interactTrigger = function () {
 }
 Billy.prototype.story = function () {
 	//console.log(this.storyStage);
-	switch(this.storyStage) {
-	case 1:
-		gm.openDialogueBox(this.constructor.name, 
-				"Chewbacca: A legendary Wookiee warrior and Han Solo’s " +
-				"co-pilot aboard the Millennium Falcon, Chewbacca was part " +
-				"of a core group of Rebels who restored freedom to the galaxy. " +
-				"Known for his short temper and accuracy with a bowcaster, " +
-				"Chewie also has a big heart -- and is unwavering in his loyalty " +
-				"to his friends. He has stuck with Han through years of turmoil " +
-				"that have changed both the galaxy and their lives.");
-		this.storyStage = 2;
-		break;
-	case 2:
-		gm.openDialogueBox(this.constructor.name, 
-				"Why are you still talking to me?");
-		this.storyStage = 3;
-		break;
-	case 3:
-		console.log("get ready to open merchant page");
-		gm.im.setAllFalse();
-		gm.openMerchantMenu();
+	gm.openMerchantMenu();
+//	switch(this.storyStage) {
+//	case 1:
 //		gm.openDialogueBox(this.constructor.name, 
-//				"Please stop using me for your tests...");
-		break;
-	default:
-		break;
-			
-	}
+//				"Chewbacca: A legendary Wookiee warrior and Han Solo’s " +
+//				"co-pilot aboard the Millennium Falcon, Chewbacca was part " +
+//				"of a core group of Rebels who restored freedom to the galaxy. " +
+//				"Known for his short temper and accuracy with a bowcaster, " +
+//				"Chewie also has a big heart -- and is unwavering in his loyalty " +
+//				"to his friends. He has stuck with Han through years of turmoil " +
+//				"that have changed both the galaxy and their lives.");
+//		this.storyStage = 2;
+//		break;
+//	case 2:
+//		gm.openDialogueBox(this.constructor.name, 
+//				"Why are you still talking to me?");
+//		this.storyStage = 3;
+//		break;
+//	case 3:
+//		console.log("get ready to open merchant page");
+//		gm.im.setAllFalse();
+//		gm.openMerchantMenu();
+////		gm.openDialogueBox(this.constructor.name, 
+////				"Please stop using me for your tests...");
+//		break;
+//	default:
+//		break;
+//			
+//	}
 }
 
 /* +------------------------------------------+ */
