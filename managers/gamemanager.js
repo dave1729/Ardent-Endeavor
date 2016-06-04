@@ -35,17 +35,21 @@ GameManager.prototype.start = function() {
 		//Preloads playerUnits
 		this.bm.init();
 	 	this.initialize(new Player(this.am.getAsset("./img/player.png")),1, 64*3, 64*6);
+	 	this.openTitleMenu();
         this.loop();
     })
 }
 
 GameManager.prototype.queueAssets = function () {
+	this.am.queueDownload("./img/ArdentEndeavorTitle.png");
 	this.am.queueDownload("./img/player3.png");
 	this.am.queueDownload("./img/player2.png");
 	this.am.queueDownload("./img/player1.png");
 	this.am.queueDownload("./img/player.png");
 	this.am.queueDownload("./img/PirateGirl.png");
+	this.am.queueDownload("./img/Merchant.png");
 	this.am.queueDownload("./img/PirateGirlWithPirateHat.png");
+	this.am.queueDownload("./img/ArdentEndeavorTitle.png");
     this.am.queueDownload("./img/GrassOnlyBackground.png");
     this.am.queueDownload("./img/collidable_background.png");
     this.am.queueDownload("./img/Background_Layer.png");
@@ -289,6 +293,26 @@ GameManager.prototype.closeMerchantMenu = function () {
 	document.getElementById("uiLayer").style.zIndex = "-1";
 }
 
+
+GameManager.prototype.openTitleMenu = function () {
+	this.gamePaused = true;
+	this.showUI = true;
+	this.im.changeCurrentGroupTo("ui");
+	this.startInput(this.ctxUI);
+	this.ui.showTitleMenu = true;
+	// need to disable previous keys (maybe).
+	document.getElementById("uiLayer").style.zIndex = "3";
+}
+
+GameManager.prototype.closeTitleMenu = function () {
+	this.gamePaused = false;
+	this.showUI = false;
+	this.im.changeCurrentGroupTo("Dungeon");
+	this.startInput();
+	this.ui.showTitleMenu = false;
+	document.getElementById("uiLayer").style.zIndex = "-1";
+}
+
 GameManager.prototype.gameOver = function () 
 {
 	this.em.removeAllEntities();
@@ -324,6 +348,7 @@ GameManager.prototype.gameOver = function ()
 
 GameManager.prototype.loop = function () {
     this.clockTick = this.timer.tick();
+    
     if (!this.gamePaused) {
     	this.em.update();
     	this.cam.update();

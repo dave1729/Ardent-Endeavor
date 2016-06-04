@@ -15,6 +15,8 @@ function UIManager() {
 	this.itemsMenu = new ItemsMenu(this, this.ctx, this.screenWidth / 4 + 15, 10);
 	this.statusBox = new StatusBox(this, this.ctx);
 	
+	this.titleMenu = new TitleMenu(this, this.ctx);
+	
 	this.playerDisplay = new PlayerDisplay(this, this.ctx, 10, null);
 	this.focusItem = null;
 	
@@ -60,6 +62,9 @@ UIManager.prototype.update = function() {
 	if (this.showDialogue) {
 		this.dialogueBox.update();
 	}
+	if (this.showTitleMenu) {
+		this.titleMenu.update();
+	}
 	
 	gm.im.setAllFalse();
 }
@@ -92,6 +97,9 @@ UIManager.prototype.draw = function() {
 	if (this.showMerchant) {
 		this.merchantMenu.draw();
 	}
+	if (this.showTitleMenu) {
+		this.titleMenu.draw();
+	}
 }
 
 UIManager.prototype.controls = function () {
@@ -107,6 +115,36 @@ UIManager.prototype.controls = function () {
 	gm.im.addInput(new Input("confirm", 'e'));
 	gm.im.changeCurrentGroupTo(temp);
 }
+/* +------------------------------------------+ */
+/* |           ===  Title Menu  ===           | */
+/* +------------------------------------------+ */
+function TitleMenu(uimanager, ctx) {
+	this.ui = uimanager;
+	this.ctx = ctx;
+	this.splashImage = gm.am.getAsset("./img/ArdentEndeavorTitle.png");
+	this.startGameBtn = new Button(this, this.ctx, "Start Game",
+			this.ui.screenWidth / 3,
+			this.ui.screenHeight / 4 * 3,
+			200, 38,
+			closeTitle = function () {
+				gm.closeTitleMenu();
+			});
+}
+
+TitleMenu.prototype.update = function () {
+	this.startGameBtn.update();
+}
+
+TitleMenu.prototype.draw = function () {
+	this.ctx.drawImage(gm.am.getAsset("./img/ArdentEndeavorTitle.png"), 0, 0);
+	
+	this.ctx.strokeStyle = "rgb(255, 255, 255)";
+	this.ctx.fillStyle = "rgba(0, 98, 130, 0.7)";
+	roundRect(this.ctx, this.ui.screenWidth / 3 - 10, this.ui.screenHeight / 4 * 3 - 5, 220, 50, 20, true, true);
+	
+	this.startGameBtn.draw(this.ctx);
+}
+
 
 /* +------------------------------------------+ */
 /* |         ===  Player Display  ===         | */
