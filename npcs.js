@@ -48,18 +48,32 @@ NPC.prototype.draw = function () {
 	}
 }
 
-NPC.prototype.collisionTrigger = function (player, startX, startY) {
+NPC.prototype.collisionTrigger = function (player, moveX, moveY) {
 	console.log("NPC Collision: " + this.constructor.name);
 	var pc = {x: player.hitBox.getX(), y: player.hitBox.getY(), width: player.hitBox.width, height: player.hitBox.height};
 	var npc = {x: this.hitBox.getX(), y: this.hitBox.getY(), width: this.hitBox.width, height: this.hitBox.height};
 
-	//needs refinement
-	
-	if (pc.x < npc.x + npc.width || pc.x + pc.width > npc.x) {
-		player.x = startX;
+	var xTestFail = false;
+	var yTestFail = false;
+	if (pc.x - moveX < npc.x + npc.width 
+			&& pc.x - moveX + pc.width > npc.x 
+			&& pc.y < npc.y + npc.height 
+			&& pc.height + pc.y > npc.y) {
+		yTestFail = true;
 	}
-	if (pc.y < npc.y + npc.height || pc.y + pc.height > npc.y) {
-		player.y = startY;
+	if (pc.x < npc.x + npc.width 
+			&& pc.x + pc.width > npc.x 
+			&& pc.y - moveY < npc.y + npc.height 
+			&& pc.height + pc.y - moveY > npc.y) {
+		xTestFail = true;
+	}
+	if (xTestFail && yTestFail) {
+		player.x -= moveX;
+		player.y -= moveY;
+	} else if (xTestFail) {
+		player.x -= moveX;
+	} else if (yTestFail) {
+		player.y -= moveY;
 	}
 	
 }
