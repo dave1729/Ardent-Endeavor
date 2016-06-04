@@ -30,7 +30,6 @@ Inventory.prototype.addItem = function (item, quantity) {
         item.use(gm.player);
     }
     else if (item.name === "Castle Key") {
-    	alert("Adding Door Teleport");
     	gm.em.addEntity(new MapTeleportEvent(1641, 390, 50, 50, 3, 15*TILE_SIZE+TILE_SIZE/2, 28*TILE_SIZE));
     }
     else

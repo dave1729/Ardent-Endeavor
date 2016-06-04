@@ -46,3 +46,33 @@ Collidable_background.prototype.draw = function (ctx) {
 Collidable_background.prototype.update = function () {
 
 };
+
+function Title() {
+	this.entityID = 131313;
+	//this.animation = new Animation(gm.am.getAsset("./img/ArdentEndeavorTitle.png", 640, 640, 1, 1, 1, true, 1));
+	this.spritesheet = gm.am.getAsset("./img/ArdentEndeavorTitle.png");
+	this.game = gm;
+	this.layer = 15;
+	this.control = false;
+	this.counter = gm.timer.gameTime;
+	this.TitleTime = 5;
+	Entity.call(this, 0, 0);
+};
+
+Title.prototype = Object.create(Entity.prototype);
+Title.prototype.constructor = Title;
+// Background.prototype
+
+Title.prototype.draw = function (ctx) {
+	//context.drawImage(img,sx,sy,swidth,sheight,x,y,width,height);
+	var width = Math.floor(gm.canvas.width);
+	var heigth = Math.floor(gm.canvas.height);
+	ctx.drawImage(this.spritesheet, 0, 0, 640, 640);
+};
+
+Title.prototype.update = function () {
+	this.counter = gm.timer.gameTime;
+	if(this.counter > this.TitleTime) {
+		this.removeFromWorld = true;
+	}
+};
