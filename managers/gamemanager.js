@@ -35,8 +35,8 @@ GameManager.prototype.start = function() {
 		//Preloads playerUnits
 		this.bm.init();
 	 	this.initialize(new Player(this.am.getAsset("./img/player.png")),1, 64*3, 64*6);
-	 	this.openTitleMenu();
         this.loop();
+        this.openTitleMenu();
     })
 }
 
