@@ -1089,7 +1089,6 @@ StoneMonster.prototype.collisionTrigger = function (player) {
 /* |          ===  TreeMonster  ===           | */
 /* +------------------------------------------+ */
 function TreeMonster(x, y) {
-	
 	this.runAnimationSpeed = 0.4;
 	this.walkAnimationSpeed = 0.6;
 	this.isWalking = true;
@@ -1269,11 +1268,11 @@ Skeleton.prototype.collisionTrigger = function (player) {
 /* |              ===  Lich  ===              | */
 /* +------------------------------------------+ */
 function Lich(x, y) {
-	
+	this.boss = true;
 	this.runAnimationSpeed = 0.2;
 	this.walkAnimationSpeed = 0.4;
 	this.isWalking = true;
-	this.overWorldSpeed = 2.0;
+	this.overWorldSpeed = 0.0;
 	//Animation(spriteSheet, frameWidth, frameHeight, sheetWidth, frameDuration, frames, loop, scale) {
 	this.downAnimation = new Animation(gm.am.getAsset("./img/enemies/undead04.png"),
 			80, 96, 3, this.walkAnimationSpeed, 3, true, 2/3, 0);
