@@ -221,6 +221,8 @@ GameManager.prototype.openBattleMenu = function (x, y) {
 	this.startInput();
 	this.ui.battleMenu.moveMenu(x, y);
 	this.ui.showBattleMenu = true;
+	this.ui.showBattleItems = false;
+	gm.im.currentgroup.click = undefined;
 	// need to disable previous keys (maybe).
 	document.getElementById("uiLayer").style.zIndex = "3";
 }
@@ -231,6 +233,7 @@ GameManager.prototype.closeBattleMenu = function () {
 	this.im.changeCurrentGroupTo("battle");
 	this.startInput();
 	this.ui.showBattleMenu = false;
+	this.ui.showBattleItems = false;
 	document.getElementById("uiLayer").style.zIndex = "-1";
 }
 

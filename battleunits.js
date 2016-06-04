@@ -196,8 +196,9 @@ PlayerUnit.prototype.rewardExp = function (exp)
     if (this.exp >= this.nextLevelExp)
     {
         this.level++;
-        this.maxhealth += 15;
-        this.health += 15;
+        this.maxhealth += 10;
+        this.health += 10;
+        this.damage += 1;
         this.nextLevelExp = this.getNextLevelExp();
         this.rewardExp(0);
     }

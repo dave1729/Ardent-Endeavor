@@ -20,6 +20,9 @@ function UIManager() {
 	this.playerDisplay = new PlayerDisplay(this, this.ctx, 10, null);
 	this.focusItem = null;
 	
+	this.showBattleItems = false;
+	this.battleItemsMenu = new BattleItemsMenu(this, this.ctx, this.screenWidth / 4 + 15, 10); 
+	
 	this.showStatusBox = false;
 	this.showDialogue = false;
 	this.showGameMenu = false;
@@ -52,6 +55,9 @@ UIManager.prototype.update = function() {
 	if (this.showBattleMenu) {
 		this.battleMenu.update();
 		this.statusBox.update();
+		if (this.showBattleItems) {
+			this.battleItemsMenu.update();
+		}
 	}
 	if (this.showStatusBox) {
 		this.statusBox.update();
@@ -90,6 +96,9 @@ UIManager.prototype.draw = function() {
 	if (this.showBattleMenu) {
 		this.battleMenu.draw();
 		this.statusBox.draw();
+		if (this.showBattleItems) {
+			this.battleItemsMenu.draw();
+		}
 	}
 	if (this.showStatusBox) {
 		this.statusBox.draw();
@@ -348,8 +357,7 @@ GameMenu.prototype.update = function () {
 			gm.im.currentgroup.input_list[4].isPressed = false;
 		}
 	}
-	
-	if (this.adaptiveMenu) {
+	if (this.adaptiveMenu && !gm.ui.showBattleItems) {
 		let click = gm.im.getClick();
 		if (gm.im.checkMouse() && click) {
 	    	if (!(click.x > this.x && 
@@ -360,6 +368,18 @@ GameMenu.prototype.update = function () {
 				gm.im.currentgroup.click = undefined;
 				gm.bm.cursor.deselect();
 	    		gm.closeBattleMenu();
+	    	}
+	    }
+	} else if (this.adaptiveMenu && gm.ui.showBattleItems) {
+		let click = gm.im.getClick();
+		if (gm.im.checkMouse() && click) {
+	    	if (!(click.x > gm.ui.battleItemsMenu.x && 
+				click.y > gm.ui.battleItemsMenu.y &&
+				click.x < gm.ui.battleItemsMenu.x + gm.ui.battleItemsMenu.MENU_WIDTH + gm.ui.battleItemsMenu.VERT_PADDING*2 &&
+				click.y < gm.ui.battleItemsMenu.y + (gm.ui.battleItemsMenu.BUTTON_HEIGHT * gm.ui.battleItemsMenu.items.length + gm.ui.battleItemsMenu.TOP_BOT_PADDING*2)))
+			{
+				gm.im.currentgroup.click = undefined;
+				gm.ui.showBattleItems = false;
 	    	}
 	    }
 	}
@@ -497,22 +517,33 @@ GameMenu.prototype.getBattleMenuButtons = function () {
 					selected.selectedAction.move = true;
 				}
 			}));
-	buttons.push(new Button(this, this.ctx, "Tech",
+	buttons.push(new Button(this, this.ctx, "Items",
 			this.x + this.VERT_PADDING,
 			this.y + (this.BUTTON_HEIGHT*2 + this.TOP_BOT_PADDING),
 			this.MENU_WIDTH - this.VERT_PADDING*2,
 			this.BUTTON_HEIGHT,
 			openMagic = function () {
-				console.log("Run Tech");
-			}));
-	buttons.push(new Button(this, this.ctx, "Items",
-			this.x + this.VERT_PADDING,
-			this.y + (this.BUTTON_HEIGHT*3 + this.TOP_BOT_PADDING),
-			this.MENU_WIDTH - this.VERT_PADDING*2,
-			this.BUTTON_HEIGHT,
-			openMagic = function () {
 				console.log("Run Items");
+				gm.ui.battleItemsMenu.init();
+				gm.ui.showBattleItems = true;
+				gm.im.currentgroup.click = undefined;
 			}));
+	buttons.push(new Button(this, this.ctx, "End Phase",
+			this.x + this.VERT_PADDING,
+			this.y + (this.BUTTON_HEIGHT*2 + this.TOP_BOT_PADDING),
+			this.MENU_WIDTH - this.VERT_PADDING*3,
+			this.BUTTON_HEIGHT,
+			endPhase = function () {
+				//gm.bm.currentBattle.resolveBattle();
+				gm.im.currentgroup.click = undefined;
+				gm.bm.cursor.deselect();
+				console.log("TURN DONE")
+		        gm.bm.currentBattle.resetPUnits();
+		        gm.bm.cursor.reset();
+		        gm.im.setFalse("endTurn");
+		        gm.closeBattleMenu();
+		        gm.bm.currentBattle.currentPhase = gm.bm.currentBattle.enemyPhase;
+	}));
 	return buttons;
 }
 
@@ -575,26 +606,39 @@ OptionsMenu.prototype.draw = function () {
 
 
 /* +------------------------------------------+ */
-/* |           ===  Items Menu  ===           | */
+/* |       ===  Battle Items Menu  ===        | */
 /* +------------------------------------------+ */
-function ItemsMenu(uimanager, ctx, x, y) {
+function BattleItemsMenu(uimanager, ctx, x, y) {
 	this.ui = uimanager;
 	this.VERT_PADDING = this.ui.screenWidth / 50;
-	this.BUTTON_HEIGHT = this.ui.screenHeight / 12;
+	this.BUTTON_HEIGHT = this.ui.screenHeight / 20;
 	this.MENU_WIDTH = this.ui.screenWidth * 3 / 4 - 20;
 	this.TOP_BOT_PADDING = this.ui.screenHeight / 48;
 	
 	this.x = x;
 	this.y = y;
+	this.counter = 0;
 	this.ctx = ctx;
 	this.items = [];
-	this.init();
+	//this.init();
 }
 
-ItemsMenu.prototype.init = function () {
-	this.items.push();
+BattleItemsMenu.prototype.init = function () {
+	this.items.length = 0;
+	this.counter = 0;
+	for (var i = 0; i < gm.player.inventory.items.length; i++) {
+		if ((gm.player.inventory.items[i].constructor.name === "Consumable" ||
+				gm.player.inventory.items[i].constructor.name === "Item") &&
+				gm.player.inventory.items[i].quantity > 0) {
+			this.items.push(new uiBattleItem(this, this.ctx, this.x, this.counter,
+					this.MENU_WIDTH, this.BUTTON_HEIGHT,
+					gm.player.inventory.items[i]
+			));
+			this.counter++;
+		}
+	}
 }
-ItemsMenu.prototype.update = function () {
+BattleItemsMenu.prototype.update = function () {
 	// Update buttons
 	var i;
 	for (i = 0; i < this.items.length; i++) {
@@ -602,7 +646,7 @@ ItemsMenu.prototype.update = function () {
 	}
 	
 }
-ItemsMenu.prototype.draw = function () {
+BattleItemsMenu.prototype.draw = function () {
 	// Draw the backdrop and border
 	this.ctx.strokeStyle = "rgb(255, 255, 255)";
 	this.ctx.fillStyle = "rgba(0, 98, 130, 0.7)";
@@ -616,18 +660,46 @@ ItemsMenu.prototype.draw = function () {
 }
 
 
-function uiItem(parent, ctx, x, y, width, height, item) {
+function uiBattleItem(parent, ctx, x, i, width, height, item) {
 	this.item = item;
 	this.x = x;
-	this.y = y;
+	this.y = parent.y + parent.TOP_BOT_PADDING + (parent.BUTTON_HEIGHT * i);
 	this.width = width;
 	this.height = height;
 	this.parent = parent;
 	this.ctx = ctx;
-	this.itemBtn = new Button(parent, ctx, item.name, x+30, y, width-30, height,
+	this.that = this;
+	this.itemBtn = new Button(this, ctx, item.name + " - " + item.description, this.x+45, this.y, width/4*3, height,
 		runItem = function () {
 			console.log("Clicked " + item.name);
+			console.log(this.parent + "  " + this.parent.constructor.name);
+			console.log(this.parent.getItem());
+			console.log(gm.bm.cursor.selected);
+			this.parent.getItem().use(gm.bm.cursor.selected);
+			gm.ui.showBattleItems = false;
 		});
+}
+
+uiBattleItem.prototype.getItem = function () {
+	return this.item;
+}
+
+uiBattleItem.prototype.update = function (canvas) {
+    this.itemBtn.update();
+}
+
+uiBattleItem.prototype.draw = function(ctx) {
+	// Font options
+	var fontSize = 20;
+	this.ctx.fillStyle = "rgb(255, 255, 255)";
+	this.ctx.font = fontSize + "px sans-serif";
+	// Text position
+	var textSize = this.ctx.measureText(this.item.quantity);
+	var textX = this.x + this.parent.VERT_PADDING;
+	var textY = this.y + (fontSize) + 2;
+	this.ctx.fillText(this.item.quantity, textX, textY);
+	
+	this.itemBtn.draw(ctx, "left");
 }
 
 
