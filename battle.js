@@ -408,6 +408,10 @@ Battle.prototype.victory = function ()
     this.resetPUnits();
     gm.bm.cursor.reset();
     gm.endBattle();
+    if(this.enemyType.boss === true) {
+    	gm.openDialogueBox(null,
+		"You Killed the Litch King! Congratulations!!!");
+    }
 }
 
 Battle.prototype.defeat = function ()
