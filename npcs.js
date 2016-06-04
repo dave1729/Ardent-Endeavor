@@ -202,8 +202,8 @@ PirateGirl.prototype.draw = function (tick, ctx, x, y, entity) {
 
 	// Collision Box
 	if (gm.hitBoxVisible) {
-		ctx.strokeStyle = "yellow";
-	    ctx.strokeRect(this.hitBox.getScreenX(), this.hitBox.getScreenY(),
+		gm.ctx.strokeStyle = "yellow";
+	    gm.ctx.strokeRect(this.hitBox.getScreenX(), this.hitBox.getScreenY(),
 	    		 	   this.hitBox.width, this.hitBox.height);
 	}
 }
@@ -316,8 +316,8 @@ Merchant.prototype.draw = function (tick, ctx, x, y, entity) {
 
 	// Collision Box
 	if (gm.hitBoxVisible) {
-		ctx.strokeStyle = "yellow";
-	    ctx.strokeRect(this.hitBox.getScreenX(), this.hitBox.getScreenY(),
+		gm.ctx.strokeStyle = "yellow";
+	    gm.ctx.strokeRect(this.hitBox.getScreenX(), this.hitBox.getScreenY(),
 	    		 	   this.hitBox.width, this.hitBox.height);
 	}
 }
