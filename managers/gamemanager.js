@@ -1,6 +1,6 @@
 const TILE_SIZE = 64;
 const COLLISION_ACCURACY = 3.0; // Higher is more accurate, but slower.
-
+const nobattles = false;
 function GameManager(ctx, ctxUI, ctxCollision, canvas)
 {
     this.controlEntity = null;
@@ -16,7 +16,7 @@ function GameManager(ctx, ctxUI, ctxCollision, canvas)
 	
 	this.im = null; // InputManager
     this.am = null; // AssetManager
-	this.ai = null;
+	this.ai = null; // AiManager
 	this.bm = null; // BattleManager
     this.cam = null; // Camera
     this.mm = null; // MapManager
@@ -29,11 +29,11 @@ function GameManager(ctx, ctxUI, ctxCollision, canvas)
     
 }
 GameManager.prototype.start = function() {
-    this.initManagers();
     this.init();
 	this.queueAssets();
     this.am.downloadAll(() => {
-		// this.startBattle(new Fire(gm, 64, 256));
+		//Preloads playerUnits
+		this.bm.init();
 	 	this.initialize(new Player(this.am.getAsset("./img/player.png")),1, 64*3, 64*6);
         this.loop();
     })
@@ -41,9 +41,11 @@ GameManager.prototype.start = function() {
 
 GameManager.prototype.queueAssets = function () {
 	this.am.queueDownload("./img/player3.png");
-		this.am.queueDownload("./img/player2.png");
-			this.am.queueDownload("./img/player1.png");
-						this.am.queueDownload("./img/player.png");
+	this.am.queueDownload("./img/player2.png");
+	this.am.queueDownload("./img/player1.png");
+	this.am.queueDownload("./img/player.png");
+	this.am.queueDownload("./img/PirateGirl.png");
+	this.am.queueDownload("./img/PirateGirlWithPirateHat.png");
     this.am.queueDownload("./img/GrassOnlyBackground.png");
     this.am.queueDownload("./img/collidable_background.png");
     this.am.queueDownload("./img/Background_Layer.png");
@@ -125,10 +127,8 @@ GameManager.prototype.initManagers = function (params) {
 GameManager.prototype.init = function () {
     this.surfaceWidth = this.ctx.canvas.width;
     this.surfaceHeight = this.ctx.canvas.height;
-	
 	this.initManagers();
     this.timer = new Timer();
-    this.disableInput = false;
     this.startInput();
     this.hitBoxVisible = false;
     console.log('game initialized');
@@ -190,6 +190,8 @@ GameManager.prototype.openGameMenu = function () {
 	this.im.changeCurrentGroupTo("ui");
 	this.startInput(this.ctxUI);
 	this.ui.showGameMenu = true;
+	this.ui.playerDisplay.init();
+	this.ui.itemsMenu.init();
 	// need to disable previous keys (maybe).
 	document.getElementById("uiLayer").style.zIndex = "3";
 }
@@ -200,6 +202,8 @@ GameManager.prototype.closeGameMenu = function () {
 	this.im.changeCurrentGroupTo("Dungeon");
 	this.startInput();
 	this.ui.showGameMenu = false;
+	this.ui.focusItem = null;
+	this.ui.menuState = "none";
 	document.getElementById("uiLayer").style.zIndex = "-1";
 }
 
@@ -266,28 +270,57 @@ GameManager.prototype.closeDialogueBox = function () {
 	document.getElementById("uiLayer").style.zIndex = "-1";
 }
 
-GameManager.prototype.checkMapCollision = function (rectBox, callback) {
-	imgData = this.ctxCol.getImageData(rectBox.x, rectBox.y, rectBox.width, rectBox.height);
-	
-	var incX = rectBox.width / COLLISION_ACCURACY;
-	var incY = rectBox.height / COLLISION_ACCURACY;
-	
-	incX = (~~incX === incX) ? incX : (incX+1 | 0 );
-	incY = (~~incY === incY) ? incY : (incY+1 | 0 );
-	
-	for (var offsetY = 0; offsetY < incY; offsetY++ ) {
-	    for (var offsetX = 0; offsetX < incX; offsetX++ ) {
-	        for (var pixelY = 0+offsetY; pixelY < rectBox.height; pixelY += incY ) {
-	            for (var pixelX = 0+offsetX; pixelX < rectBox.width; pixelX += incX){
-	                if ( imgData.data[(pixelX + pixelY * imgData.width) * 4 + 3] > 50 ) {
-		            	//console.log((pixelX + pixelY * imgData.width) * 4 + 3);
-	                	callback(true, {x: pixelX, y: pixelY}, imgData);
-	                }
-	            }
-	        }
-	    }
-	}
+GameManager.prototype.openMerchantMenu = function () {
+	this.gamePaused = true;
+	this.showUI = true;
+	this.im.changeCurrentGroupTo("ui");
+	this.startInput(this.ctxUI);
+	gm.im.setAllFalse();
+	this.ui.showMerchant = true;
+	document.getElementById("uiLayer").style.zIndex = "3";
 }
+
+GameManager.prototype.closeMerchantMenu = function () {
+	this.gamePaused = false;
+	this.showUI = false;
+	this.im.changeCurrentGroupTo("Dungeon");
+	this.startInput(this.ctx);
+	this.ui.showMerchant = false;
+	document.getElementById("uiLayer").style.zIndex = "-1";
+}
+
+GameManager.prototype.gameOver = function () 
+{
+	this.em.removeAllEntities();
+	this.openDialogueBox(null,
+		"game over... Refresh the page to play again.");
+	this.ui.dialogueBox.canClose = false;
+	
+}
+
+/* *** DEPRECATED *** */
+//GameManager.prototype.checkMapCollision = function (rectBox, callback) {
+//	imgData = this.ctxCol.getImageData(rectBox.x, rectBox.y, rectBox.width, rectBox.height);
+//	
+//	var incX = rectBox.width / COLLISION_ACCURACY;
+//	var incY = rectBox.height / COLLISION_ACCURACY;
+//	
+//	incX = (~~incX === incX) ? incX : (incX+1 | 0 );
+//	incY = (~~incY === incY) ? incY : (incY+1 | 0 );
+//	
+//	for (var offsetY = 0; offsetY < incY; offsetY++ ) {
+//	    for (var offsetX = 0; offsetX < incX; offsetX++ ) {
+//	        for (var pixelY = 0+offsetY; pixelY < rectBox.height; pixelY += incY ) {
+//	            for (var pixelX = 0+offsetX; pixelX < rectBox.width; pixelX += incX){
+//	                if ( imgData.data[(pixelX + pixelY * imgData.width) * 4 + 3] > 50 ) {
+//		            	//console.log((pixelX + pixelY * imgData.width) * 4 + 3);
+//	                	callback(true, {x: pixelX, y: pixelY}, imgData);
+//	                }
+//	            }
+//	        }
+//	    }
+//	}
+//}
 
 GameManager.prototype.loop = function () {
     this.clockTick = this.timer.tick();

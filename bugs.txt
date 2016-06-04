@@ -1,0 +1,15 @@
+Game:
+
+Win and lose somehow....
+
+Overworld:
+
+Spam e near enemies get win dialog???
+
+Battle:
+
+After Units die, setup phase does not work properly.
+
+Chests
+
+Emeralds need to readded
