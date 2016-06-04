@@ -102,11 +102,17 @@ Consumable.prototype.constructor = Consumable;
 
 Consumable.prototype.use = function (target)
 {
+	var itemUsed = true;
     this.effects.forEach((effect) =>
     {
-        effect.activate(target);
+    	if (itemUsed) {
+    		itemUsed = effect.activate(target);
+    	}
     })
-    Item.prototype.use.call(this, target);
+    if (itemUsed) {
+    	Item.prototype.use.call(this, target);
+    }
+    
 }
 
 function Equipment(spec)
@@ -136,7 +142,16 @@ RestoreHealth.prototype = Object.create(Effect.prototype);
 RestoreHealth.prototype.constructor = RestoreHealth;
 
 RestoreHealth.prototype.activate = function (target) {
-    target.health += this.value;
+	if (target.health === target.maxhealth) {
+		return false;
+	} else if (target.health + this.value > target.maxhealth) {
+		target.health = target.maxhealth;
+		return true;
+	} else {
+		target.health += this.value;
+		return true;
+	}
+    
 }
 
 function inventoryHowTo ()
@@ -151,9 +166,14 @@ function inventoryHowTo ()
 
 // Leave Library done here and it works
 Inventory.LIBRARY = {
-    HEALTH_POTION: new Consumable({name: "Health Potion", description: "Restores 20 health", 
-                                   quantity: 10, effects: [new RestoreHealth({value: 20})],
-				   price: 20}),
+    HEALTH_POTION: new Consumable({name: "Health Potion", description: "Restores 30 health", 
+        quantity: 10, effects: [new RestoreHealth({value: 30})], price: 15}),
     PIRATE_HAT: new Item({name: "Pirate Hat", description: "A Fancy Pirate Hat", quantity: 1}),
-    CASTLE_KEY: new Item({name: "Castle Key", description: "An Old Key", quantity: 1})
+    CASTLE_KEY: new Item({name: "Castle Key", description: "An Old Key", quantity: 1}),
+    STEAK: new Consumable({name: "Steak", description: "Yummy, Restores 30 health",
+    	quantity: 1, effects: [new RestoreHealth({value: 30})], price: 30}),
+    HIGH_POTION: new Consumable({name: "High Potion", description: "Restores 80 health", 
+        quantity: 1, effects: [new RestoreHealth({value: 80})], price: 45}),
+    ELIXER: new Consumable({name: "Elixer", description: "Restores 150 health", 
+        quantity: 1, effects: [new RestoreHealth({value: 150})], price: 85})
 }

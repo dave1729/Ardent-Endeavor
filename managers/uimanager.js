@@ -15,6 +15,8 @@ function UIManager() {
 	this.itemsMenu = new ItemsMenu(this, this.ctx, this.screenWidth / 4 + 15, 10);
 	this.statusBox = new StatusBox(this, this.ctx);
 	
+	this.titleMenu = new TitleMenu(this, this.ctx);
+	
 	this.playerDisplay = new PlayerDisplay(this, this.ctx, 10, null);
 	this.focusItem = null;
 	
@@ -60,6 +62,9 @@ UIManager.prototype.update = function() {
 	if (this.showDialogue) {
 		this.dialogueBox.update();
 	}
+	if (this.showTitleMenu) {
+		this.titleMenu.update();
+	}
 	
 	gm.im.setAllFalse();
 }
@@ -92,6 +97,9 @@ UIManager.prototype.draw = function() {
 	if (this.showMerchant) {
 		this.merchantMenu.draw();
 	}
+	if (this.showTitleMenu) {
+		this.titleMenu.draw();
+	}
 }
 
 UIManager.prototype.controls = function () {
@@ -103,10 +111,40 @@ UIManager.prototype.controls = function () {
 	gm.im.addInput(new Input("down", 's'));
 	gm.im.addInput(new Input("left", 'a'));
 	gm.im.addInput(new Input("right", 'd'));
-	gm.im.addInput(new Input("menu", 'i'));
+	gm.im.addInput(new Input("menu", 'q'));
 	gm.im.addInput(new Input("confirm", 'e'));
 	gm.im.changeCurrentGroupTo(temp);
 }
+/* +------------------------------------------+ */
+/* |           ===  Title Menu  ===           | */
+/* +------------------------------------------+ */
+function TitleMenu(uimanager, ctx) {
+	this.ui = uimanager;
+	this.ctx = ctx;
+	this.splashImage = gm.am.getAsset("./img/ArdentEndeavorTitle.png");
+	this.startGameBtn = new Button(this, this.ctx, "Start Game",
+			this.ui.screenWidth / 3,
+			this.ui.screenHeight / 4 * 3,
+			200, 38,
+			closeTitle = function () {
+				gm.closeTitleMenu();
+			});
+}
+
+TitleMenu.prototype.update = function () {
+	this.startGameBtn.update();
+}
+
+TitleMenu.prototype.draw = function () {
+	this.ctx.drawImage(gm.am.getAsset("./img/ArdentEndeavorTitle.png"), 0, 0);
+	
+	this.ctx.strokeStyle = "rgb(255, 255, 255)";
+	this.ctx.fillStyle = "rgba(0, 98, 130, 0.7)";
+	roundRect(this.ctx, this.ui.screenWidth / 3 - 10, this.ui.screenHeight / 4 * 3 - 5, 220, 50, 20, true, true);
+	
+	this.startGameBtn.draw(this.ctx);
+}
+
 
 /* +------------------------------------------+ */
 /* |         ===  Player Display  ===         | */
@@ -485,7 +523,7 @@ GameMenu.prototype.getBattleMenuButtons = function () {
 function OptionsMenu(uimanager, ctx, x, y) {
 	this.ui = uimanager;
 	this.VERT_PADDING = this.ui.screenWidth / 50;
-	this.BUTTON_HEIGHT = this.ui.screenHeight / 12;
+	this.BUTTON_HEIGHT = this.ui.screenHeight / 14;
 	this.MENU_WIDTH = this.ui.screenWidth * 3 / 4 - 20;
 	this.TOP_BOT_PADDING = this.ui.screenHeight / 48;
 	
@@ -503,8 +541,15 @@ OptionsMenu.prototype.init = function () {
 			20,
 			20,
 			toggleDrawCollision = function () {
-				console.log("check da box");
 				gm.hitBoxVisible = this.isChecked;
+			}));
+	this.items.push(new CheckBox(this, this.ctx, "CHEAT: No Battles",
+			this.x + this.VERT_PADDING,
+			this.y + (this.BUTTON_HEIGHT*1 + this.TOP_BOT_PADDING),
+			20,
+			20,
+			toggleDrawCollision = function () {
+				gm.nobattles = this.isChecked;
 			}));
 }
 OptionsMenu.prototype.update = function () {
@@ -626,9 +671,9 @@ ItemsMenu.prototype.update = function () {
 	for (i = 0; i < this.items.length; i++) {
 		this.items[i].update(this.ctx);
 	}
-	for (var j = 0; j < gm.player.inventory.items.length; j++) {
-		console.log(gm.player.inventory.items[j].quantity + " " + gm.player.inventory.items[j].name);
-	}
+//	for (var j = 0; j < gm.player.inventory.items.length; j++) {
+//		console.log(gm.player.inventory.items[j].quantity + " " + gm.player.inventory.items[j].name);
+//	}
 	
 }
 ItemsMenu.prototype.draw = function () {
@@ -706,6 +751,14 @@ MerchantMenu.prototype.init = function () {
 			this.MENU_WIDTH, this.BUTTON_HEIGHT,
 			Inventory.LIBRARY.HEALTH_POTION
 	));
+    this.items.push(new MerchantItem(this, this.ctx, this.x, 1,
+			this.MENU_WIDTH, this.BUTTON_HEIGHT,
+			Inventory.LIBRARY.HIGH_POTION
+	));
+    this.items.push(new MerchantItem(this, this.ctx, this.x, 2,
+			this.MENU_WIDTH, this.BUTTON_HEIGHT,
+			Inventory.LIBRARY.ELIXER
+	));
 }
 MerchantMenu.prototype.update = function () {
 	// Update buttons
@@ -713,9 +766,9 @@ MerchantMenu.prototype.update = function () {
 	for (i = 0; i < this.items.length; i++) {
 		this.items[i].update(this.ctx);
 	}
-	for (var j = 0; j < gm.player.inventory.items.length; j++) {
-		console.log(gm.player.inventory.items[j].quantity + " " + gm.player.inventory.items[j].name);
-	}
+//	for (var j = 0; j < gm.player.inventory.items.length; j++) {
+//		console.log(gm.player.inventory.items[j].quantity + " " + gm.player.inventory.items[j].name);
+//	}
 	if (gm.im.checkInput("menu") || gm.im.checkInput("confirm")) {
 		gm.im.setAllFalse();
 		this.merchantFocus = null;
@@ -809,9 +862,7 @@ function BuyBox(parent, ctx, x, y) {
 			this.x+90, this.y+this.LINE_HEIGHT*3, 20, this.LINE_HEIGHT,
 			runItem = function () {
 				if ((gm.ui.merchantMenu.buyBox.buyCount+1)*gm.ui.merchantMenu.buyBox.item.price < gm.player.gold) {
-					console.log(gm.ui.merchantMenu.buyBox.buyCount);
 					gm.ui.merchantMenu.buyBox.buyCount++;
-					console.log(gm.ui.merchantMenu.buyBox.buyCount);
 				}
 				if (gm.ui.merchantMenu.buyBox.buyCount === 0) {
 					gm.ui.merchantMenu.buyBox.buySellBtn.setText("---");
