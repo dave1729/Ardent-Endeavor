@@ -114,35 +114,31 @@ Billy.prototype.interactTrigger = function () {
 }
 Billy.prototype.story = function () {
 	//console.log(this.storyStage);
-	gm.openMerchantMenu();
-//	switch(this.storyStage) {
-//	case 1:
+	//gm.openMerchantMenu();
+	switch(this.storyStage) {
+	case 1:
+		gm.openDialogueBox(this.constructor.name, 
+				"Player: Listen Billy, I'm going on an adventure. " +
+				"I need you to stay here an protect the farm. " +
+				"I don't know how long I'll be away. " +
+				"So if any of these filthy monsters comes near, eat um. ");
+		this.storyStage = 2;
+		break;
+	case 2:
+		gm.openDialogueBox(this.constructor.name, 
+				"Bark!");
+		break;
+	case 3:
+		console.log("get ready to open merchant page");
+		//gm.im.setAllFalse();
+		//gm.openMerchantMenu();
 //		gm.openDialogueBox(this.constructor.name, 
-//				"Chewbacca: A legendary Wookiee warrior and Han Solo’s " +
-//				"co-pilot aboard the Millennium Falcon, Chewbacca was part " +
-//				"of a core group of Rebels who restored freedom to the galaxy. " +
-//				"Known for his short temper and accuracy with a bowcaster, " +
-//				"Chewie also has a big heart -- and is unwavering in his loyalty " +
-//				"to his friends. He has stuck with Han through years of turmoil " +
-//				"that have changed both the galaxy and their lives.");
-//		this.storyStage = 2;
-//		break;
-//	case 2:
-//		gm.openDialogueBox(this.constructor.name, 
-//				"Why are you still talking to me?");
-//		this.storyStage = 3;
-//		break;
-//	case 3:
-//		console.log("get ready to open merchant page");
-//		gm.im.setAllFalse();
-//		gm.openMerchantMenu();
-////		gm.openDialogueBox(this.constructor.name, 
-////				"Please stop using me for your tests...");
-//		break;
-//	default:
-//		break;
-//			
-//	}
+//				"Please stop using me for your tests...");
+		break;
+	default:
+		break;
+			
+	}
 }
 
 /* +------------------------------------------+ */
@@ -233,7 +229,8 @@ PirateGirl.prototype.story = function () {
 				"Ship Captin: Please adventurer. My ship was overtaken by bandits. " +
 				"I barely escaped with my life, and lost my favorite Hat. " +
 				"If you can get all those bandits off my ship, I'll tell you a " +
-				"valuable secret. To prove you have done it, return my favorite Hat to me.");
+				"valuable secret. To prove you have gotten all of those bandits " +
+				"off of my ship, return my favorite Pirate Hat to me.");
 		this.storyStage = 2;
 		break;
 	case 2:
@@ -251,6 +248,104 @@ PirateGirl.prototype.story = function () {
 	case 4:
 		gm.openDialogueBox(this.constructor.name, 
 				"Thank you again for getting those bandits off of my boat.");
+		break;
+	default:
+		break;
+			
+	}
+}
+
+/* +------------------------------------------+ */
+/* |             ===  Merchant  ===              | */
+/* +------------------------------------------+ */
+function Merchant(x, y) {
+	this.game = gm;
+	this.animation = new Animation(gm.am.getAsset("./img/Merchant.png"), 
+					 		TILE_SIZE, TILE_SIZE, 9, 0.20, 9, true, 1);
+	this.x = x;
+	this.y = y;
+	this.direction = "down";
+	this.walking = false;
+	this.screenX = this.x;
+	this.screenY = this.y;
+	this.storyStage = 1;
+	this.hitBox = new CollisionBox(this, 10, 10, TILE_SIZE-20, TILE_SIZE-20);
+}
+Merchant.prototype = new NPC();
+Merchant.prototype.constructor = Merchant;
+
+Merchant.prototype.draw = function (tick, ctx, x, y, entity) {
+	this.elapsedTime += tick;
+	if (this.animation.isDone()) {
+		if (this.animation.loop) this.animation.elapsedTime = 0;
+	}
+	var frame = this.animation.currentFrame();
+	var xindex = 0;
+	var yindex = 0;
+	xindex = frame % this.animation.sheetWidth;
+
+	//Choosing character sprite from sheet
+	if (this.walking === false) {
+		xindex = 0;
+	}
+	
+	if(this.direction === "up") {
+		yindex = 8;
+	}
+	else if(this.direction === "down") {
+		yindex = 10;
+	}
+	else if(this.direction === "left") {
+		yindex = 9;
+	}
+	else if(this.direction === "right") {
+		yindex = 11;
+	}
+	else {
+		yindex = 10;
+	}
+
+	var screenPoint = gm.cam.getMyScreenXandY(this.x, this.y);
+	
+	gm.ctx.drawImage(this.animation.spriteSheet,
+			xindex * this.animation.frameWidth, yindex * this.animation.frameHeight,  // source from sheet
+			this.animation.frameWidth, this.animation.frameHeight,
+			screenPoint.x, screenPoint.y,
+			this.animation.frameWidth * this.animation.scale,
+			this.animation.frameHeight * this.animation.scale);
+
+	// Collision Box
+	if (gm.hitBoxVisible) {
+		ctx.strokeStyle = "yellow";
+	    ctx.strokeRect(this.hitBox.getScreenX(), this.hitBox.getScreenY(),
+	    		 	   this.hitBox.width, this.hitBox.height);
+	}
+}
+Merchant.prototype.update = function () {
+	NPC.prototype.directionTowardPlayer(this);
+}
+Merchant.prototype.collisionTrigger = function (player, startX, startY) {
+	NPC.prototype.collisionTrigger.call(this, player, startX, startY);
+}
+Merchant.prototype.interactTrigger = function () {
+	if(gm.player.tryRemoveItem("Pirate Hat")) {
+		this.storyStage = 3;
+		this.animation = new Animation(gm.am.getAsset("./img/PirateGirlWithPirateHat.png"), 
+		 		TILE_SIZE, TILE_SIZE, 9, 0.20, 9, true, 1);
+	}
+	this.story();
+}
+Merchant.prototype.story = function () {
+	//console.log(this.storyStage);
+	switch(this.storyStage) {
+	case 1:
+		gm.openDialogueBox(this.constructor.name, 
+				"Merchant: What are you interested in buying today Adventurer? ");
+		this.storyStage = 2;
+		break;
+	case 2:
+		gm.im.setAllFalse();
+		gm.openMerchantMenu();
 		break;
 	default:
 		break;
