@@ -48,18 +48,32 @@ NPC.prototype.draw = function () {
 	}
 }
 
-NPC.prototype.collisionTrigger = function (player, startX, startY) {
+NPC.prototype.collisionTrigger = function (player, moveX, moveY) {
 	console.log("NPC Collision: " + this.constructor.name);
 	var pc = {x: player.hitBox.getX(), y: player.hitBox.getY(), width: player.hitBox.width, height: player.hitBox.height};
 	var npc = {x: this.hitBox.getX(), y: this.hitBox.getY(), width: this.hitBox.width, height: this.hitBox.height};
 
-	//needs refinement
-	
-	if (pc.x < npc.x + npc.width || pc.x + pc.width > npc.x) {
-		player.x = startX;
+	var xTestFail = false;
+	var yTestFail = false;
+	if (pc.x - moveX < npc.x + npc.width 
+			&& pc.x - moveX + pc.width > npc.x 
+			&& pc.y < npc.y + npc.height 
+			&& pc.height + pc.y > npc.y) {
+		yTestFail = true;
 	}
-	if (pc.y < npc.y + npc.height || pc.y + pc.height > npc.y) {
-		player.y = startY;
+	if (pc.x < npc.x + npc.width 
+			&& pc.x + pc.width > npc.x 
+			&& pc.y - moveY < npc.y + npc.height 
+			&& pc.height + pc.y - moveY > npc.y) {
+		xTestFail = true;
+	}
+	if (xTestFail && yTestFail) {
+		player.x -= moveX;
+		player.y -= moveY;
+	} else if (xTestFail) {
+		player.x -= moveX;
+	} else if (yTestFail) {
+		player.y -= moveY;
 	}
 	
 }
@@ -100,34 +114,35 @@ Billy.prototype.interactTrigger = function () {
 }
 Billy.prototype.story = function () {
 	//console.log(this.storyStage);
-	switch(this.storyStage) {
-	case 1:
-		gm.openDialogueBox(this.constructor.name, 
-				"Chewbacca: A legendary Wookiee warrior and Han Solo’s " +
-				"co-pilot aboard the Millennium Falcon, Chewbacca was part " +
-				"of a core group of Rebels who restored freedom to the galaxy. " +
-				"Known for his short temper and accuracy with a bowcaster, " +
-				"Chewie also has a big heart -- and is unwavering in his loyalty " +
-				"to his friends. He has stuck with Han through years of turmoil " +
-				"that have changed both the galaxy and their lives.");
-		this.storyStage = 2;
-		break;
-	case 2:
-		gm.openDialogueBox(this.constructor.name, 
-				"Why are you still talking to me?");
-		this.storyStage = 3;
-		break;
-	case 3:
-		console.log("get ready to open merchant page");
-		gm.im.setAllFalse();
-		gm.openMerchantMenu();
+	gm.openMerchantMenu();
+//	switch(this.storyStage) {
+//	case 1:
 //		gm.openDialogueBox(this.constructor.name, 
-//				"Please stop using me for your tests...");
-		break;
-	default:
-		break;
-			
-	}
+//				"Chewbacca: A legendary Wookiee warrior and Han Solo’s " +
+//				"co-pilot aboard the Millennium Falcon, Chewbacca was part " +
+//				"of a core group of Rebels who restored freedom to the galaxy. " +
+//				"Known for his short temper and accuracy with a bowcaster, " +
+//				"Chewie also has a big heart -- and is unwavering in his loyalty " +
+//				"to his friends. He has stuck with Han through years of turmoil " +
+//				"that have changed both the galaxy and their lives.");
+//		this.storyStage = 2;
+//		break;
+//	case 2:
+//		gm.openDialogueBox(this.constructor.name, 
+//				"Why are you still talking to me?");
+//		this.storyStage = 3;
+//		break;
+//	case 3:
+//		console.log("get ready to open merchant page");
+//		gm.im.setAllFalse();
+//		gm.openMerchantMenu();
+////		gm.openDialogueBox(this.constructor.name, 
+////				"Please stop using me for your tests...");
+//		break;
+//	default:
+//		break;
+//			
+//	}
 }
 
 /* +------------------------------------------+ */

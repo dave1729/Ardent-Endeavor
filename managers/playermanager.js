@@ -41,18 +41,67 @@ Player.prototype.controls = function () {
     gm.cam.follow(this);
 }
 
-Player.prototype.entityCollisionCheck = function (startX, startY) {
-	var rectMain = {x: this.hitBox.getX(), y: this.hitBox.getY(), width: this.hitBox.width, height: this.hitBox.height}
+Player.prototype.entityCollisionCheck = function (moveX, moveY) {
 	
-	gm.checkMapCollision({x: this.hitBox.getScreenX(), y: this.hitBox.getScreenY(), width: this.hitBox.width, height: this.hitBox.height}, checkCollisionData);
-	
-	function checkCollisionData(wasCollision, pixelPoint, imageData) {
-		if (wasCollision) {
-			// NOTE: Collision needs to be refined so diagonal movement can be done.
-			gm.player.x = startX;
-			gm.player.y = startY;
+	// Left and Right collision
+	var revertX = false;
+	if (moveX != 0) {
+		gm.player.y -= moveY;
+		// Check pixel collision with environment
+		
+		if (moveX < 0) {
+			// only get data for left side
+			imgData = gm.ctxCol.getImageData(this.hitBox.getScreenX(), this.hitBox.getScreenY(),
+					1, this.hitBox.height);
+		} else {
+			// only get data for right side
+			imgData = gm.ctxCol.getImageData(this.hitBox.getScreenX()+this.hitBox.width, this.hitBox.getScreenY(),
+					1, this.hitBox.height);
 		}
+		var incY = Math.floor(this.hitBox.height / COLLISION_ACCURACY);
+		for (var r = 0; r < this.hitBox.height; r += incY) {
+			if ( imgData.data[(0 + r * imgData.width) * 4 + 3] > 50 ) {
+				revertX = true;
+            }
+		}
+		if ( imgData.data[(0 + (this.hitBox.height-1) * imgData.width) * 4 + 3] > 50 ) {
+			revertX = true;
+        }
+		gm.player.y += moveY;
 	}
+	
+	
+	var revertY = false;
+	if (moveY != 0) {
+		gm.player.x -= moveX;
+		if (moveY < 0) {
+			// only get data for left side
+			imgData = gm.ctxCol.getImageData(this.hitBox.getScreenX(), this.hitBox.getScreenY(),
+					this.hitBox.width, 1);
+		} else {
+			// only get data for right side
+			imgData = gm.ctxCol.getImageData(this.hitBox.getScreenX(), this.hitBox.getScreenY()+this.hitBox.height,
+					this.hitBox.width, 1);
+		}
+		var incX = Math.floor(this.hitBox.width / COLLISION_ACCURACY);
+		for (var c = 0; c < this.hitBox.width; c += incX) {
+			if ( imgData.data[(c + 0 * imgData.width) * 4 + 3] > 50 ) {
+				revertY = true;
+            }
+		}
+		if ( imgData.data[((this.hitBox.width-1) + (0) * imgData.width) * 4 + 3] > 50 ) {
+			revertY = true;
+        }
+		gm.player.x += moveX;
+	}
+	if (revertY) {
+		gm.player.y -= moveY;
+	}
+
+	if (revertX) {
+		gm.player.x -= moveX;
+	}
+	
 	
 	var rectMain = {x: this.hitBox.getX(), y: this.hitBox.getY(), width: this.hitBox.width, height: this.hitBox.height}
 	//console.log(rectMain);
@@ -69,7 +118,7 @@ Player.prototype.entityCollisionCheck = function (startX, startY) {
 					&& rectMain.y < rectOther.y + rectOther.height 
 					&& rectMain.height + rectMain.y > rectOther.y) { 
 				//console.log("COLLISION DETECTED OMG");
-				gm.em.entities[i].collisionTrigger(this, startX, startY);
+				gm.em.entities[i].collisionTrigger(this, moveX, moveY);
 			} 
 		}
 		//console.log("ran check");
@@ -216,6 +265,6 @@ Player.prototype.update = function () {
 		}
 
 		// COLLISION
-		this.entityCollisionCheck(startX, startY);
+		this.entityCollisionCheck(this.x - startX, this.y - startY);
 	}
 }

@@ -298,28 +298,29 @@ GameManager.prototype.gameOver = function ()
 	
 }
 
-GameManager.prototype.checkMapCollision = function (rectBox, callback) {
-	imgData = this.ctxCol.getImageData(rectBox.x, rectBox.y, rectBox.width, rectBox.height);
-	
-	var incX = rectBox.width / COLLISION_ACCURACY;
-	var incY = rectBox.height / COLLISION_ACCURACY;
-	
-	incX = (~~incX === incX) ? incX : (incX+1 | 0 );
-	incY = (~~incY === incY) ? incY : (incY+1 | 0 );
-	
-	for (var offsetY = 0; offsetY < incY; offsetY++ ) {
-	    for (var offsetX = 0; offsetX < incX; offsetX++ ) {
-	        for (var pixelY = 0+offsetY; pixelY < rectBox.height; pixelY += incY ) {
-	            for (var pixelX = 0+offsetX; pixelX < rectBox.width; pixelX += incX){
-	                if ( imgData.data[(pixelX + pixelY * imgData.width) * 4 + 3] > 50 ) {
-		            	//console.log((pixelX + pixelY * imgData.width) * 4 + 3);
-	                	callback(true, {x: pixelX, y: pixelY}, imgData);
-	                }
-	            }
-	        }
-	    }
-	}
-}
+/* *** DEPRECATED *** */
+//GameManager.prototype.checkMapCollision = function (rectBox, callback) {
+//	imgData = this.ctxCol.getImageData(rectBox.x, rectBox.y, rectBox.width, rectBox.height);
+//	
+//	var incX = rectBox.width / COLLISION_ACCURACY;
+//	var incY = rectBox.height / COLLISION_ACCURACY;
+//	
+//	incX = (~~incX === incX) ? incX : (incX+1 | 0 );
+//	incY = (~~incY === incY) ? incY : (incY+1 | 0 );
+//	
+//	for (var offsetY = 0; offsetY < incY; offsetY++ ) {
+//	    for (var offsetX = 0; offsetX < incX; offsetX++ ) {
+//	        for (var pixelY = 0+offsetY; pixelY < rectBox.height; pixelY += incY ) {
+//	            for (var pixelX = 0+offsetX; pixelX < rectBox.width; pixelX += incX){
+//	                if ( imgData.data[(pixelX + pixelY * imgData.width) * 4 + 3] > 50 ) {
+//		            	//console.log((pixelX + pixelY * imgData.width) * 4 + 3);
+//	                	callback(true, {x: pixelX, y: pixelY}, imgData);
+//	                }
+//	            }
+//	        }
+//	    }
+//	}
+//}
 
 GameManager.prototype.loop = function () {
     this.clockTick = this.timer.tick();
