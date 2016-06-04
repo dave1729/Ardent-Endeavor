@@ -82,8 +82,11 @@ MapManager.prototype.initialize = function () {
     //Pirate Girl
     map01.addEntity(new PirateGirl(23*TILE_SIZE, 13*TILE_SIZE));
     
+    //Merchant
+    map01.addEntity(new Merchant(7*TILE_SIZE, 20*TILE_SIZE));
+    
     //This is David's Skip to Level 3 For Testing Teleport (behind the tree)
-    //map01.addEntity(new MapTeleportEvent(32, 720, 5, 5, 3, 15*TILE_SIZE+TILE_SIZE/2, 28*TILE_SIZE));
+    map01.addEntity(new MapTeleportEvent(32, 720, 5, 5, 3, 15*TILE_SIZE+TILE_SIZE/2, 28*TILE_SIZE));
     
     //Regular End of Level Teleport
 	map01.addEntity(new MapTeleportEvent(2024, 1730, 20, 50, 2, 3*TILE_SIZE, 1*TILE_SIZE+TILE_SIZE/2));
@@ -124,13 +127,16 @@ MapManager.prototype.initialize = function () {
     map02.addEntity(new UndeadJacket(17*TILE_SIZE, 23*TILE_SIZE));
     map02.addEntity(new Zombie(2*TILE_SIZE, 5*TILE_SIZE));    
     map02.addEntity(new UndeadJacket(11*TILE_SIZE, 3*TILE_SIZE));
-    map02.addEntidwty(new UndeadJacket(25*TILE_SIZE, 22*TILE_SIZE));
+    map02.addEntity(new UndeadJacket(25*TILE_SIZE, 22*TILE_SIZE));
     map02.addEntity(new Skeleton(25*TILE_SIZE, 7*TILE_SIZE));
     map02.addEntity(new StoneMonster(14*TILE_SIZE, 17*TILE_SIZE));
     map02.addEntity(new UndeadJacket(28*TILE_SIZE, 18*TILE_SIZE));
     map02.addEntity(new UndeadCreeper(24*TILE_SIZE, 10*TILE_SIZE));
     map02.addEntity(new UndeadCreeper(27*TILE_SIZE, 10*TILE_SIZE));
 	
+    //Merchant
+    map02.addEntity(new Merchant(9*TILE_SIZE, 3*TILE_SIZE));
+    
 	//Obvious Chests
 	map02.addEntity(new Chest(1*TILE_SIZE, 1*TILE_SIZE, 2, new Currency({value: 5, name: "Gold"})));
 	map02.addEntity(new Chest(1*TILE_SIZE, 23*TILE_SIZE, 1, new Currency({value: 5, name: "Gold"})));
@@ -167,7 +173,7 @@ MapManager.prototype.initialize = function () {
     map03.addEntity(new Slime(14*TILE_SIZE, 14*TILE_SIZE));
     map03.addEntity(new Slime(12*TILE_SIZE, 10*TILE_SIZE));
     map03.addEntity(new Slime(7*TILE_SIZE, 8*TILE_SIZE));
-    map03.addEntity(new Slime(26*TILE_SIZE, 27*TILE_SIZE));
+    map03.addEntity(new Slime(26*TILE_SIZE, 24*TILE_SIZE));
     map03.addEntity(new Slime(27*TILE_SIZE, 14*TILE_SIZE));
     map03.addEntity(new Slime(28*TILE_SIZE, 14*TILE_SIZE));
     map03.addEntity(new Slime(18*TILE_SIZE, 5*TILE_SIZE));
@@ -181,6 +187,9 @@ MapManager.prototype.initialize = function () {
 	map03.addEntity(new Mercenary(3*TILE_SIZE, 22*TILE_SIZE));
 	map03.addEntity(new Lich(6*TILE_SIZE, 5*TILE_SIZE));
 	map03.addEntity(new YouWinEvent(9*TILE_SIZE, 0*TILE_SIZE, 2*TILE_SIZE, 1.3*TILE_SIZE));
+	
+	//Merchant
+    map03.addEntity(new Merchant(2*TILE_SIZE, 21*TILE_SIZE));
 	
 	//Obvious Chests
     map03.addEntity(new Chest(2*TILE_SIZE, 22*TILE_SIZE, 2, new Currency({value: 5, name: "Gold"})));
