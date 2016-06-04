@@ -166,14 +166,14 @@ function inventoryHowTo ()
 
 // Leave Library done here and it works
 Inventory.LIBRARY = {
-    HEALTH_POTION: new Consumable({name: "Health Potion", description: "Restores 20 health", 
-        quantity: 10, effects: [new RestoreHealth({value: 20})], price: 10}),
+    HEALTH_POTION: new Consumable({name: "Health Potion", description: "Restores 30 health", 
+        quantity: 10, effects: [new RestoreHealth({value: 30})], price: 15}),
     PIRATE_HAT: new Item({name: "Pirate Hat", description: "A Fancy Pirate Hat", quantity: 1}),
     CASTLE_KEY: new Item({name: "Castle Key", description: "An Old Key", quantity: 1}),
     STEAK: new Consumable({name: "Steak", description: "Yummy, Restores 30 health",
-    	quantity: 1, effects: [new RestoreHealth({value: 30})], price: 25}),
-    HIGH_POTION: new Consumable({name: "High Potion", description: "Restores 50 health", 
-        quantity: 1, effects: [new RestoreHealth({value: 50})], price: 35}),
-    ELIXER: new Consumable({name: "Elixer", description: "Restores 100 health", 
-        quantity: 1, effects: [new RestoreHealth({value: 100})], price: 65})
+    	quantity: 1, effects: [new RestoreHealth({value: 30})], price: 30}),
+    HIGH_POTION: new Consumable({name: "High Potion", description: "Restores 80 health", 
+        quantity: 1, effects: [new RestoreHealth({value: 80})], price: 45}),
+    ELIXER: new Consumable({name: "Elixer", description: "Restores 150 health", 
+        quantity: 1, effects: [new RestoreHealth({value: 150})], price: 85})
 }

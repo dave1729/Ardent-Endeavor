@@ -29,7 +29,7 @@ Player.prototype.controls = function () {
     gm.im.addInput(new Input("down", 's'));
     gm.im.addInput(new Input("left", 'a'));
     gm.im.addInput(new Input("right", 'd'));
-    gm.im.addInput(new Input("menu", 'i'));
+    gm.im.addInput(new Input("menu", 'q'));
     gm.im.addInput(new Input("interact", 'e'));
 	
     //turns player follow on and off with 't'

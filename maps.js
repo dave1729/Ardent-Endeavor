@@ -103,9 +103,9 @@ MapManager.prototype.initialize = function () {
     
     //HIDDEN CHESTS
     map01.addEntity(new Chest(1*TILE_SIZE, 2*TILE_SIZE, 1, new Currency({value: 1265, name: "Gold"})));
-    map01.addEntity(new Chest(19*TILE_SIZE + 16, 1*TILE_SIZE - 12, 1, new Currency({value: 50, name: "Gold"})));
+    map01.addEntity(new Chest(19*TILE_SIZE + 16, 1*TILE_SIZE - 12, 1, new Currency({value: 65, name: "Gold"})));
     map01.addEntity(new Chest(29*TILE_SIZE + 16, 21*TILE_SIZE - 12, 1, new Currency({value: 60, name: "Gold"})));
-    map01.addEntity(new Chest(6*TILE_SIZE + 16, 14*TILE_SIZE - 12, 1, new Currency({value: 50, name: "Gold"})));
+    map01.addEntity(new Chest(6*TILE_SIZE + 16, 14*TILE_SIZE - 12, 1, new Currency({value: 75, name: "Gold"})));
     map01.addEntity(new Chest(31*TILE_SIZE + 16, 9*TILE_SIZE - 12, 1, new Currency({value: 70, name: "Gold"})));
     
     //OLD UNUSED CODE
@@ -144,7 +144,7 @@ MapManager.prototype.initialize = function () {
 	map02.addEntity(new Chest(1*TILE_SIZE, 23*TILE_SIZE, 1, Inventory.LIBRARY.HIGH_POTION, 4));
 	map02.addEntity(new Chest(14*TILE_SIZE, 16*TILE_SIZE, 2, new Currency({value: 100, name: "Gold"})));
 	map02.addEntity(new Chest(15*TILE_SIZE, 1*TILE_SIZE, 1, Inventory.LIBRARY.HIGH_POTION, 3));
-	map02.addEntity(new Chest(25*TILE_SIZE, 15*TILE_SIZE, 2, new Currency({value: 80, name: "Gold"})));
+	map02.addEntity(new Chest(25*TILE_SIZE, 15*TILE_SIZE, 2, new Currency({value: 120, name: "Gold"})));
 	
     //HIDDEN CHESTSw
     map02.addEntity(new Chest(28*TILE_SIZE + 16, 26*TILE_SIZE - 12, 1, new Currency({value: 150, name: "Gold"})));
@@ -194,10 +194,10 @@ MapManager.prototype.initialize = function () {
     map03.addEntity(new Merchant(2*TILE_SIZE, 21*TILE_SIZE));
 	
 	//Obvious Chests
-    map03.addEntity(new Chest(2*TILE_SIZE, 22*TILE_SIZE, 2, new Currency({value: 100, name: "Gold"})));
+    map03.addEntity(new Chest(2*TILE_SIZE, 22*TILE_SIZE, 2, new Currency({value: 150, name: "Gold"})));
     map03.addEntity(new Chest(29*TILE_SIZE, 21*TILE_SIZE, 1, new Currency({value: 150, name: "Gold"})));
     map03.addEntity(new Chest(25*TILE_SIZE, 9*TILE_SIZE, 2, Inventory.LIBRARY.ELIXER, 2));
-    map03.addEntity(new Chest(3*TILE_SIZE, 12*TILE_SIZE, 1, new Currency({value: 150, name: "Gold"})));
+    map03.addEntity(new Chest(3*TILE_SIZE, 12*TILE_SIZE, 1, new Currency({value: 175, name: "Gold"})));
     map03.addEntity(new Chest(2*TILE_SIZE, 2*TILE_SIZE, 2, Inventory.LIBRARY.ELIXER, 2));
 	
     //Return to Level 2

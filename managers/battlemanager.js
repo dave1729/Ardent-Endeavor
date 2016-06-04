@@ -13,11 +13,11 @@ BattleManager.prototype.init = function () {
 BattleManager.prototype.createPlayers = function ()
 {
     this.battleUnits.push(new PlayerUnit({spriteSheet:gm.am.getAsset("./img/player1.png"), 
-                                          x: 0, y : 0, health: 100, damage: 10}));
+                                          x: 0, y : 0, health: 100, damage: 10, name: "Owl"}));
     this.battleUnits.push(new PlayerUnit({spriteSheet:gm.am.getAsset("./img/player2.png"), 
-                                          x: 0, y : 0, health: 100, damage: 10}));
+                                          x: 0, y : 0, health: 100, damage: 10, name: "Bear"}));
     this.battleUnits.push(new PlayerUnit({spriteSheet:gm.am.getAsset("./img/player3.png"), 
-                                          x: 0, y : 0, health: 100, damage: 10}));
+                                          x: 0, y : 0, health: 100, damage: 10, name: "Monkey"}));
 }
 
 BattleManager.prototype.createBattle = function (spec) {
