@@ -1,6 +1,6 @@
 const TILE_SIZE = 64;
 const COLLISION_ACCURACY = 3.0; // Higher is more accurate, but slower.
-const nobattles = false;
+//const nobattles = false;
 function GameManager(ctx, ctxUI, ctxCollision, canvas)
 {
     this.controlEntity = null;
@@ -26,6 +26,7 @@ function GameManager(ctx, ctxUI, ctxCollision, canvas)
 	
     this.timer = null;
     this.gamePaused = false;
+    this.nobattles = false;
     
 }
 GameManager.prototype.start = function() {
