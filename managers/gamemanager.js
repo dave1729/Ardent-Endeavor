@@ -27,6 +27,7 @@ function GameManager(ctx, ctxUI, ctxCollision, canvas)
     this.timer = null;
     this.gamePaused = false;
     this.nobattles = false;
+    this.mouseMenuActivie = false;
     
 }
 GameManager.prototype.start = function() {

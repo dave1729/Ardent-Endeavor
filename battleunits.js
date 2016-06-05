@@ -357,7 +357,20 @@ PlayerUnit.prototype.playerPhase = function () {
         else if (!gm.showUI)
         {
         	gm.ui.statusBox.newInfo("Player", this.health, this.maxhealth);
-            gm.openBattleMenu(520, 450);
+        	if (gm.mouseMenuActive) {
+        		let newX = (this.x) * TILE_SIZE;
+        		if (this.x > 7) {
+        			newX = (this.x - 1) * TILE_SIZE + (TILE_SIZE / 3);
+        		}
+        		let newY = this.y * TILE_SIZE;
+        		if (this.y > 7) {
+        			newY = (this.y - 2) * TILE_SIZE + (TILE_SIZE / 3);
+        		}
+        		gm.openBattleMenu(newX, newY);
+        	} else {
+        		gm.openBattleMenu(520, 450);
+        	}
+            
             this.cursor.visible = false;
         }       
     }
