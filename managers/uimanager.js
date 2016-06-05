@@ -180,7 +180,7 @@ PlayerDisplay.prototype.init = function () {
 		this.buttons.push(new PlayerButton(this, this.ctx, gm.bm.battleUnits[i],
 				this.x + this.VERT_PADDING*(i+1) + this.PLAYER_WIDTH*i, this.y + this.TOP_BOT_PADDING,
 				this.PLAYER_WIDTH, this.PLAYER_HEIGHT
-				));
+		));
 	}
 	
 }
@@ -582,6 +582,14 @@ OptionsMenu.prototype.init = function () {
 			toggleDrawCollision = function () {
 				gm.nobattles = this.isChecked;
 			}));
+	this.items.push(new CheckBox(this, this.ctx, "Adaptive Battle Menu",
+			this.x + this.VERT_PADDING,
+			this.y + (this.BUTTON_HEIGHT*2 + this.TOP_BOT_PADDING),
+			20,
+			20,
+			toggleDrawCollision = function () {
+				gm.mouseMenuActive = this.isChecked;
+			}));
 }
 OptionsMenu.prototype.update = function () {
 	// Update buttons
@@ -672,10 +680,8 @@ function uiBattleItem(parent, ctx, x, i, width, height, item) {
 	this.itemBtn = new Button(this, ctx, item.name + " - " + item.description, this.x+45, this.y, width/4*3, height,
 		runItem = function () {
 			console.log("Clicked " + item.name);
-			console.log(this.parent + "  " + this.parent.constructor.name);
-			console.log(this.parent.getItem());
-			console.log(gm.bm.cursor.selected);
 			this.parent.getItem().use(gm.bm.cursor.selected);
+			gm.ui.statusBox.refresh();
 			gm.ui.showBattleItems = false;
 		});
 }
@@ -1146,7 +1152,8 @@ Button.prototype.draw = function(ctx, align) {
 	}
 	
 	// Draw button frame
-	ctx.fillRect(this.x, this.y, this.width, this.height);
+	roundRect(ctx, this.x, this.y, this.width, this.height, 15, true, false);
+	//ctx.fillRect(this.x, this.y, this.width, this.height);
 	
 	// Font options
 	var fontSize = 20;
@@ -1399,6 +1406,12 @@ StatusBox.prototype.newInfo = function (name, currentHP, maxHP) {
 	this.name = name;
 	this.currentHP = currentHP;
 	this.maxHP = maxHP;
+	this.refresh(); // Overrides other stuff.
+}
+StatusBox.prototype.refresh = function () {
+	this.name = gm.bm.cursor.selected.name;
+	this.currentHP = gm.bm.cursor.selected.health;
+	this.maxHP = gm.bm.cursor.selected.maxhealth;
 }
 StatusBox.prototype.move = function (x, y) {
 	this.x = x;
