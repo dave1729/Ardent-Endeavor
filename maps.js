@@ -57,8 +57,8 @@ MapManager.prototype.initialize = function () {
 	
 	/* Map 1 - Grasslands */
 	var map01 = new Map(1,
-		    new Background(gm.am.getAsset("./img/Background_Layer.png")),
-		    new Background(gm.am.getAsset("./img/Foreground_Layer.png")),
+		    new Background(gm.am.getAsset("./img/Background_Layer.png"), false),
+		    new Background(gm.am.getAsset("./img/Foreground_Layer.png"), true),
 		    new Collidable_background(gm.am.getAsset("./img/Collision_Layer.png"))
 	);
 	
@@ -116,8 +116,8 @@ MapManager.prototype.initialize = function () {
     
     /* Map 2 - Maze */
     var map02 = new Map(2,
-		    new Background(gm.am.getAsset("./img/Background_Layer2.png")),
-		    new Background(gm.am.getAsset("./img/Foreground_Layer2.png")),
+		    new Background(gm.am.getAsset("./img/Background_Layer2.png"), false),
+		    new Background(gm.am.getAsset("./img/Foreground_Layer2.png"), true),
 		    new Collidable_background(gm.am.getAsset("./img/Collision_Layer2.png"))
 	);
     
@@ -165,8 +165,8 @@ MapManager.prototype.initialize = function () {
     
     /* Map 3 - Castle */
     var map03 = new Map(3,
-		    new Background(gm.am.getAsset("./img/Background_Layer3.png")),
-		    new Background(gm.am.getAsset("./img/Foreground_Layer3.png")),
+		    new Background(gm.am.getAsset("./img/Background_Layer3.png"), false),
+		    new Background(gm.am.getAsset("./img/Foreground_Layer3.png"), true),
 		    new Collidable_background(gm.am.getAsset("./img/Collision_Layer3.png"))
 	);
 	

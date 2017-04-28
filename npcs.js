@@ -142,9 +142,10 @@ Billy.prototype.story = function () {
 }
 
 /* +------------------------------------------+ */
-/* |             ===  Pirate Girl  ===              | */
+/* |           ===  Pirate Girl  ===          | */
 /* +------------------------------------------+ */
 function PirateGirl(x, y) {
+	console.log("this is running");
 	this.game = gm;
 	this.animation = new Animation(gm.am.getAsset("./img/PirateGirl.png"), 
 					 		TILE_SIZE, TILE_SIZE, 9, 0.20, 9, true, 1);
