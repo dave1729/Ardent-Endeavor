@@ -27,12 +27,14 @@ EntityManager.prototype.addEntity = function (entity) {
 	if(entity.entityID === 1) this.controlEntity = entity;
 	if(entity.entityID === 0) this.backgroundEntity = entity;
 	//Sort entities by layer
+	/*
 	this.entities.sort(
 			function(x, y)
 			{
 				return x.layer - y.layer;
 			}
 	);
+	*/
 }
 
 EntityManager.prototype.removeEntityA = function (remove) {
@@ -111,8 +113,8 @@ EntityManager.prototype.draw = function () {
     			this.entities[i].hitBox.getScreenY() < gm.surfaceWidth + 1*TILE_SIZE &&
     			this.entities[i].hitBox.getScreenY() > -1*TILE_SIZE ) {
     		// Only draw entities within range of the screen.
-    		this.entities[i].draw(gm.ctx);
     		//console.log(this.entities[i].constructor.name + " is being drawn.");
+    		this.entities[i].draw(gm.ctx);
     	}
     }
     

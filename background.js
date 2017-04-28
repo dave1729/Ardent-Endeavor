@@ -1,9 +1,10 @@
 //no inheritance
-function Background(spritesheet) {
+function Background(spritesheet, foregroundFlag) {
 	this.entityID = 0;
 	this.spritesheet = spritesheet;
 	this.game = gm;
 	this.layer = 1;
+	if (foregroundFlag) this.layer = 8
 	this.control = false;
 	Entity.call(this, 0, 0);
 };
@@ -28,7 +29,7 @@ function Collidable_background(spritesheet) {
 	this.entityID = 3;
 	this.spritesheet = spritesheet;
 	this.game = gm;
-	this.layer = 2;
+	this.layer = 5;
 	Entity.call(this, 0, 0);
 };
 

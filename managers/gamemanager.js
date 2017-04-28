@@ -1,6 +1,5 @@
 const TILE_SIZE = 64;
 const COLLISION_ACCURACY = 3.0; // Higher is more accurate, but slower.
-//const nobattles = false;
 function GameManager(ctx, ctxUI, ctxCollision, canvas)
 {
     this.controlEntity = null;
@@ -157,6 +156,13 @@ GameManager.prototype.loadMap = function (mapid, destx, desty) {
 	for (var i = 0; i < this.map.entities.length; ++i) {
 		this.em.addEntity(this.map.entities[i]);
 	}
+	
+	this.em.entities.sort(
+			function(x, y)
+			{
+				return x.layer - y.layer;
+			}
+	);
     //debugger;
 }
 /* Loads battle scene, disabling overworld entities and controls */

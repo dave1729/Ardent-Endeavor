@@ -14,7 +14,7 @@ function Event(game, x, y, w, h) {
 	this.h = h;
 	this.x = x;
 	this.y = y;
-	this.layer = 1;
+	this.layer = 3;
 	this.hitBox = new CollisionBox(this, 0, 0, w, h);
 	Entity.call(this, game, x, y);
 }
